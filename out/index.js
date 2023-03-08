@@ -28,18 +28,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importStar(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const dotenv_safe_1 = __importDefault(require("dotenv-safe"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const port = process.env.PORT || 3000;
 const app = (0, express_1.default)();
 app.use((0, express_1.json)());
 app.use((0, cors_1.default)());
-dotenv_safe_1.default.config();
-app.get('/', (_req, res) => {
-    bcrypt_1.default.compare("testandos123", "$2b$10$H4/EuXRUV8UIA2IsGaIYdernPiyS.1zaWdbyrLdA/QcUqLOw3bm/O")
-        .then(good => {
-        console.log(good);
-    });
-    res.send("Hello!");
-});
+// dotenv.config();
+app.get('/', (_req, res) => res.send("Hello!"));
 app.listen(port, () => console.log("APP RUNNING ON PORT " + port));

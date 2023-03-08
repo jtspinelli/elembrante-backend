@@ -10,7 +10,7 @@ const app = express();
 app.use(json());
 app.use(cors());
 
-dotenv.config();
+// dotenv.config();
 
 app.get('/', (_req: Request, res: Response) => res.send("Hello!") );
 
