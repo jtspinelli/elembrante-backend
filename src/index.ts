@@ -1,6 +1,7 @@
 import express, { json, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv-safe';
+import jwt from 'jsonwebtoken';
 
 const port = process.env.PORT || 3000;
 
