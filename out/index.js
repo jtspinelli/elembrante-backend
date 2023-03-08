@@ -29,6 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importStar(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_safe_1 = __importDefault(require("dotenv-safe"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const port = process.env.PORT || 3000;
 const app = (0, express_1.default)();
 app.use((0, express_1.json)());
@@ -36,5 +37,16 @@ app.use((0, cors_1.default)());
 dotenv_safe_1.default.config();
 app.get('/', (_req, res) => {
     res.send("Hello!\nSECRET: " + process.env.SECRET);
+});
+app.post('/auth', (req, res) => {
+    const secret = process.env.SECRET;
+    const token = req.headers["access_token"];
+    if (!secret || !token)
+        return;
+    jsonwebtoken_1.default.verify(token, secret, (err, decoded) => {
+        if (err)
+            return res.status(401).send("Unauthorized!");
+        res.status(200).send("Authorized!");
+    });
 });
 app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
