@@ -28,10 +28,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importStar(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const dotenv_safe_1 = __importDefault(require("dotenv-safe"));
 const port = process.env.PORT || 3000;
 const app = (0, express_1.default)();
 app.use((0, express_1.json)());
 app.use((0, cors_1.default)());
-// dotenv.config();
-app.get('/', (_req, res) => res.send("Hello!"));
+dotenv_safe_1.default.config();
+app.get('/', (_req, res) => {
+    res.send("Hello!\nSECRET: " + process.env.SECRET);
+});
 app.listen(port, () => console.log("APP RUNNING ON PORT " + port));

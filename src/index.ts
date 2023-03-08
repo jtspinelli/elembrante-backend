@@ -10,8 +10,10 @@ const app = express();
 app.use(json());
 app.use(cors());
 
-// dotenv.config();
+dotenv.config();
 
-app.get('/', (_req: Request, res: Response) => res.send("Hello!") );
+app.get('/', (_req: Request, res: Response) => {
+	res.send("Hello!\nSECRET: " + process.env.SECRET);
+} );
 
 app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
