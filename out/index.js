@@ -22,6 +22,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -29,14 +38,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importStar(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+require("reflect-metadata");
+const dataSource_1 = require("./dataSource");
+const Usuario_1 = require("./entity/Usuario");
 const port = process.env.PORT || 3000;
 const app = (0, express_1.default)();
 app.use((0, express_1.json)());
 app.use((0, cors_1.default)());
-// dotenv.config();
 app.get('/', (_req, res) => {
     res.send("Hello!\nSECRET: " + process.env.SECRET);
 });
+app.get('/users', (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield dataSource_1.db.getRepository(Usuario_1.Usuario).find();
+    console.log(users);
+    res.status(200).send('users count: ' + users.length);
+}));
 app.post('/auth', (req, res) => {
     const secret = process.env.SECRET;
     const token = req.headers["access_token"];
@@ -48,4 +64,6 @@ app.post('/auth', (req, res) => {
         res.status(200).send("Authorized!");
     });
 });
-app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
+dataSource_1.db.initialize().then(() => {
+    app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
+});

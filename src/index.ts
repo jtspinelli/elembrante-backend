@@ -3,6 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv-safe';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import "reflect-metadata";
+import { db } from './dataSource';
+import { Usuario } from './entity/Usuario';
 
 const port = process.env.PORT || 3000;
 
@@ -10,11 +13,17 @@ const app = express();
 app.use(json());
 app.use(cors());
 
-// dotenv.config();
-
 app.get('/', (_req: Request, res: Response) => {
 	res.send("Hello!\nSECRET: " + process.env.SECRET);
 } );
+
+app.get('/users', async (_req: Request, res: Response) => {
+	const users = await db.getRepository(Usuario).find();
+
+	console.log(users);
+
+	res.status(200).send('users count: ' + users.length);
+});
 
 app.post('/auth', (req: Request, res: Response) => {
 	const secret = process.env.SECRET;
@@ -29,4 +38,6 @@ app.post('/auth', (req: Request, res: Response) => {
 	});
 });
 
-app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
+db.initialize().then(() => {	
+	app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
+});
