@@ -1,3 +1,4 @@
+import { createUser, removeUser } from './features/users';
 import express, { json, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv-safe';
@@ -13,17 +14,22 @@ const app = express();
 app.use(json());
 app.use(cors());
 
+export const usuarioRepository = db.getRepository(Usuario);
+
 app.get('/', (_req: Request, res: Response) => {
 	res.send("Hello!\nSECRET: " + process.env.SECRET);
 } );
 
 app.get('/users', async (_req: Request, res: Response) => {
-	const users = await db.getRepository(Usuario).find();
+	const users = await usuarioRepository.find();
 
 	console.log(users);
 
 	res.status(200).send('users count: ' + users.length);
 });
+
+app.post('/user', createUser);
+app.delete('/user/:id', removeUser);
 
 app.post('/auth', (req: Request, res: Response) => {
 	const secret = process.env.SECRET;
