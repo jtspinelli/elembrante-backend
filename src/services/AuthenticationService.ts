@@ -30,7 +30,7 @@ export class AuthenticationService {
 			const access_token = jwt.sign(userData, secret);
 	
 			const token = savedToken ?? new Token();
-			token.username = user.username;
+			token.userId = user.id;
 			token.accessToken = access_token
 	
 			token.expiraEm = new Date(new Date().setDate(today.getDate() + 5));

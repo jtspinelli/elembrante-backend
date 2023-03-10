@@ -1,5 +1,5 @@
 import express, { json, Request, Response } from 'express';
-import { createUser, removeUser } from './features/users/crud';
+import { createUser, removeUser, updateUser } from './features/users/crud';
 import { authenticateUser } from './features/users/auth';
 import { Usuario } from './entity/Usuario';
 import { Token } from './entity/Token';
@@ -18,6 +18,7 @@ export const tokenRepository = db.getRepository(Token);
 
 app.get('/', (_req: Request, res: Response) => res.send('Hello!'));
 app.post('/user', createUser);
+app.put('/user/:id', updateUser);
 app.delete('/user/:id', removeUser);
 app.post('/auth', authenticateUser);
 

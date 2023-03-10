@@ -29,7 +29,7 @@ class AuthenticationService {
             const userData = { nome: user.nome, username: user.username };
             const access_token = jsonwebtoken_1.default.sign(userData, secret);
             const token = savedToken !== null && savedToken !== void 0 ? savedToken : new Token_1.Token();
-            token.username = user.username;
+            token.userId = user.id;
             token.accessToken = access_token;
             token.expiraEm = new Date(new Date().setDate(today.getDate() + 5));
             __1.tokenRepository.save(token)

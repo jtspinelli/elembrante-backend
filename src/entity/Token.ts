@@ -6,7 +6,7 @@ export class Token {
 	id: number;
 
 	@Column()
-	username: string;
+	userId: number;
 
 	@Column()
 	accessToken: string;

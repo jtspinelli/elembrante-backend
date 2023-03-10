@@ -18,7 +18,7 @@ export const authenticateUser = async (req: Request, res: Response) => {
 	const senhaIsCorrect = await AuthenticationService.checkSenha(senha, user.senha);
 	if(!senhaIsCorrect) return unauthorized(res, 'Err: usuário e/ou senha incorretos.');
 
-	const savedToken = await tokenRepository.findOneBy({username});
+	const savedToken = await tokenRepository.findOneBy({userId: user.id});
 	const today = new Date();
 	const savedTokenExpired = savedToken && today > savedToken.expiraEm;
 

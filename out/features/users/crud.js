@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeUser = exports.createUser = void 0;
-const httpResponses_1 = require("../httpResponses");
+exports.updateUser = exports.removeUser = exports.createUser = void 0;
 const __1 = require("../..");
+const httpResponses_1 = require("../httpResponses");
+const httpResponses_2 = require("./../httpResponses");
 const Usuario_1 = require("../../entity/Usuario");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -22,7 +23,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return (0, httpResponses_1.bad)(res, 'Impossível criar usuário com o objeto enviado.');
     bcrypt_1.default.hash(req.body.senha, 10, (err, hash) => {
         if (err)
-            (0, httpResponses_1.internalError)(res);
+            return (0, httpResponses_1.internalError)(res);
         const newUser = new Usuario_1.Usuario();
         newUser.nome = req.body.nome;
         newUser.username = req.body.username;
@@ -51,3 +52,38 @@ const removeUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     });
 });
 exports.removeUser = removeUser;
+const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const secret = process.env.SECRET;
+    if (!secret)
+        return;
+    const id = Number(req.params.id);
+    if (isNaN(id))
+        return (0, httpResponses_1.bad)(res, 'Erro: id informado está em formato inválido.');
+    const accessToken = req.headers.access_token;
+    if (!accessToken)
+        return (0, httpResponses_2.unauthorized)(res, 'Token não encontrado ou inválido.');
+    const user = yield __1.usuarioRepository.findOneBy({ id });
+    if (!user)
+        return (0, httpResponses_1.bad)(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
+    const savedToken = yield __1.tokenRepository.findOneBy({ userId: user.id });
+    if (!savedToken)
+        return (0, httpResponses_1.bad)(res, 'Erro: o usuário não possui token de acesso. Autentique-se.');
+    if (accessToken !== savedToken.accessToken)
+        return (0, httpResponses_2.unauthorized)(res, 'Não autorizado.');
+    const nome = req.body.nome;
+    const username = req.body.username;
+    if (!nome && !username)
+        return (0, httpResponses_1.bad)(res, 'Erro: Impossível atualizar usuário com o objeto enviado.');
+    const userWithSameUsername = yield __1.usuarioRepository.findOneBy({ username });
+    const usernameInUse = userWithSameUsername && userWithSameUsername.id !== id;
+    if (usernameInUse)
+        return (0, httpResponses_1.bad)(res, 'Erro: este nome de usuário não está disponível.');
+    user.nome = nome !== null && nome !== void 0 ? nome : user.nome;
+    user.username = username !== null && username !== void 0 ? username : user.username;
+    __1.usuarioRepository.save(user)
+        .then(() => res.status(200).send("okaay"))
+        .catch((err) => {
+        return (0, httpResponses_1.internalError)(res);
+    });
+});
+exports.updateUser = updateUser;

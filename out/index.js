@@ -43,6 +43,7 @@ exports.usuarioRepository = dataSource_1.db.getRepository(Usuario_1.Usuario);
 exports.tokenRepository = dataSource_1.db.getRepository(Token_1.Token);
 app.get('/', (_req, res) => res.send('Hello!'));
 app.post('/user', crud_1.createUser);
+app.put('/user/:id', crud_1.updateUser);
 app.delete('/user/:id', crud_1.removeUser);
 app.post('/auth', auth_1.authenticateUser);
 dataSource_1.db.initialize().then(() => {

@@ -28,7 +28,7 @@ const authenticateUser = (req, res) => __awaiter(void 0, void 0, void 0, functio
     const senhaIsCorrect = yield AuthenticationService_1.AuthenticationService.checkSenha(senha, user.senha);
     if (!senhaIsCorrect)
         return (0, httpResponses_1.unauthorized)(res, 'Err: usuário e/ou senha incorretos.');
-    const savedToken = yield index_1.tokenRepository.findOneBy({ username });
+    const savedToken = yield index_1.tokenRepository.findOneBy({ userId: user.id });
     const today = new Date();
     const savedTokenExpired = savedToken && today > savedToken.expiraEm;
     if (!savedToken || savedTokenExpired) {

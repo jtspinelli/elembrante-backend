@@ -19,8 +19,8 @@ __decorate([
 ], Token.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Token.prototype, "username", void 0);
+    __metadata("design:type", Number)
+], Token.prototype, "userId", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
