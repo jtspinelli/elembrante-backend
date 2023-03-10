@@ -41,9 +41,6 @@ export const removeUser = async (req: Request, res: Response) => {
 }
 
 export const updateUser = async (req: Request, res: Response) => {
-	const secret = process.env.SECRET;
-	if(!secret) return;
-
 	const id = Number(req.params.id);
 	if(isNaN(id)) return bad(res, 'Erro: id informado está em formato inválido.');
 	
@@ -74,7 +71,5 @@ export const updateUser = async (req: Request, res: Response) => {
 
 	usuarioRepository.save(user)
 		.then(() => res.status(200).send("okaay"))
-		.catch((err) => {
-			return internalError(res)
-		});
+		.catch(() => internalError(res));
 }

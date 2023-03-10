@@ -53,9 +53,6 @@ const removeUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.removeUser = removeUser;
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const secret = process.env.SECRET;
-    if (!secret)
-        return;
     const id = Number(req.params.id);
     if (isNaN(id))
         return (0, httpResponses_1.bad)(res, 'Erro: id informado está em formato inválido.');
@@ -85,8 +82,6 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     user.username = username !== null && username !== void 0 ? username : user.username;
     __1.usuarioRepository.save(user)
         .then(() => res.status(200).send("okaay"))
-        .catch((err) => {
-        return (0, httpResponses_1.internalError)(res);
-    });
+        .catch(() => (0, httpResponses_1.internalError)(res));
 });
 exports.updateUser = updateUser;
