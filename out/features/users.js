@@ -16,31 +16,46 @@ exports.removeUser = exports.createUser = void 0;
 const __1 = require("..");
 const Usuario_1 = require("../entity/Usuario");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const internalError = (res) => {
+    return res.status(500).send('Erro interno no servidor.');
+};
+const success = (res) => {
+    return res.status(200).send('Operação realizada com sucesso!');
+};
+const bad = (res, message) => {
+    return res.status(400).send(message);
+};
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.nome || !req.body.username || !req.body.senha)
-        return res.status(400).send("Impossível criar usuário com o objeto enviado.");
+        return bad(res, 'Impossível criar usuário com o objeto enviado.');
     bcrypt_1.default.hash(req.body.senha, 10, (err, hash) => {
         if (err)
-            return res.status(500).send("Internal error.");
+            internalError(res);
         const newUser = new Usuario_1.Usuario();
         newUser.nome = req.body.nome;
         newUser.username = req.body.username;
         newUser.senha = hash;
         __1.usuarioRepository.save(newUser)
-            .then(() => res.status(200).send("Okayy"))
-            .catch(() => res.status(500).send("Internal error"));
+            .then(() => success(res))
+            .catch(() => internalError(res));
     });
 });
 exports.createUser = createUser;
 const removeUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.body.senha)
+        return bad(res, 'Erro: procedimento não autorizado sem informar senha.');
     const id = Number(req.params.id);
     if (isNaN(id))
-        return res.status(400).send("Erro: id informado está em formato inválido.");
+        return bad(res, 'Erro: id informado está em formato inválido.');
     const user = yield __1.usuarioRepository.findOneBy({ id });
     if (!user)
-        return res.status(400).send(`Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
-    __1.usuarioRepository.remove(user)
-        .then(() => res.status(200).send("Usuário removido com sucesso!"))
-        .catch(() => res.status(500).send("Internal error."));
+        return bad(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
+    bcrypt_1.default.compare(req.body.senha, user.senha).then(pass => {
+        if (!pass)
+            return bad(res, 'Erro: senha incorreta.');
+        __1.usuarioRepository.remove(user)
+            .then(() => success(res))
+            .catch(() => internalError(res));
+    });
 });
 exports.removeUser = removeUser;
