@@ -1,6 +1,7 @@
-import dotenv from 'dotenv-safe';
 import { DataSource } from "typeorm";
 import { Usuario } from "./entity/Usuario";
+import { Token } from './entity/Token';
+import dotenv from 'dotenv-safe';
 
 //dotenv.config();
 
@@ -14,5 +15,5 @@ export const db = new DataSource({
 	username,
 	password,
 	database: 'elembrante',
-	entities: [Usuario]
+	entities: [Usuario, Token]
 });

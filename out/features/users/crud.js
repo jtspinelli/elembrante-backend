@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeUser = exports.createUser = void 0;
-const httpResponses_1 = require("./httpResponses");
-const __1 = require("..");
-const Usuario_1 = require("../entity/Usuario");
+const httpResponses_1 = require("../httpResponses");
+const __1 = require("../..");
+const Usuario_1 = require("../../entity/Usuario");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.nome || !req.body.username || !req.body.senha)

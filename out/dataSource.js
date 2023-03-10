@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.db = void 0;
 const typeorm_1 = require("typeorm");
 const Usuario_1 = require("./entity/Usuario");
+const Token_1 = require("./entity/Token");
 //dotenv.config();
 const host = process.env.HOST;
 const username = process.env.HOSTUSERNAME;
@@ -13,5 +14,5 @@ exports.db = new typeorm_1.DataSource({
     username,
     password,
     database: 'elembrante',
-    entities: [Usuario_1.Usuario]
+    entities: [Usuario_1.Usuario, Token_1.Token]
 });

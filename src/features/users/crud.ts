@@ -1,19 +1,8 @@
+import { bad, internalError, success } from '../httpResponses';
 import { Request, Response } from 'express';
-import { usuarioRepository } from '..';
-import { Usuario } from '../entity/Usuario';
+import { usuarioRepository } from '../..';
+import { Usuario } from '../../entity/Usuario';
 import bcrypt from 'bcrypt';
-
-const internalError = (res: Response) => {
-	return res.status(500).send('Erro interno no servidor.');
-}
-
-const success = (res: Response) => {
-	return res.status(200).send('Operação realizada com sucesso!');
-}
-
-const bad = (res: Response, message: string) => {
-	return res.status(400).send(message);
-}
 
 export const createUser = async (req: Request, res: Response) => {
 	if(!req.body.nome || !req.body.username || !req.body.senha) return bad(res, 'Impossível criar usuário com o objeto enviado.');
