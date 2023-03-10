@@ -55,6 +55,9 @@ export const updateUser = async (req: Request, res: Response) => {
 
 	const savedToken = await tokenRepository.findOneBy({userId: user.id});
 	if(!savedToken) return bad(res, 'Erro: o usuário não possui token de acesso. Autentique-se.');
+
+	const today = new Date();
+	if(today > savedToken.expiraEm) return bad(res, 'Erro: token expirou. Autentique-se novamente.');
 	
 	if(accessToken !== savedToken.accessToken) return unauthorized(res, 'Não autorizado.');
 

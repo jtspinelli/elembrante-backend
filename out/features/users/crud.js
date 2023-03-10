@@ -68,6 +68,9 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const savedToken = yield __1.tokenRepository.findOneBy({ userId: user.id });
     if (!savedToken)
         return (0, httpResponses_1.bad)(res, 'Erro: o usuário não possui token de acesso. Autentique-se.');
+    const today = new Date();
+    if (today > savedToken.expiraEm)
+        return (0, httpResponses_1.bad)(res, 'Erro: token expirou. Autentique-se novamente.');
     if (accessToken !== savedToken.accessToken)
         return (0, httpResponses_2.unauthorized)(res, 'Não autorizado.');
     const nome = req.body.nome;
