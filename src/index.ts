@@ -1,6 +1,8 @@
 import express, { json, Request, Response } from 'express';
 import { createUser, removeUser, updateUser } from './features/users/crud';
 import { authenticateUser } from './features/users/auth';
+import { addLembrete } from './features/lembretes/crud';
+import { Lembrete } from './entity/Lembrete';
 import { Usuario } from './entity/Usuario';
 import { Token } from './entity/Token';
 import { db } from './dataSource';
@@ -15,12 +17,15 @@ app.use(cors());
 
 export const usuarioRepository = db.getRepository(Usuario);
 export const tokenRepository = db.getRepository(Token);
+export const lembreteRepository = db.getRepository(Lembrete);
 
 app.get('/', (_req: Request, res: Response) => res.send('Hello!'));
 app.post('/user', createUser);
 app.put('/user/:id', updateUser);
 app.delete('/user/:id', removeUser);
 app.post('/auth', authenticateUser);
+
+app.post('/lembrete', addLembrete);
 
 db.initialize().then(() => {	
 	app.listen(port, () => console.log("APP RUNNING ON PORT " + port));

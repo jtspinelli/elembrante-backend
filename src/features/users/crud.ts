@@ -70,6 +70,6 @@ export const updateUser = async (req: Request, res: Response) => {
 	user.username = username ?? user.username;
 
 	usuarioRepository.save(user)
-		.then(() => res.status(200).send("okaay"))
+		.then(() => success(res))
 		.catch(() => internalError(res));
 }

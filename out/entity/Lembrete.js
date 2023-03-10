@@ -9,32 +9,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Usuario = void 0;
+exports.Lembrete = void 0;
 const typeorm_1 = require("typeorm");
-const Lembrete_1 = require("./Lembrete");
-let Usuario = class Usuario {
+const Usuario_1 = require("./Usuario");
+let Lembrete = class Lembrete {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Usuario.prototype, "id", void 0);
+], Lembrete.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Usuario.prototype, "nome", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ unique: true }),
-    __metadata("design:type", String)
-], Usuario.prototype, "username", void 0);
+], Lembrete.prototype, "titulo", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Usuario.prototype, "senha", void 0);
+], Lembrete.prototype, "descricao", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Lembrete_1.Lembrete, (lembrete) => lembrete.usuario),
-    __metadata("design:type", Array)
-], Usuario.prototype, "lembretes", void 0);
-Usuario = __decorate([
+    (0, typeorm_1.ManyToOne)(() => Usuario_1.Usuario, (usuario) => usuario.lembretes),
+    __metadata("design:type", Usuario_1.Usuario)
+], Lembrete.prototype, "usuario", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Boolean)
+], Lembrete.prototype, "excluido", void 0);
+Lembrete = __decorate([
     (0, typeorm_1.Entity)()
-], Usuario);
-exports.Usuario = Usuario;
+], Lembrete);
+exports.Lembrete = Lembrete;

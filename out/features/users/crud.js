@@ -81,7 +81,7 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     user.nome = nome !== null && nome !== void 0 ? nome : user.nome;
     user.username = username !== null && username !== void 0 ? username : user.username;
     __1.usuarioRepository.save(user)
-        .then(() => res.status(200).send("okaay"))
+        .then(() => (0, httpResponses_1.success)(res))
         .catch(() => (0, httpResponses_1.internalError)(res));
 });
 exports.updateUser = updateUser;

@@ -26,10 +26,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tokenRepository = exports.usuarioRepository = void 0;
+exports.lembreteRepository = exports.tokenRepository = exports.usuarioRepository = void 0;
 const express_1 = __importStar(require("express"));
 const crud_1 = require("./features/users/crud");
 const auth_1 = require("./features/users/auth");
+const crud_2 = require("./features/lembretes/crud");
+const Lembrete_1 = require("./entity/Lembrete");
 const Usuario_1 = require("./entity/Usuario");
 const Token_1 = require("./entity/Token");
 const dataSource_1 = require("./dataSource");
@@ -41,11 +43,13 @@ app.use((0, express_1.json)());
 app.use((0, cors_1.default)());
 exports.usuarioRepository = dataSource_1.db.getRepository(Usuario_1.Usuario);
 exports.tokenRepository = dataSource_1.db.getRepository(Token_1.Token);
+exports.lembreteRepository = dataSource_1.db.getRepository(Lembrete_1.Lembrete);
 app.get('/', (_req, res) => res.send('Hello!'));
 app.post('/user', crud_1.createUser);
 app.put('/user/:id', crud_1.updateUser);
 app.delete('/user/:id', crud_1.removeUser);
 app.post('/auth', auth_1.authenticateUser);
+app.post('/lembrete', crud_2.addLembrete);
 dataSource_1.db.initialize().then(() => {
     app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
 });
