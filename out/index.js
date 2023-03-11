@@ -58,10 +58,11 @@ app.post('/user', crud_2.createUser);
 app.put('/user/:id', crud_2.updateUser);
 app.delete('/user/:id', crud_2.removeUser);
 app.post('/auth', auth_1.authenticateUser);
+app.post('/lembrete', crud_1.addLembrete);
+app.put('/lembrete/:id', crud_1.updateLembrete);
 app.put('/lembrete/archive/:id', crud_1.archiveLembrete);
 app.put('/lembrete/recover/:id', crud_1.recoverLembrete);
 app.delete('/lembrete/:id', crud_1.removeLembrete);
-app.post('/lembrete', crud_1.addLembrete);
 dataSource_1.db.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {
     app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
 }));

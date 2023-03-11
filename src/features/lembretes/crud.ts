@@ -62,3 +62,17 @@ export const removeLembrete = async (req: Request, res: Response) => {
 		.then(() => success(res))
 		.catch(() => internalError(res));
 }
+
+export const updateLembrete = async (req: Request, res: Response) => {
+	const validation = await validate(req, res, { strings: ['titulo', 'descricao'], numbers: [] }, req.params.id);
+	if(!(validation instanceof ValidatedResponse)) return;
+
+	const lembrete = await lembreteRepository.findOneBy({id: Number(req.params.id)});
+	if(!lembrete) return;
+
+	lembrete.titulo = req.body.titulo;
+	lembrete.descricao = req.body.descricao;
+	lembreteRepository.save(lembrete)
+		.then(() => success(res))
+		.catch(() => internalError(res));
+}

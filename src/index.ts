@@ -1,5 +1,5 @@
 import express, { json, Request, Response } from 'express';
-import { addLembrete, archiveLembrete, recoverLembrete, removeLembrete } from './features/lembretes/crud';
+import { addLembrete, archiveLembrete, recoverLembrete, removeLembrete, updateLembrete } from './features/lembretes/crud';
 import { createUser, removeUser, updateUser } from './features/users/crud';
 import { authenticateUser } from './features/users/auth';
 import { Lembrete } from './entity/Lembrete';
@@ -24,11 +24,12 @@ app.post('/user', createUser);
 app.put('/user/:id', updateUser);
 app.delete('/user/:id', removeUser);
 app.post('/auth', authenticateUser);
+app.post('/lembrete', addLembrete);
+app.put('/lembrete/:id', updateLembrete);
 app.put('/lembrete/archive/:id', archiveLembrete);
 app.put('/lembrete/recover/:id', recoverLembrete);
 app.delete('/lembrete/:id', removeLembrete);
 
-app.post('/lembrete', addLembrete);
 
 db.initialize().then(async () => {	
 	app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
