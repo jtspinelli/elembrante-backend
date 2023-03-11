@@ -16,5 +16,5 @@ export class Lembrete {
 	usuario: Usuario;
 
 	@Column()
-	excluido: boolean;
+	arquivado: boolean;
 }

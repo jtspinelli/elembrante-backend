@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addLembrete = void 0;
+exports.archiveLembrete = exports.addLembrete = void 0;
 const index_1 = require("./../../index");
 const ValidatedResponse_1 = require("../../entity/ValidatedResponse");
 const httpResponses_1 = require("./../httpResponses");
@@ -21,11 +21,11 @@ const getLembrete = (titulo, descricao, usuario) => {
     newLembrete.titulo = titulo;
     newLembrete.descricao = descricao;
     newLembrete.usuario = usuario;
-    newLembrete.excluido = false;
+    newLembrete.arquivado = false;
     return newLembrete;
 };
 const addLembrete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const validation = yield (0, validations_1.validate)(req, res, { strings: ['titulo', 'descricao'], numbers: ['userId'] });
+    const validation = yield (0, validations_1.validate)(req, res, { strings: ['titulo', 'descricao'], numbers: ['userId'] }, null);
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
         return;
     const { titulo, descricao, usuario } = validation;
@@ -35,3 +35,16 @@ const addLembrete = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         .catch(() => (0, httpResponses_1.internalError)(res));
 });
 exports.addLembrete = addLembrete;
+const archiveLembrete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const validation = yield (0, validations_1.validate)(req, res, { strings: [], numbers: [] }, req.params.id);
+    if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
+        return;
+    const lembrete = yield index_1.lembreteRepository.findOneBy({ id: Number(req.params.id) });
+    if (!lembrete)
+        return;
+    lembrete.arquivado = true;
+    index_1.lembreteRepository.save(lembrete)
+        .then(() => (0, httpResponses_2.success)(res))
+        .catch(() => (0, httpResponses_1.internalError)(res));
+});
+exports.archiveLembrete = archiveLembrete;

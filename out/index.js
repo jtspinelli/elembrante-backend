@@ -22,6 +22,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -29,8 +38,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.lembreteRepository = exports.tokenRepository = exports.usuarioRepository = void 0;
 const express_1 = __importStar(require("express"));
 const crud_1 = require("./features/users/crud");
-const auth_1 = require("./features/users/auth");
 const crud_2 = require("./features/lembretes/crud");
+const auth_1 = require("./features/users/auth");
 const Lembrete_1 = require("./entity/Lembrete");
 const Usuario_1 = require("./entity/Usuario");
 const Token_1 = require("./entity/Token");
@@ -49,7 +58,8 @@ app.post('/user', crud_1.createUser);
 app.put('/user/:id', crud_1.updateUser);
 app.delete('/user/:id', crud_1.removeUser);
 app.post('/auth', auth_1.authenticateUser);
+app.post('/lembrete/archive/:id', crud_2.archiveLembrete);
 app.post('/lembrete', crud_2.addLembrete);
-dataSource_1.db.initialize().then(() => {
+dataSource_1.db.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {
     app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
-});
+}));

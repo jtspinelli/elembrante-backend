@@ -9,36 +9,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUser = exports.requiredFieldsAreNotPresent = exports.requiredFieldsArePresent = exports.validate = exports.getTokenValidation = exports.tokenNotPresent = exports.tokenIsPresent = void 0;
+exports.validate = void 0;
 const __1 = require("../..");
+const index_1 = require("./../../index");
 const ValidatedResponse_1 = require("../../entity/ValidatedResponse");
 const httpResponses_1 = require("../httpResponses");
-const tokenIsPresent = (req) => {
-    return req.headers.access_token !== undefined;
-};
-exports.tokenIsPresent = tokenIsPresent;
-const tokenNotPresent = (req) => {
-    return !(0, exports.tokenIsPresent)(req);
-};
-exports.tokenNotPresent = tokenNotPresent;
-const getTokenValidation = (req, userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const today = new Date();
-    const savedToken = yield __1.tokenRepository.findOneBy({ userId });
-    return {
-        userHasValidToken: savedToken && today < savedToken.expiraEm,
-        requestTokenPass: savedToken && req.headers.access_token === savedToken.accessToken
-    };
-});
-exports.getTokenValidation = getTokenValidation;
-const validate = (req, res, requiredFields) => __awaiter(void 0, void 0, void 0, function* () {
-    if ((0, exports.tokenNotPresent)(req))
+const validate = (req, res, requiredFields, lembreteId) => __awaiter(void 0, void 0, void 0, function* () {
+    if (tokenNotPresent(req))
         return (0, httpResponses_1.unauthorized)(res, 'Token não encontrado ou inválido.');
-    if ((0, exports.requiredFieldsAreNotPresent)(req, requiredFields))
+    if (requiredFieldsAreNotPresent(req, requiredFields))
         return (0, httpResponses_1.bad)(res, 'Erro: impossível criar um lembrete com o objeto enviado.');
-    const usuario = yield (0, exports.getUser)(req.body.userId);
+    let lembrete = null;
+    if (lembreteId) {
+        if (isNaN(Number(lembreteId)))
+            return (0, httpResponses_1.bad)(res, 'Erro: o id do lembrete é inválido.');
+        lembrete = yield index_1.lembreteRepository.findOne({
+            where: { id: Number(lembreteId) },
+            relations: { usuario: true }
+        });
+        if (!lembrete)
+            return (0, httpResponses_1.bad)(res, `Erro: o id ${lembreteId} não está vinculado a nenhum lembrete`);
+    }
+    if (!lembrete && !req.body.userId)
+        return (0, httpResponses_1.bad)(res, 'Não foi possível localizar informações do usuário.');
+    const usuario = lembrete ? lembrete.usuario : yield getUser(req.body.userId);
     if (!usuario)
         return (0, httpResponses_1.bad)(res, `Erro: o id ${req.body.userId} não está vinculado a nenhum usuário ativo.`);
-    const tokenValidation = yield (0, exports.getTokenValidation)(req, usuario.id);
+    const tokenValidation = yield getTokenValidation(req, usuario.id);
     if (!tokenValidation.userHasValidToken)
         return (0, httpResponses_1.bad)(res, 'Erro: o usuário não possui token válido. Autentique-se novamente.');
     if (!tokenValidation.requestTokenPass)
@@ -55,6 +52,20 @@ const validate = (req, res, requiredFields) => __awaiter(void 0, void 0, void 0,
     return response;
 });
 exports.validate = validate;
+const tokenIsPresent = (req) => {
+    return req.headers.access_token !== undefined;
+};
+const tokenNotPresent = (req) => {
+    return !tokenIsPresent(req);
+};
+const getTokenValidation = (req, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const today = new Date();
+    const savedToken = yield __1.tokenRepository.findOneBy({ userId });
+    return {
+        userHasValidToken: savedToken && today < savedToken.expiraEm,
+        requestTokenPass: savedToken && req.headers.access_token === savedToken.accessToken
+    };
+});
 const requiredFieldsArePresent = (req, requiredFields) => {
     let result = true;
     requiredFields.strings.forEach(field => {
@@ -72,12 +83,9 @@ const requiredFieldsArePresent = (req, requiredFields) => {
     });
     return result;
 };
-exports.requiredFieldsArePresent = requiredFieldsArePresent;
 const requiredFieldsAreNotPresent = (req, requiredFields) => {
-    return !(0, exports.requiredFieldsArePresent)(req, requiredFields);
+    return !requiredFieldsArePresent(req, requiredFields);
 };
-exports.requiredFieldsAreNotPresent = requiredFieldsAreNotPresent;
 const getUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
     return yield __1.usuarioRepository.findOneBy({ id });
 });
-exports.getUser = getUser;

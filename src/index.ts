@@ -1,7 +1,7 @@
 import express, { json, Request, Response } from 'express';
 import { createUser, removeUser, updateUser } from './features/users/crud';
+import { addLembrete, archiveLembrete } from './features/lembretes/crud';
 import { authenticateUser } from './features/users/auth';
-import { addLembrete } from './features/lembretes/crud';
 import { Lembrete } from './entity/Lembrete';
 import { Usuario } from './entity/Usuario';
 import { Token } from './entity/Token';
@@ -24,9 +24,10 @@ app.post('/user', createUser);
 app.put('/user/:id', updateUser);
 app.delete('/user/:id', removeUser);
 app.post('/auth', authenticateUser);
+app.post('/lembrete/archive/:id', archiveLembrete);
 
 app.post('/lembrete', addLembrete);
 
-db.initialize().then(() => {	
+db.initialize().then(async () => {	
 	app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
 });
