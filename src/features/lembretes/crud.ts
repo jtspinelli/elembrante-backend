@@ -31,13 +31,21 @@ export const addLembrete = async (req: Request, res: Response) => {
 }
 
 export const archiveLembrete = async (req: Request, res: Response) => {
+	setArchive(req, res, true);
+}
+
+export const recoverLembrete = async (req: Request, res: Response) => {
+	setArchive(req, res, false);
+}
+
+export const setArchive = async (req: Request, res: Response, value: boolean) => {
 	const validation = await validate(req, res, {strings: [], numbers: []}, req.params.id);
 	if(!(validation instanceof ValidatedResponse)) return;
 
 	const lembrete = await lembreteRepository.findOneBy({id: Number(req.params.id)});
 	if(!lembrete) return;
 
-	lembrete.arquivado = true;
+	lembrete.arquivado = value;
 	lembreteRepository.save(lembrete)
 		.then(() => success(res))
 		.catch(() => internalError(res));

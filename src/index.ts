@@ -1,6 +1,6 @@
 import express, { json, Request, Response } from 'express';
+import { addLembrete, archiveLembrete, recoverLembrete } from './features/lembretes/crud';
 import { createUser, removeUser, updateUser } from './features/users/crud';
-import { addLembrete, archiveLembrete } from './features/lembretes/crud';
 import { authenticateUser } from './features/users/auth';
 import { Lembrete } from './entity/Lembrete';
 import { Usuario } from './entity/Usuario';
@@ -24,7 +24,8 @@ app.post('/user', createUser);
 app.put('/user/:id', updateUser);
 app.delete('/user/:id', removeUser);
 app.post('/auth', authenticateUser);
-app.post('/lembrete/archive/:id', archiveLembrete);
+app.put('/lembrete/archive/:id', archiveLembrete);
+app.put('/lembrete/recover/:id', recoverLembrete);
 
 app.post('/lembrete', addLembrete);
 
