@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setArchive = exports.recoverLembrete = exports.archiveLembrete = exports.addLembrete = void 0;
+exports.removeLembrete = exports.setArchive = exports.recoverLembrete = exports.archiveLembrete = exports.addLembrete = void 0;
 const index_1 = require("./../../index");
 const ValidatedResponse_1 = require("../../entity/ValidatedResponse");
 const httpResponses_1 = require("./../httpResponses");
@@ -56,3 +56,15 @@ const setArchive = (req, res, value) => __awaiter(void 0, void 0, void 0, functi
         .catch(() => (0, httpResponses_1.internalError)(res));
 });
 exports.setArchive = setArchive;
+const removeLembrete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const validation = yield (0, validations_1.validate)(req, res, { strings: [], numbers: [] }, req.params.id);
+    if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
+        return;
+    const lembrete = yield index_1.lembreteRepository.findOneBy({ id: Number(req.params.id) });
+    if (!lembrete)
+        return;
+    index_1.lembreteRepository.remove(lembrete)
+        .then(() => (0, httpResponses_2.success)(res))
+        .catch(() => (0, httpResponses_1.internalError)(res));
+});
+exports.removeLembrete = removeLembrete;

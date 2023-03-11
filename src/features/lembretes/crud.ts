@@ -50,3 +50,15 @@ export const setArchive = async (req: Request, res: Response, value: boolean) =>
 		.then(() => success(res))
 		.catch(() => internalError(res));
 }
+
+export const removeLembrete = async (req: Request, res: Response) => {
+	const validation = await validate(req, res, {strings: [], numbers: []}, req.params.id);
+	if(!(validation instanceof ValidatedResponse)) return;
+
+	const lembrete = await lembreteRepository.findOneBy({id: Number(req.params.id)});
+	if(!lembrete) return;
+
+	lembreteRepository.remove(lembrete)
+		.then(() => success(res))
+		.catch(() => internalError(res));
+}
