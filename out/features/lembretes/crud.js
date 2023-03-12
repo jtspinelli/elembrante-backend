@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateLembrete = exports.removeLembrete = exports.setArchive = exports.recoverLembrete = exports.archiveLembrete = exports.addLembrete = exports.getLembretes = void 0;
 const index_1 = require("./../../index");
+const LembreteViewModel_1 = require("./../../viewModels/LembreteViewModel");
 const ValidatedResponse_1 = require("../../entity/ValidatedResponse");
 const httpResponses_1 = require("./../httpResponses");
 const Lembrete_1 = require("../../entity/Lembrete");
@@ -30,11 +31,15 @@ const getLembretes = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return;
     const usuario = validation.usuario;
     const lembretes = usuario.lembretes
-        .filter(lembrete => !lembrete.arquivado)
-        .map(lembrete => ({
-        titulo: lembrete.titulo,
-        descricao: lembrete.descricao
-    }));
+        .map(lembrete => {
+        const viewModel = new LembreteViewModel_1.LembreteViewModel();
+        viewModel.id = lembrete.id;
+        viewModel.arquivado = lembrete.arquivado;
+        viewModel.titulo = lembrete.titulo;
+        viewModel.descricao = lembrete.descricao;
+        viewModel.criadoEm = lembrete.criadoEm;
+        return viewModel;
+    });
     return res.status(200).send(lembretes);
 });
 exports.getLembretes = getLembretes;

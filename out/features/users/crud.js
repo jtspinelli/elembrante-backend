@@ -12,12 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.removeUser = exports.createUser = void 0;
+exports.updateUser = exports.removeUser = exports.createUser = exports.userExists = void 0;
 const __1 = require("../..");
 const httpResponses_1 = require("../httpResponses");
 const httpResponses_2 = require("./../httpResponses");
 const Usuario_1 = require("../../entity/Usuario");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const userExists = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const username = req.body.username;
+    if (!username)
+        return;
+    const user = yield __1.usuarioRepository.findOneBy({ username });
+    if (!user)
+        return (0, httpResponses_1.bad)(res, 'Erro: usuário não encontrado.');
+    (0, httpResponses_1.success)(res);
+});
+exports.userExists = userExists;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.nome || !req.body.username || !req.body.senha)
         return (0, httpResponses_1.bad)(res, 'Impossível criar usuário com o objeto enviado.');

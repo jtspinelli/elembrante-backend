@@ -5,6 +5,17 @@ import { unauthorized } from './../httpResponses';
 import { Usuario } from '../../entity/Usuario';
 import bcrypt from 'bcrypt';
 
+export const userExists = async (req: Request, res: Response) => {
+	const username = req.body.username;
+	if(!username) return;
+
+	const user = await usuarioRepository.findOneBy({username});
+
+	if(!user) return bad(res, 'Erro: usuário não encontrado.');
+
+	success(res);
+}
+
 export const createUser = async (req: Request, res: Response) => {
 	if(!req.body.nome || !req.body.username || !req.body.senha) return bad(res, 'Impossível criar usuário com o objeto enviado.');
 

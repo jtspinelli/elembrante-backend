@@ -54,6 +54,7 @@ exports.usuarioRepository = dataSource_1.db.getRepository(Usuario_1.Usuario);
 exports.tokenRepository = dataSource_1.db.getRepository(Token_1.Token);
 exports.lembreteRepository = dataSource_1.db.getRepository(Lembrete_1.Lembrete);
 app.get('/', (_req, res) => res.send("Hello"));
+app.post('/checkuser', crud_2.userExists);
 app.post('/user', crud_2.createUser);
 app.put('/user/:id', crud_2.updateUser);
 app.delete('/user/:id', crud_2.removeUser);

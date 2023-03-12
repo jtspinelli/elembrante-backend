@@ -1,7 +1,8 @@
 import { lembreteRepository } from './../../index';
+import { LembreteViewModel } from './../../viewModels/LembreteViewModel';
 import { ValidatedResponse } from '../../entity/ValidatedResponse';
 import { Request, Response } from 'express';
-import {  internalError } from './../httpResponses';
+import { internalError } from './../httpResponses';
 import { Lembrete } from '../../entity/Lembrete';
 import { validate } from './validations';
 import { success } from '../httpResponses';
@@ -23,11 +24,16 @@ export const getLembretes = async (req: Request, res: Response) => {
 
 	const usuario = validation.usuario;
 	const lembretes = usuario.lembretes
-		.filter(lembrete => !lembrete.arquivado)
-		.map(lembrete => ({
-			titulo: lembrete.titulo,
-			descricao: lembrete.descricao
-		}));
+		.map(lembrete => {
+			const viewModel = new LembreteViewModel();
+			viewModel.id = lembrete.id;
+			viewModel.arquivado = lembrete.arquivado;
+			viewModel.titulo = lembrete.titulo;
+			viewModel.descricao = lembrete.descricao;
+			viewModel.criadoEm = lembrete.criadoEm;
+
+			return viewModel;
+		})
 
 	return res.status(200).send(lembretes);
 }

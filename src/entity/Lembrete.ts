@@ -17,4 +17,7 @@ export class Lembrete {
 
 	@Column()
 	arquivado: boolean;
+
+	@Column()
+	criadoEm: Date;
 }

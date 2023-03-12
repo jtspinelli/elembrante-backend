@@ -34,6 +34,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Boolean)
 ], Lembrete.prototype, "arquivado", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Date)
+], Lembrete.prototype, "criadoEm", void 0);
 Lembrete = __decorate([
     (0, typeorm_1.Entity)()
 ], Lembrete);
