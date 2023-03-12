@@ -21,9 +21,15 @@ export const getLembretes = async (req: Request, res: Response) => {
 	const validation = await validate(req, res, { strings: [], numbers: []}, null);
 	if(!(validation instanceof ValidatedResponse)) return;
 
-	const usuario = validation.usuario;	
+	const usuario = validation.usuario;
+	const lembretes = usuario.lembretes
+		.filter(lembrete => !lembrete.arquivado)
+		.map(lembrete => ({
+			titulo: lembrete.titulo,
+			descricao: lembrete.descricao
+		}));
 
-	return res.status(200).send(usuario.lembretes);
+	return res.status(200).send(lembretes);
 }
 
 export const addLembrete = async (req: Request, res: Response) => {

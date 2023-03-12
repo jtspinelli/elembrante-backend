@@ -29,7 +29,13 @@ const getLembretes = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
         return;
     const usuario = validation.usuario;
-    return res.status(200).send(usuario.lembretes);
+    const lembretes = usuario.lembretes
+        .filter(lembrete => !lembrete.arquivado)
+        .map(lembrete => ({
+        titulo: lembrete.titulo,
+        descricao: lembrete.descricao
+    }));
+    return res.status(200).send(lembretes);
 });
 exports.getLembretes = getLembretes;
 const addLembrete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
