@@ -8,13 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validate = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const __1 = require("../..");
 const index_1 = require("./../../index");
 const ValidatedResponse_1 = require("../../entity/ValidatedResponse");
 const httpResponses_1 = require("../httpResponses");
 const validate = (req, res, requiredFields, lembreteId) => __awaiter(void 0, void 0, void 0, function* () {
+    const secret = process.env.SECRET;
+    if (!secret)
+        return;
     if (tokenNotPresent(req))
         return (0, httpResponses_1.unauthorized)(res, 'Token não encontrado ou inválido.');
     if (requiredFieldsAreNotPresent(req, requiredFields))
@@ -30,26 +37,34 @@ const validate = (req, res, requiredFields, lembreteId) => __awaiter(void 0, voi
         if (!lembrete)
             return (0, httpResponses_1.bad)(res, `Erro: o id ${lembreteId} não está vinculado a nenhum lembrete`);
     }
-    if (!lembrete && !req.body.userId)
-        return (0, httpResponses_1.bad)(res, 'Não foi possível localizar informações do usuário.');
-    const usuario = lembrete ? lembrete.usuario : yield getUser(req.body.userId);
-    if (!usuario)
-        return (0, httpResponses_1.bad)(res, `Erro: o id ${req.body.userId} não está vinculado a nenhum usuário ativo.`);
-    const tokenValidation = yield getTokenValidation(req, usuario.id);
-    if (!tokenValidation.userHasValidToken)
-        return (0, httpResponses_1.bad)(res, 'Erro: o usuário não possui token válido. Autentique-se novamente.');
-    if (!tokenValidation.requestTokenPass)
-        return (0, httpResponses_1.unauthorized)(res, 'Erro: não autorizado.');
-    const response = new ValidatedResponse_1.ValidatedResponse();
-    response.pass = true;
-    if (usuario)
-        response.usuario = usuario;
-    requiredFields.strings.forEach(field => {
-        eval(`
-			response.${field} = req.body.${field};
-		`);
-    });
-    return response;
+    try {
+        const payload = jsonwebtoken_1.default.verify(req.headers.access_token, secret);
+        const username = payload.username;
+        const usuario = yield __1.usuarioRepository.findOne({
+            where: { username: username },
+            relations: { lembretes: true }
+        });
+        if (!usuario)
+            return (0, httpResponses_1.bad)(res, 'Usuário não encontrado');
+        const tokenValidation = yield getTokenValidation(req, usuario);
+        if (!tokenValidation.userHasValidToken)
+            return (0, httpResponses_1.bad)(res, 'Erro: o usuário não possui token válido. Autentique-se novamente.');
+        if (!tokenValidation.requestTokenPass)
+            return (0, httpResponses_1.unauthorized)(res, 'Erro: não autorizado.');
+        const response = new ValidatedResponse_1.ValidatedResponse();
+        response.pass = true;
+        if (usuario)
+            response.usuario = usuario;
+        requiredFields.strings.forEach(field => {
+            eval(`
+				response.${field} = req.body.${field};
+			`);
+        });
+        return response;
+    }
+    catch (err) {
+        return (0, httpResponses_1.bad)(res, 'Token inválido.');
+    }
 });
 exports.validate = validate;
 const tokenIsPresent = (req) => {
@@ -58,9 +73,9 @@ const tokenIsPresent = (req) => {
 const tokenNotPresent = (req) => {
     return !tokenIsPresent(req);
 };
-const getTokenValidation = (req, userId) => __awaiter(void 0, void 0, void 0, function* () {
+const getTokenValidation = (req, usuario) => __awaiter(void 0, void 0, void 0, function* () {
     const today = new Date();
-    const savedToken = yield __1.tokenRepository.findOneBy({ userId });
+    const savedToken = yield __1.tokenRepository.findOneBy({ userId: usuario.id });
     return {
         userHasValidToken: savedToken && today < savedToken.expiraEm,
         requestTokenPass: savedToken && req.headers.access_token === savedToken.accessToken

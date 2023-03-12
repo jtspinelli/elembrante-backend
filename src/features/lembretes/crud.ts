@@ -1,7 +1,7 @@
 import { lembreteRepository } from './../../index';
 import { ValidatedResponse } from '../../entity/ValidatedResponse';
 import { Request, Response } from 'express';
-import { internalError } from './../httpResponses';
+import {  internalError } from './../httpResponses';
 import { Lembrete } from '../../entity/Lembrete';
 import { validate } from './validations';
 import { success } from '../httpResponses';
@@ -17,8 +17,17 @@ const getLembrete = (titulo: string, descricao: string, usuario: Usuario) => {
 	return newLembrete;
 }
 
+export const getLembretes = async (req: Request, res: Response) => {
+	const validation = await validate(req, res, { strings: [], numbers: []}, null);
+	if(!(validation instanceof ValidatedResponse)) return;
+
+	const usuario = validation.usuario;	
+
+	return res.status(200).send(usuario.lembretes);
+}
+
 export const addLembrete = async (req: Request, res: Response) => {
-	const validation = await validate(req, res, { strings: ['titulo', 'descricao'], numbers: ['userId']}, null);
+	const validation = await validate(req, res, { strings: ['titulo', 'descricao'], numbers: []}, null);
 	if(!(validation instanceof ValidatedResponse)) return;
 
 	const { titulo, descricao, usuario } = validation;

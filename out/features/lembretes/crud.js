@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateLembrete = exports.removeLembrete = exports.setArchive = exports.recoverLembrete = exports.archiveLembrete = exports.addLembrete = void 0;
+exports.updateLembrete = exports.removeLembrete = exports.setArchive = exports.recoverLembrete = exports.archiveLembrete = exports.addLembrete = exports.getLembretes = void 0;
 const index_1 = require("./../../index");
 const ValidatedResponse_1 = require("../../entity/ValidatedResponse");
 const httpResponses_1 = require("./../httpResponses");
@@ -24,8 +24,16 @@ const getLembrete = (titulo, descricao, usuario) => {
     newLembrete.arquivado = false;
     return newLembrete;
 };
+const getLembretes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const validation = yield (0, validations_1.validate)(req, res, { strings: [], numbers: [] }, null);
+    if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
+        return;
+    const usuario = validation.usuario;
+    return res.status(200).send(usuario.lembretes);
+});
+exports.getLembretes = getLembretes;
 const addLembrete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const validation = yield (0, validations_1.validate)(req, res, { strings: ['titulo', 'descricao'], numbers: ['userId'] }, null);
+    const validation = yield (0, validations_1.validate)(req, res, { strings: ['titulo', 'descricao'], numbers: [] }, null);
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
         return;
     const { titulo, descricao, usuario } = validation;
