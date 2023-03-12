@@ -14,17 +14,6 @@ export const validate = async (req: Request, res: Response, requiredFields: { st
 	if(tokenNotPresent(req)) return unauthorized(res, 'Token não encontrado ou inválido.');
 	if(requiredFieldsAreNotPresent(req, requiredFields)) return bad(res, 'Erro: impossível criar um lembrete com o objeto enviado.');
 	
-	let lembrete: Lembrete | null = null;
-	if(lembreteId) {
-		if(isNaN(Number(lembreteId))) return bad(res, 'Erro: o id do lembrete é inválido.');
-
-		lembrete = await lembreteRepository.findOne({
-			where: { id: Number(lembreteId) },
-			relations: { usuario: true }
-		});
-
-		if(!lembrete) return bad(res, `Erro: o id ${lembreteId} não está vinculado a nenhum lembrete`);
-	}
 
 	try {
 		const payload = jwt.verify(req.headers.access_token as string, secret);
@@ -34,6 +23,20 @@ export const validate = async (req: Request, res: Response, requiredFields: { st
 			relations: { lembretes: true }
 		});
 		if(!usuario) return bad(res, 'Usuário não encontrado');
+
+		let lembrete: Lembrete | null = null;
+		if(lembreteId) {
+			if(isNaN(Number(lembreteId))) return bad(res, 'Erro: o id do lembrete é inválido.');
+
+			lembrete = await lembreteRepository.findOne({
+				where: { id: Number(lembreteId) },
+				relations: { usuario: true }
+			});
+
+			if(!lembrete) return bad(res, `Erro: o id ${lembreteId} não está vinculado a nenhum lembrete`);
+		}
+
+		if(lembrete && lembrete.usuario.id !== usuario.id) return unauthorized(res, 'Erro: não autorizado.');
 
 		const tokenValidation = await getTokenValidation(req, usuario);
 		if(!tokenValidation.userHasValidToken) return bad(res, 'Erro: o usuário não possui token válido. Autentique-se novamente.');

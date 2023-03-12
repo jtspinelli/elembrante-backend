@@ -26,17 +26,6 @@ const validate = (req, res, requiredFields, lembreteId) => __awaiter(void 0, voi
         return (0, httpResponses_1.unauthorized)(res, 'Token não encontrado ou inválido.');
     if (requiredFieldsAreNotPresent(req, requiredFields))
         return (0, httpResponses_1.bad)(res, 'Erro: impossível criar um lembrete com o objeto enviado.');
-    let lembrete = null;
-    if (lembreteId) {
-        if (isNaN(Number(lembreteId)))
-            return (0, httpResponses_1.bad)(res, 'Erro: o id do lembrete é inválido.');
-        lembrete = yield index_1.lembreteRepository.findOne({
-            where: { id: Number(lembreteId) },
-            relations: { usuario: true }
-        });
-        if (!lembrete)
-            return (0, httpResponses_1.bad)(res, `Erro: o id ${lembreteId} não está vinculado a nenhum lembrete`);
-    }
     try {
         const payload = jsonwebtoken_1.default.verify(req.headers.access_token, secret);
         const username = payload.username;
@@ -46,6 +35,19 @@ const validate = (req, res, requiredFields, lembreteId) => __awaiter(void 0, voi
         });
         if (!usuario)
             return (0, httpResponses_1.bad)(res, 'Usuário não encontrado');
+        let lembrete = null;
+        if (lembreteId) {
+            if (isNaN(Number(lembreteId)))
+                return (0, httpResponses_1.bad)(res, 'Erro: o id do lembrete é inválido.');
+            lembrete = yield index_1.lembreteRepository.findOne({
+                where: { id: Number(lembreteId) },
+                relations: { usuario: true }
+            });
+            if (!lembrete)
+                return (0, httpResponses_1.bad)(res, `Erro: o id ${lembreteId} não está vinculado a nenhum lembrete`);
+        }
+        if (lembrete && lembrete.usuario.id !== usuario.id)
+            return (0, httpResponses_1.unauthorized)(res, 'Erro: não autorizado.');
         const tokenValidation = yield getTokenValidation(req, usuario);
         if (!tokenValidation.userHasValidToken)
             return (0, httpResponses_1.bad)(res, 'Erro: o usuário não possui token válido. Autentique-se novamente.');
