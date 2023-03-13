@@ -8,11 +8,12 @@ import { validate } from './validations';
 import { success } from '../httpResponses';
 import { Usuario } from '../../entity/Usuario';
 
-const getLembrete = (titulo: string, descricao: string, usuario: Usuario) => {
+const getLembrete = (titulo: string, descricao: string, criadoEm: Date, usuario: Usuario) => {
 	const newLembrete = new Lembrete();
 	newLembrete.titulo = titulo;
 	newLembrete.descricao = descricao;
 	newLembrete.usuario = usuario;
+	newLembrete.criadoEm = criadoEm;
 	newLembrete.arquivado = false;
 
 	return newLembrete;
@@ -39,16 +40,19 @@ export const getLembretes = async (req: Request, res: Response) => {
 }
 
 export const addLembrete = async (req: Request, res: Response) => {
-	const validation = await validate(req, res, { strings: ['titulo', 'descricao'], numbers: []}, null);
+	const validation = await validate(req, res, { strings: ['titulo', 'descricao', 'criadoEm'], numbers: []}, null);
 	if(!(validation instanceof ValidatedResponse)) return;
 
-	const { titulo, descricao, usuario } = validation;
+	const { titulo, descricao, criadoEm, usuario } = validation;
 
-	const newLembrete = getLembrete(titulo, descricao, usuario);
+	const newLembrete = getLembrete(titulo, descricao, criadoEm, usuario);	
 
 	lembreteRepository.save(newLembrete)
-		.then(() => success(res))
-		.catch(() => internalError(res));
+		.then((lembrete: Lembrete) => res.status(200).send(lembrete))
+		.catch((err) => {
+			console.log(err);
+			internalError(res);
+		});
 }
 
 export const archiveLembrete = async (req: Request, res: Response) => {
@@ -94,6 +98,6 @@ export const updateLembrete = async (req: Request, res: Response) => {
 	lembrete.titulo = req.body.titulo;
 	lembrete.descricao = req.body.descricao;
 	lembreteRepository.save(lembrete)
-		.then(() => success(res))
+		.then((lembrete: Lembrete) => res.status(200).send(lembrete))
 		.catch(() => internalError(res));
 }

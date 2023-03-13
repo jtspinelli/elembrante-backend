@@ -83,7 +83,7 @@ const requiredFieldsArePresent = (req: Request, requiredFields: { strings: strin
 		eval(`
 			const ${field} = req.body.${field};
 
-			if(!${field}) result = false;
+			if(${field} === undefined) result = false;
 		`);
 	});
 

@@ -17,11 +17,12 @@ const httpResponses_1 = require("./../httpResponses");
 const Lembrete_1 = require("../../entity/Lembrete");
 const validations_1 = require("./validations");
 const httpResponses_2 = require("../httpResponses");
-const getLembrete = (titulo, descricao, usuario) => {
+const getLembrete = (titulo, descricao, criadoEm, usuario) => {
     const newLembrete = new Lembrete_1.Lembrete();
     newLembrete.titulo = titulo;
     newLembrete.descricao = descricao;
     newLembrete.usuario = usuario;
+    newLembrete.criadoEm = criadoEm;
     newLembrete.arquivado = false;
     return newLembrete;
 };
@@ -44,14 +45,17 @@ const getLembretes = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.getLembretes = getLembretes;
 const addLembrete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const validation = yield (0, validations_1.validate)(req, res, { strings: ['titulo', 'descricao'], numbers: [] }, null);
+    const validation = yield (0, validations_1.validate)(req, res, { strings: ['titulo', 'descricao', 'criadoEm'], numbers: [] }, null);
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
         return;
-    const { titulo, descricao, usuario } = validation;
-    const newLembrete = getLembrete(titulo, descricao, usuario);
+    const { titulo, descricao, criadoEm, usuario } = validation;
+    const newLembrete = getLembrete(titulo, descricao, criadoEm, usuario);
     index_1.lembreteRepository.save(newLembrete)
-        .then(() => (0, httpResponses_2.success)(res))
-        .catch(() => (0, httpResponses_1.internalError)(res));
+        .then((lembrete) => res.status(200).send(lembrete))
+        .catch((err) => {
+        console.log(err);
+        (0, httpResponses_1.internalError)(res);
+    });
 });
 exports.addLembrete = addLembrete;
 const archiveLembrete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -97,7 +101,7 @@ const updateLembrete = (req, res) => __awaiter(void 0, void 0, void 0, function*
     lembrete.titulo = req.body.titulo;
     lembrete.descricao = req.body.descricao;
     index_1.lembreteRepository.save(lembrete)
-        .then(() => (0, httpResponses_2.success)(res))
+        .then((lembrete) => res.status(200).send(lembrete))
         .catch(() => (0, httpResponses_1.internalError)(res));
 });
 exports.updateLembrete = updateLembrete;
