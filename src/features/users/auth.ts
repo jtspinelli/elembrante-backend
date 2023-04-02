@@ -6,6 +6,7 @@ import { tokenRepository } from './../../index';
 import { Usuario } from '../../entity/Usuario';
 import axios, { AxiosResponse } from 'axios';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 export const authenticateUser = async (req: Request, res: Response) => {
 	const secret = process.env.SECRET;

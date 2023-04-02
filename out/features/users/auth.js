@@ -20,6 +20,7 @@ const index_1 = require("./../../index");
 const Usuario_1 = require("../../entity/Usuario");
 const axios_1 = __importDefault(require("axios"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const crypto_1 = __importDefault(require("crypto"));
 const authenticateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const secret = process.env.SECRET;
     if (!secret)
@@ -73,7 +74,7 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         if (validToken)
             return AuthenticationService_1.AuthenticationService.returnToken(savedToken, user, res);
     }
-    bcrypt_1.default.hash(crypto.randomUUID(), 10, (err, hash) => {
+    bcrypt_1.default.hash(crypto_1.default.randomUUID(), 10, (err, hash) => {
         if (err)
             return (0, httpResponses_1.internalError)(res);
         const newUser = new Usuario_1.Usuario();
