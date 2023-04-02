@@ -65,6 +65,7 @@ app.put('/lembrete/:id', crud_1.updateLembrete);
 app.put('/lembrete/archive/:id', crud_1.archiveLembrete);
 app.put('/lembrete/recover/:id', crud_1.recoverLembrete);
 app.delete('/lembrete/:id', crud_1.removeLembrete);
+app.post('/googlelogin', auth_1.googleLogin);
 dataSource_1.db.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {
     app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
 }));

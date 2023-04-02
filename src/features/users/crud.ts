@@ -22,6 +22,10 @@ export const createUser = async (req: Request, res: Response) => {
 	bcrypt.hash(req.body.senha, 10, (err, hash) => {
 		if(err) return internalError(res);
 
+		if(req.body.username.includes('@')){
+			return bad(res, 'Para registrar-se com email utilize o loggin via Google');
+		}
+
 		const newUser = new Usuario();
 		newUser.nome = req.body.nome;
 		newUser.username = req.body.username;
@@ -29,7 +33,13 @@ export const createUser = async (req: Request, res: Response) => {
 
 		usuarioRepository.save(newUser)
 			.then(() => success(res))
-			.catch(() => internalError(res));
+			.catch((e) => {
+				if(e.message.includes('Duplicate entry') && e.message.includes('usuario.username')){
+					return bad(res, 'Nome de usuário não disponível');
+				}
+				
+				internalError(res);
+			});
 	});
 }
 

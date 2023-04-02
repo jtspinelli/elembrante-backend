@@ -34,13 +34,21 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     bcrypt_1.default.hash(req.body.senha, 10, (err, hash) => {
         if (err)
             return (0, httpResponses_1.internalError)(res);
+        if (req.body.username.includes('@')) {
+            return (0, httpResponses_1.bad)(res, 'Para registrar-se com email utilize o loggin via Google');
+        }
         const newUser = new Usuario_1.Usuario();
         newUser.nome = req.body.nome;
         newUser.username = req.body.username;
         newUser.senha = hash;
         __1.usuarioRepository.save(newUser)
             .then(() => (0, httpResponses_1.success)(res))
-            .catch(() => (0, httpResponses_1.internalError)(res));
+            .catch((e) => {
+            if (e.message.includes('Duplicate entry') && e.message.includes('usuario.username')) {
+                return (0, httpResponses_1.bad)(res, 'Nome de usuário não disponível');
+            }
+            (0, httpResponses_1.internalError)(res);
+        });
     });
 });
 exports.createUser = createUser;
