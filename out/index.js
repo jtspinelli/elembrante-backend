@@ -56,7 +56,6 @@ app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 app.use((0, express_1.json)());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: 'htpps://localhost:3000',
     credentials: true
 }));
 // const server = https.createServer({key, cert}, app);
