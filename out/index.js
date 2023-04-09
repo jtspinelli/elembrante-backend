@@ -56,16 +56,13 @@ app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 app.use((0, express_1.json)());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
+    origin: 'htpps://localhost:3000',
     credentials: true
 }));
 // const server = https.createServer({key, cert}, app);
 exports.usuarioRepository = dataSource_1.db.getRepository(Usuario_1.Usuario);
 exports.tokenRepository = dataSource_1.db.getRepository(Token_1.Token);
 exports.lembreteRepository = dataSource_1.db.getRepository(Lembrete_1.Lembrete);
-app.get('/', (req, res) => {
-    res.sendFile(path_1.default.join(__dirname, "public", "index.html"));
-});
-app.get('/', (_req, res) => res.send("Hello"));
 app.post('/checkuser', crud_2.userExists);
 app.post('/user', crud_2.createUser);
 app.put('/user/:id', crud_2.updateUser);
@@ -78,6 +75,9 @@ app.put('/lembrete/archive/:id', crud_1.archiveLembrete);
 app.put('/lembrete/recover/:id', crud_1.recoverLembrete);
 app.delete('/lembrete/:id', crud_1.removeLembrete);
 app.post('/googlelogin', auth_1.googleLogin);
+app.get('*', (req, res) => {
+    res.sendFile(path_1.default.join(__dirname, "public", "index.html"));
+});
 dataSource_1.db.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {
     app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
     // server.listen(port, () => console.log("APP RUNNING ON PORT " + port));

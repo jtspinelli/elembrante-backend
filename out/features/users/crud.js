@@ -18,6 +18,7 @@ const httpResponses_1 = require("../httpResponses");
 const httpResponses_2 = require("./../httpResponses");
 const Usuario_1 = require("../../entity/Usuario");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const AuthenticationService_1 = require("../../services/AuthenticationService");
 const userExists = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const username = req.body.username;
     if (!username)
@@ -42,7 +43,12 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         newUser.username = req.body.username;
         newUser.senha = hash;
         __1.usuarioRepository.save(newUser)
-            .then(() => (0, httpResponses_1.success)(res))
+            .then(() => __awaiter(void 0, void 0, void 0, function* () {
+            const data = yield AuthenticationService_1.AuthenticationService.createOrUpdateToken(newUser);
+            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
+            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.sign);
+            (0, httpResponses_1.success)(res);
+        }))
             .catch((e) => {
             if (e.message.includes('Duplicate entry') && e.message.includes('usuario.username')) {
                 return (0, httpResponses_1.bad)(res, 'Nome de usuário não disponível');

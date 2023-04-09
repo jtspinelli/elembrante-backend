@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { unauthorized } from './../httpResponses';
 import { Usuario } from '../../entity/Usuario';
 import bcrypt from 'bcrypt';
+import { AuthenticationService } from '../../services/AuthenticationService';
 
 export const userExists = async (req: Request, res: Response) => {
 	const username = req.body.username;
@@ -32,7 +33,12 @@ export const createUser = async (req: Request, res: Response) => {
 		newUser.senha = hash;
 
 		usuarioRepository.save(newUser)
-			.then(() => success(res))
+			.then(async () => {
+				const data = await AuthenticationService.createOrUpdateToken(newUser);
+				res.setHeader('Set-Cookie', data?.headerPayload as string);
+				res.setHeader('Set-Cookie', data?.sign as string);
+				success(res);
+			})
 			.catch((e) => {
 				if(e.message.includes('Duplicate entry') && e.message.includes('usuario.username')){
 					return bad(res, 'Nome de usuário não disponível');

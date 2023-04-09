@@ -22,6 +22,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(json());
 app.use(cookieParser());
 app.use(cors({
+	origin: 'htpps://localhost:3000',
 	credentials: true
 }));
 
@@ -31,10 +32,6 @@ export const usuarioRepository = db.getRepository(Usuario);
 export const tokenRepository = db.getRepository(Token);
 export const lembreteRepository = db.getRepository(Lembrete);
 
-app.get('/', (req: Request, res:Response) => {
-	res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-app.get('/', (_req: Request, res: Response) => res.send("Hello"));
 app.post('/checkuser', userExists);
 app.post('/user', createUser);
 app.put('/user/:id', updateUser);
@@ -47,6 +44,9 @@ app.put('/lembrete/archive/:id', archiveLembrete);
 app.put('/lembrete/recover/:id', recoverLembrete);
 app.delete('/lembrete/:id', removeLembrete);
 app.post('/googlelogin', googleLogin)
+app.get('*', (req: Request, res:Response) => {
+	res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 db.initialize().then(async () => {
 	app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
