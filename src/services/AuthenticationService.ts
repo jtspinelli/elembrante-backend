@@ -36,7 +36,7 @@ export class AuthenticationService {
 				(_err, jwtToken) => {
 					const sign = serialize('sign', (jwtToken as string).split('.')[2], {
 						httpOnly: true,
-						secure: true,
+						secure: process.env.NODE_ENV === "production",
 						sameSite: 'none',						
 						maxAge: 600,
 						path: '/',

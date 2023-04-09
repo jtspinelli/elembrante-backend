@@ -31,7 +31,7 @@ class AuthenticationService {
             }, (_err, jwtToken) => {
                 const sign = (0, cookie_1.serialize)('sign', jwtToken.split('.')[2], {
                     httpOnly: true,
-                    secure: true,
+                    secure: process.env.NODE_ENV === "production",
                     sameSite: 'none',
                     maxAge: 600,
                     path: '/',
