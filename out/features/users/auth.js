@@ -16,7 +16,6 @@ exports.googleLogin = exports.authenticateUser = void 0;
 const httpResponses_1 = require("../httpResponses");
 const AuthenticationService_1 = require("../../services/AuthenticationService");
 const __1 = require("../..");
-const index_1 = require("./../../index");
 const Usuario_1 = require("../../entity/Usuario");
 const axios_1 = __importDefault(require("axios"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -52,20 +51,15 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         .then(data => data)
         .catch(e => e);
     if (googleResponse.status !== 200)
-        return (0, httpResponses_1.bad)(res, 'Token inválido.');
+        return (0, httpResponses_1.bad)(res, 'Google Token inválido.');
     const user = yield __1.usuarioRepository.findOneBy({ username: googleResponse.data.email });
     if (user) {
-        const savedToken = yield index_1.tokenRepository.findOneBy({ userId: user.id });
-        const today = new Date();
-        const savedTokenExpired = savedToken && today > savedToken.expiraEm;
-        if (!savedToken || savedTokenExpired) {
-            const data = yield AuthenticationService_1.AuthenticationService.createOrUpdateToken(user);
-            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
-            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.sign);
-            if (data)
-                return res.status(200).send(data);
-            return (0, httpResponses_1.internalError)(res);
-        }
+        const data = yield AuthenticationService_1.AuthenticationService.createOrUpdateToken(user);
+        res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
+        res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.sign);
+        if (data)
+            return res.status(200).send(data);
+        return (0, httpResponses_1.internalError)(res);
     }
     bcrypt_1.default.hash(crypto_1.default.randomUUID(), 10, (err, hash) => {
         if (err)
@@ -77,6 +71,8 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         __1.usuarioRepository.save(newUser)
             .then(() => __awaiter(void 0, void 0, void 0, function* () {
             const data = yield AuthenticationService_1.AuthenticationService.createOrUpdateToken(newUser);
+            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
+            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.sign);
             if (data)
                 return res.status(200).send(data);
             return (0, httpResponses_1.internalError)(res);

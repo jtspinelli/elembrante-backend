@@ -38,22 +38,16 @@ export const googleLogin = async (req: Request, res: Response) => {
 	const googleResponse: AxiosResponse<any, any> = await axios.get(url)
 		.then(data => data)
 		.catch(e => e);
-	if(googleResponse.status !== 200) return bad(res, 'Token inválido.');
+	if(googleResponse.status !== 200) return bad(res, 'Google Token inválido.');
 
 	const user = await usuarioRepository.findOneBy({username: googleResponse.data.email});
 
 	if(user) {
-		const savedToken = await tokenRepository.findOneBy({userId: user.id});
-		const today = new Date();
-		const savedTokenExpired = savedToken && today > savedToken.expiraEm;
-
-		if(!savedToken || savedTokenExpired) {
-			const data = await AuthenticationService.createOrUpdateToken(user);
-			res.setHeader('Set-Cookie', data?.headerPayload as string);
-			res.setHeader('Set-Cookie', data?.sign as string);
-			if(data) return res.status(200).send(data);
-			return internalError(res);
-		}
+		const data = await AuthenticationService.createOrUpdateToken(user);
+		res.setHeader('Set-Cookie', data?.headerPayload as string);
+		res.setHeader('Set-Cookie', data?.sign as string);
+		if(data) return res.status(200).send(data);
+		return internalError(res);
 	}
 
 	bcrypt.hash(crypto.randomUUID(), 10, (err, hash) => {
@@ -67,6 +61,8 @@ export const googleLogin = async (req: Request, res: Response) => {
 		usuarioRepository.save(newUser)
 			.then(async () => {
 				const data = await AuthenticationService.createOrUpdateToken(newUser);
+				res.setHeader('Set-Cookie', data?.headerPayload as string);
+				res.setHeader('Set-Cookie', data?.sign as string);
 				if(data) return res.status(200).send(data);
 				return internalError(res);
 			})
