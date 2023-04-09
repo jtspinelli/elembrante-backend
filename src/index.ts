@@ -6,10 +6,11 @@ import { Lembrete } from './entity/Lembrete';
 import { Usuario } from './entity/Usuario';
 import { Token } from './entity/Token';
 import { db } from './dataSource';
+import path from 'path';
 import "reflect-metadata";
-// import fs from 'fs';
+import fs from 'fs';
 import cors from 'cors';
-// import https from 'https';
+import https from 'https';
 import cookieParser from 'cookie-parser';
 
 const port = process.env.PORT || 8081;
@@ -17,10 +18,11 @@ const port = process.env.PORT || 8081;
 // const cert = fs.readFileSync(__dirname + '/cert/localhost.crt');
 
 const app = express();
+app.use(express.static(path.join(__dirname, "public")));
 app.use(json());
 app.use(cookieParser());
 app.use(cors({
-	origin: ['https://localhost:3000', 'https://elembrante.vercel.app'],
+	// origin: 'https://localhost:3000',
 	credentials: true
 }));
 
@@ -30,6 +32,9 @@ export const usuarioRepository = db.getRepository(Usuario);
 export const tokenRepository = db.getRepository(Token);
 export const lembreteRepository = db.getRepository(Lembrete);
 
+app.get('/', (req: Request, res:Response) => {
+	res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 app.get('/', (_req: Request, res: Response) => res.send("Hello"));
 app.post('/checkuser', userExists);
 app.post('/user', createUser);

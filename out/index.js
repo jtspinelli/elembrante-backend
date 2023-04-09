@@ -44,25 +44,28 @@ const Lembrete_1 = require("./entity/Lembrete");
 const Usuario_1 = require("./entity/Usuario");
 const Token_1 = require("./entity/Token");
 const dataSource_1 = require("./dataSource");
+const path_1 = __importDefault(require("path"));
 require("reflect-metadata");
-// import fs from 'fs';
 const cors_1 = __importDefault(require("cors"));
-// import https from 'https';
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const port = process.env.PORT || 8081;
 // const key = fs.readFileSync(__dirname + '/cert/localhost.key');
 // const cert = fs.readFileSync(__dirname + '/cert/localhost.crt');
 const app = (0, express_1.default)();
+app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 app.use((0, express_1.json)());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: ['https://localhost:3000', 'https://elembrante.vercel.app'],
+    // origin: 'https://localhost:3000',
     credentials: true
 }));
 // const server = https.createServer({key, cert}, app);
 exports.usuarioRepository = dataSource_1.db.getRepository(Usuario_1.Usuario);
 exports.tokenRepository = dataSource_1.db.getRepository(Token_1.Token);
 exports.lembreteRepository = dataSource_1.db.getRepository(Lembrete_1.Lembrete);
+app.get('/', (req, res) => {
+    res.sendFile(path_1.default.join(__dirname, "public", "index.html"));
+});
 app.get('/', (_req, res) => res.send("Hello"));
 app.post('/checkuser', crud_2.userExists);
 app.post('/user', crud_2.createUser);
