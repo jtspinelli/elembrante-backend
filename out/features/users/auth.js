@@ -37,18 +37,12 @@ const authenticateUser = (req, res) => __awaiter(void 0, void 0, void 0, functio
     const senhaIsCorrect = yield AuthenticationService_1.AuthenticationService.checkSenha(senha, user.senha);
     if (!senhaIsCorrect)
         return (0, httpResponses_1.unauthorized)(res, 'Err: usuário e/ou senha incorretos.');
-    const savedToken = yield index_1.tokenRepository.findOneBy({ userId: user.id });
-    const today = new Date();
-    const savedTokenExpired = savedToken && today > savedToken.expiraEm;
-    if (!savedToken || savedTokenExpired) {
-        const data = yield AuthenticationService_1.AuthenticationService.createOrUpdateToken(savedToken, user, today);
-        if (data)
-            return res.status(200).send(data);
-        return (0, httpResponses_1.internalError)(res);
-    }
-    const validToken = savedToken && today < savedToken.expiraEm;
-    if (validToken)
-        AuthenticationService_1.AuthenticationService.returnToken(savedToken, user, res);
+    const data = yield AuthenticationService_1.AuthenticationService.createOrUpdateToken(user);
+    res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
+    res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.sign);
+    if (data)
+        return res.status(200).send(data);
+    return (0, httpResponses_1.internalError)(res);
 });
 exports.authenticateUser = authenticateUser;
 const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -65,14 +59,13 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const today = new Date();
         const savedTokenExpired = savedToken && today > savedToken.expiraEm;
         if (!savedToken || savedTokenExpired) {
-            const data = yield AuthenticationService_1.AuthenticationService.createOrUpdateToken(savedToken, user, today);
+            const data = yield AuthenticationService_1.AuthenticationService.createOrUpdateToken(user);
+            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
+            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.sign);
             if (data)
                 return res.status(200).send(data);
             return (0, httpResponses_1.internalError)(res);
         }
-        const validToken = savedToken && today < savedToken.expiraEm;
-        if (validToken)
-            return AuthenticationService_1.AuthenticationService.returnToken(savedToken, user, res);
     }
     bcrypt_1.default.hash(crypto_1.default.randomUUID(), 10, (err, hash) => {
         if (err)
@@ -83,7 +76,7 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         newUser.senha = hash;
         __1.usuarioRepository.save(newUser)
             .then(() => __awaiter(void 0, void 0, void 0, function* () {
-            const data = yield AuthenticationService_1.AuthenticationService.createOrUpdateToken(null, newUser, new Date());
+            const data = yield AuthenticationService_1.AuthenticationService.createOrUpdateToken(newUser);
             if (data)
                 return res.status(200).send(data);
             return (0, httpResponses_1.internalError)(res);

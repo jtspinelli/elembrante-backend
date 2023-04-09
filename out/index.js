@@ -45,11 +45,22 @@ const Usuario_1 = require("./entity/Usuario");
 const Token_1 = require("./entity/Token");
 const dataSource_1 = require("./dataSource");
 require("reflect-metadata");
+// import fs from 'fs';
 const cors_1 = __importDefault(require("cors"));
-const port = process.env.PORT || 8080;
+// import https from 'https';
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const port = process.env.PORT || 8081;
+// const key = fs.readFileSync(__dirname + '/cert/localhost.key');
+// const cert = fs.readFileSync(__dirname + '/cert/localhost.crt');
 const app = (0, express_1.default)();
 app.use((0, express_1.json)());
-app.use((0, cors_1.default)());
+app.use((0, cookie_parser_1.default)());
+app.use((0, cors_1.default)({
+    // origin: 'https://localhost:3000',
+    origin: 'https://elembrante.vercel.app',
+    credentials: true
+}));
+// const server = https.createServer({key, cert}, app);
 exports.usuarioRepository = dataSource_1.db.getRepository(Usuario_1.Usuario);
 exports.tokenRepository = dataSource_1.db.getRepository(Token_1.Token);
 exports.lembreteRepository = dataSource_1.db.getRepository(Lembrete_1.Lembrete);
@@ -68,4 +79,5 @@ app.delete('/lembrete/:id', crud_1.removeLembrete);
 app.post('/googlelogin', auth_1.googleLogin);
 dataSource_1.db.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {
     app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
+    // server.listen(port, () => console.log("APP RUNNING ON PORT " + port));
 }));

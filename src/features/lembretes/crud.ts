@@ -22,7 +22,7 @@ const getLembrete = (titulo: string, descricao: string, criadoEm: Date, usuario:
 export const getLembretes = async (req: Request, res: Response) => {
 	const validation = await validate(req, res, { strings: [], numbers: []}, null);
 	if(!(validation instanceof ValidatedResponse)) return;
-
+	
 	const usuario = validation.usuario;
 	const lembretes = usuario.lembretes
 		.map(lembrete => {

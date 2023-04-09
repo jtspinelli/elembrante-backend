@@ -7,13 +7,25 @@ import { Usuario } from './entity/Usuario';
 import { Token } from './entity/Token';
 import { db } from './dataSource';
 import "reflect-metadata";
+// import fs from 'fs';
 import cors from 'cors';
+// import https from 'https';
+import cookieParser from 'cookie-parser';
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8081;
+// const key = fs.readFileSync(__dirname + '/cert/localhost.key');
+// const cert = fs.readFileSync(__dirname + '/cert/localhost.crt');
 
 const app = express();
 app.use(json());
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({
+	// origin: 'https://localhost:3000',
+	origin: 'https://elembrante.vercel.app',
+	credentials: true
+}));
+
+// const server = https.createServer({key, cert}, app);
 
 export const usuarioRepository = db.getRepository(Usuario);
 export const tokenRepository = db.getRepository(Token);
@@ -33,7 +45,7 @@ app.put('/lembrete/recover/:id', recoverLembrete);
 app.delete('/lembrete/:id', removeLembrete);
 app.post('/googlelogin', googleLogin)
 
-
-db.initialize().then(async () => {	
+db.initialize().then(async () => {
 	app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
+	// server.listen(port, () => console.log("APP RUNNING ON PORT " + port));
 });

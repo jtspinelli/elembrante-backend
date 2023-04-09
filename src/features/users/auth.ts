@@ -24,18 +24,11 @@ export const authenticateUser = async (req: Request, res: Response) => {
 	const senhaIsCorrect = await AuthenticationService.checkSenha(senha, user.senha);
 	if(!senhaIsCorrect) return unauthorized(res, 'Err: usuário e/ou senha incorretos.');
 
-	const savedToken = await tokenRepository.findOneBy({userId: user.id});
-	const today = new Date();
-	const savedTokenExpired = savedToken && today > savedToken.expiraEm;
-
-	if(!savedToken || savedTokenExpired) {
-		const data = await AuthenticationService.createOrUpdateToken(savedToken, user, today);
-		if(data) return res.status(200).send(data);
-		return internalError(res);
-	}
-
-	const validToken = savedToken && today < savedToken.expiraEm;
-	if(validToken) AuthenticationService.returnToken(savedToken, user, res);
+	const data = await AuthenticationService.createOrUpdateToken(user);
+	res.setHeader('Set-Cookie', data?.headerPayload as string);
+	res.setHeader('Set-Cookie', data?.sign as string);
+	if(data) return res.status(200).send(data);
+	return internalError(res);
 }
 
 export const googleLogin = async (req: Request, res: Response) => {
@@ -55,13 +48,12 @@ export const googleLogin = async (req: Request, res: Response) => {
 		const savedTokenExpired = savedToken && today > savedToken.expiraEm;
 
 		if(!savedToken || savedTokenExpired) {
-			const data = await AuthenticationService.createOrUpdateToken(savedToken, user, today);
+			const data = await AuthenticationService.createOrUpdateToken(user);
+			res.setHeader('Set-Cookie', data?.headerPayload as string);
+			res.setHeader('Set-Cookie', data?.sign as string);
 			if(data) return res.status(200).send(data);
 			return internalError(res);
 		}
-	
-		const validToken = savedToken && today < savedToken.expiraEm;
-		if(validToken) return AuthenticationService.returnToken(savedToken, user, res);
 	}
 
 	bcrypt.hash(crypto.randomUUID(), 10, (err, hash) => {
@@ -74,7 +66,7 @@ export const googleLogin = async (req: Request, res: Response) => {
 
 		usuarioRepository.save(newUser)
 			.then(async () => {
-				const data = await AuthenticationService.createOrUpdateToken(null, newUser, new Date());
+				const data = await AuthenticationService.createOrUpdateToken(newUser);
 				if(data) return res.status(200).send(data);
 				return internalError(res);
 			})

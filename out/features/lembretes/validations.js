@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validate = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const __1 = require("../..");
 const index_1 = require("./../../index");
+const __1 = require("../..");
 const ValidatedResponse_1 = require("../../entity/ValidatedResponse");
 const httpResponses_1 = require("../httpResponses");
 const validate = (req, res, requiredFields, lembreteId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -23,11 +23,15 @@ const validate = (req, res, requiredFields, lembreteId) => __awaiter(void 0, voi
     if (!secret)
         return;
     if (tokenNotPresent(req))
-        return (0, httpResponses_1.unauthorized)(res, 'Token não encontrado ou inválido.');
+        return (0, httpResponses_1.bad)(res, 'Token não encontrado ou inválido.');
     if (requiredFieldsAreNotPresent(req, requiredFields))
         return (0, httpResponses_1.bad)(res, 'Erro: impossível criar um lembrete com o objeto enviado.');
+    const accessToken = req.cookies.token + '.' + req.cookies.sign;
     try {
-        const payload = jsonwebtoken_1.default.verify(req.headers.access_token, secret);
+        const payload = jsonwebtoken_1.default.verify(accessToken, secret);
+        const tokenExpired = Date.now() > payload.exp * 1000;
+        if (tokenExpired)
+            return (0, httpResponses_1.bad)(res, 'Erro: o usuário não possui token válido. Autentique-se novamente.');
         const username = payload.username;
         const usuario = yield __1.usuarioRepository.findOne({
             where: { username: username },
@@ -48,11 +52,6 @@ const validate = (req, res, requiredFields, lembreteId) => __awaiter(void 0, voi
         }
         if (lembrete && lembrete.usuario.id !== usuario.id)
             return (0, httpResponses_1.unauthorized)(res, 'Erro: não autorizado.');
-        const tokenValidation = yield getTokenValidation(req, usuario);
-        if (!tokenValidation.userHasValidToken)
-            return (0, httpResponses_1.bad)(res, 'Erro: o usuário não possui token válido. Autentique-se novamente.');
-        if (!tokenValidation.requestTokenPass)
-            return (0, httpResponses_1.unauthorized)(res, 'Erro: não autorizado.');
         const response = new ValidatedResponse_1.ValidatedResponse();
         response.pass = true;
         if (usuario)
@@ -70,19 +69,11 @@ const validate = (req, res, requiredFields, lembreteId) => __awaiter(void 0, voi
 });
 exports.validate = validate;
 const tokenIsPresent = (req) => {
-    return req.headers.access_token !== undefined;
+    return req.cookies.sign !== undefined && req.cookies.token !== undefined;
 };
 const tokenNotPresent = (req) => {
     return !tokenIsPresent(req);
 };
-const getTokenValidation = (req, usuario) => __awaiter(void 0, void 0, void 0, function* () {
-    const today = new Date();
-    const savedToken = yield __1.tokenRepository.findOneBy({ userId: usuario.id });
-    return {
-        userHasValidToken: savedToken && today < savedToken.expiraEm,
-        requestTokenPass: savedToken && req.headers.access_token === savedToken.accessToken
-    };
-});
 const requiredFieldsArePresent = (req, requiredFields) => {
     let result = true;
     requiredFields.strings.forEach(field => {

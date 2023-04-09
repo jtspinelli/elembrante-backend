@@ -1,4 +1,4 @@
-import { tokenRepository } from '..';
+import { serialize } from 'cookie';
 import { Response } from 'express';
 import { Usuario } from '../entity/Usuario';
 import { Token } from '../entity/Token';
@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 
 export class AuthenticationService {
 	public static checkSenha(senha: string, savedSenha: string): Promise<boolean> {
-		return new Promise((res, rej) => {
+		return new Promise((res, _rej) => {
 			bcrypt.compare(senha, savedSenha).then(pass => {
 				res(pass);
 			})
@@ -21,23 +21,32 @@ export class AuthenticationService {
 		return res.status(200).send({userData, access_token});
 	} 
 
-	public static createOrUpdateToken(savedToken: Token | null, user: Usuario, today: Date) {
+	public static createOrUpdateToken(user: Usuario) {
 		const secret = process.env.SECRET;
 		if(!secret) return;
 		
-		return new Promise<{userData: { nome: string, username: string }, access_token: string} | null>((res, _rej) => {
+		return new Promise<{userData: { nome: string, username: string }, headerPayload: string, sign: string} | null>((res, _rej) => {
 			const userData = { nome: user.nome, username: user.username };
-			const access_token = jwt.sign(userData, secret);
+			jwt.sign(
+				userData, 
+				secret,
+				{
+					expiresIn: 600
+				},
+				(_err, jwtToken) => {
+					const sign = serialize('sign', (jwtToken as string).split('.')[2], {
+						httpOnly: true,
+						secure: true,
+						sameSite: 'none',						
+						maxAge: 600,
+						path: '/',
+					});
+
+					res({userData, headerPayload: `${(jwtToken as string).split('.')[0]}.${(jwtToken as string).split('.')[1]}`, sign})
+				}
+			);
 	
-			const token = savedToken ?? new Token();
-			token.userId = user.id;
-			token.accessToken = access_token
-	
-			token.expiraEm = new Date(new Date().setDate(today.getDate() + 5));
 			
-			tokenRepository.save(token)
-				.then(() => res({userData, access_token}))
-				.catch(() => res(null));
 		})
 	}
 }
