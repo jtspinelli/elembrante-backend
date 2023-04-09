@@ -20,8 +20,7 @@ const app = express();
 app.use(json());
 app.use(cookieParser());
 app.use(cors({
-	// origin: 'https://localhost:3000',
-	origin: 'https://elembrante.vercel.app',
+	origin: ['https://localhost:3000', 'https://elembrante.vercel.app'],
 	credentials: true
 }));
 
