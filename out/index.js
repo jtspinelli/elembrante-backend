@@ -56,8 +56,7 @@ const app = (0, express_1.default)();
 app.use((0, express_1.json)());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    // origin: 'https://localhost:3000',
-    origin: 'https://elembrante.vercel.app',
+    origin: ['https://localhost:3000', 'https://elembrante.vercel.app'],
     credentials: true
 }));
 // const server = https.createServer({key, cert}, app);
