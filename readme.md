@@ -89,3 +89,6 @@ Inicie a aplicação com o comando `npm start`.
 
 Dirija-se a `https://localhost:8081` para encontrar a página inicial.
 
+## Testando os endpoints
+
+Baixe a [coleção](https://drive.google.com/file/d/1AFydxLs-STYykDWChfveuvSfpsuS2rYF/view?usp=share_link) de _requests_ para o Postman para testar os endpoints da API.
