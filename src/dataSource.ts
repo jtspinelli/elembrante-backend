@@ -4,7 +4,7 @@ import { Usuario } from "./entity/Usuario";
 import { Token } from './entity/Token';
 import dotenv from 'dotenv-safe';
 
-//dotenv.config();
+dotenv.config();
 
 const host = process.env.HOST;
 const username = process.env.HOSTUSERNAME;

@@ -14,19 +14,19 @@ export class AuthenticationService {
 		});
 	}
 
-	public static returnToken(savedToken: Token, user: Usuario, res: Response) {
-		const userData = { nome: user.nome, username: user.username };
-		const access_token = savedToken.accessToken;
+	// public static returnToken(savedToken: Token, user: Usuario, res: Response) {
+	// 	const userData = { nome: user.nome, username: user.username };
+	// 	const access_token = savedToken.accessToken;
 	
-		return res.status(200).send({userData, access_token});
-	} 
+	// 	return res.status(200).send({userData, access_token});
+	// } 
 
-	public static createOrUpdateToken(user: Usuario) {
+	public static createToken(user: Usuario) {
 		const secret = process.env.SECRET;
 		if(!secret) return;
 		
 		return new Promise<{userData: { nome: string, username: string }, headerPayload: string, sign: string} | null>((res, _rej) => {
-			const userData = { nome: user.nome, username: user.username };
+			const userData = {id: user.id, nome: user.nome, username: user.username };
 			jwt.sign(
 				userData, 
 				secret,
