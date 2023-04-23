@@ -15,11 +15,6 @@ class AuthenticationService {
             });
         });
     }
-    // public static returnToken(savedToken: Token, user: Usuario, res: Response) {
-    // 	const userData = { nome: user.nome, username: user.username };
-    // 	const access_token = savedToken.accessToken;
-    // 	return res.status(200).send({userData, access_token});
-    // } 
     static createToken(user) {
         const secret = process.env.SECRET;
         if (!secret)

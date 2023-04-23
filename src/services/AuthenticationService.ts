@@ -1,7 +1,5 @@
 import { serialize } from 'cookie';
-import { Response } from 'express';
 import { Usuario } from '../entity/Usuario';
-import { Token } from '../entity/Token';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
@@ -13,13 +11,6 @@ export class AuthenticationService {
 			})
 		});
 	}
-
-	// public static returnToken(savedToken: Token, user: Usuario, res: Response) {
-	// 	const userData = { nome: user.nome, username: user.username };
-	// 	const access_token = savedToken.accessToken;
-	
-	// 	return res.status(200).send({userData, access_token});
-	// } 
 
 	public static createToken(user: Usuario) {
 		const secret = process.env.SECRET;

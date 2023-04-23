@@ -35,7 +35,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Usuario.prototype, "lembretes", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], Usuario.prototype, "excluido", void 0);
 Usuario = __decorate([
