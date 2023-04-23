@@ -15,5 +15,5 @@ exports.db = new typeorm_1.DataSource({
     password,
     database: 'elembrante',
     entities: [Usuario_1.Usuario, Lembrete_1.Lembrete],
-    synchronize: true
+    // synchronize: true
 });

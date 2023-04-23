@@ -16,5 +16,5 @@ export const db = new DataSource({
 	password,
 	database: 'elembrante',
 	entities: [Usuario, Lembrete],
-	synchronize: true
+	// synchronize: true
 });
