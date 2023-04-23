@@ -41,22 +41,16 @@ const Lembrete_1 = require("./entity/Lembrete");
 const dataSource_1 = require("./dataSource");
 const path_1 = __importDefault(require("path"));
 require("reflect-metadata");
-const fs_1 = __importDefault(require("fs"));
 const cors_1 = __importDefault(require("cors"));
-const https_1 = __importDefault(require("https"));
 const mapper_1 = __importDefault(require("./mappings/mapper"));
 const LembreteDto_1 = __importDefault(require("./controller/dto/LembreteDto"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const LembreteService_1 = __importDefault(require("./services/LembreteService"));
-const ValidationService_1 = __importDefault(require("./services/ValidationService"));
-const LembreteController_1 = __importDefault(require("./controller/LembreteController"));
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
-const Factory_1 = __importDefault(require("./factory/Factory"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const lembreteRoutes_1 = __importDefault(require("./routes/lembreteRoutes"));
 const port = process.env.PORT || 8081;
-const key = fs_1.default.readFileSync(__dirname + '/cert/localhost.key');
-const cert = fs_1.default.readFileSync(__dirname + '/cert/localhost.crt');
+// const key = fs.readFileSync(__dirname + '/cert/localhost.key');
+// const cert = fs.readFileSync(__dirname + '/cert/localhost.crt');
 const app = (0, express_1.default)();
 app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 app.use((0, express_1.json)());
@@ -64,43 +58,15 @@ app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
     credentials: true
 }));
-const server = https_1.default.createServer({ key, cert }, app);
-/* #region Initialize Repositories */
-// export const usuarioRepository = db.getRepository(Usuario);
-// export const tokenRepository = db.getRepository(Token);
-// export const lembreteRepository = db.getRepository(Lembrete);
-/* #endregion */
-/* #region Initialize Services */
-const validationService = new ValidationService_1.default(Factory_1.default.usuarioRepository, Factory_1.default.lembreteRepository);
-const lembreteService = new LembreteService_1.default(Factory_1.default.lembreteRepository);
-/* #endregion */
-/* #region Initialize Controllers */
-// export const authenticationController = new AuthenticationController(Factory.usuarioRepository);
-// const userController = new UserController(Factory.usuarioRepository, validationService);
-const lembreteController = new LembreteController_1.default(validationService, lembreteService);
-/* #endregion */
 app.use(authRoutes_1.default);
 app.use(userRoutes_1.default);
 app.use(lembreteRoutes_1.default);
-/* #region Create Mappings */
+// const server = https.createServer({key, cert}, app);
 (0, core_1.createMap)(mapper_1.default, Lembrete_1.Lembrete, LembreteDto_1.default, (0, core_1.forMember)(dto => dto.usuarioId, (0, core_1.mapFrom)(lembrete => lembrete.usuario.id)));
-/* #endregion */
-// app.post('/checkuser', userController.userExists.bind(userController));
-// app.post('/user', userController.createUser.bind(userController));
-// app.put('/user/:id', userController.updateUser.bind(userController));
-// app.delete('/user/:id', userController.removeUser.bind(userController));
-// app.post('/auth', authenticationController.authenticateUser.bind(authenticationController));
-// app.post('/googlelogin', authenticationController.googleLogin.bind(authenticationController));
-// app.get('/lembretes', lembreteController.getLembretes.bind(lembreteController));
-// app.post('/lembrete', lembreteController.addLembrete.bind(lembreteController));
-// app.put('/lembrete/:id', lembreteController.updateLembrete.bind(lembreteController));
-// app.put('/lembrete/archive/:id', lembreteController.archiveLembrete.bind(lembreteController));
-// app.put('/lembrete/recover/:id', lembreteController.recoverLembrete.bind(lembreteController));
-// app.delete('/lembrete/:id', lembreteController.removeLembrete.bind(lembreteController));
 app.get('*', (_req, res) => {
     res.sendFile(path_1.default.join(__dirname, "public", "index.html"));
 });
 dataSource_1.db.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {
-    // app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
-    server.listen(port, () => console.log("APP RUNNING ON PORT " + port));
+    app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
+    // server.listen(port, () => console.log("APP RUNNING ON PORT " + port));
 }));
