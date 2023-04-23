@@ -34,6 +34,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Lembrete_1.Lembrete, (lembrete) => lembrete.usuario),
     __metadata("design:type", Array)
 ], Usuario.prototype, "lembretes", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Boolean)
+], Usuario.prototype, "excluido", void 0);
 Usuario = __decorate([
     (0, typeorm_1.Entity)()
 ], Usuario);

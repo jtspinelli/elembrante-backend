@@ -35,19 +35,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lembreteRepository = exports.tokenRepository = exports.usuarioRepository = void 0;
 const express_1 = __importStar(require("express"));
-const crud_1 = require("./features/lembretes/crud");
-const crud_2 = require("./features/users/crud");
-const auth_1 = require("./features/users/auth");
+const core_1 = require("@automapper/core");
 const Lembrete_1 = require("./entity/Lembrete");
-const Usuario_1 = require("./entity/Usuario");
-const Token_1 = require("./entity/Token");
 const dataSource_1 = require("./dataSource");
 const path_1 = __importDefault(require("path"));
 require("reflect-metadata");
 const cors_1 = __importDefault(require("cors"));
+const mapper_1 = __importDefault(require("./mappings/mapper"));
+const LembreteDto_1 = __importDefault(require("./controller/dto/LembreteDto"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
+const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const lembreteRoutes_1 = __importDefault(require("./routes/lembreteRoutes"));
 const port = process.env.PORT || 8081;
 // const key = fs.readFileSync(__dirname + '/cert/localhost.key');
 // const cert = fs.readFileSync(__dirname + '/cert/localhost.crt');
@@ -58,23 +58,12 @@ app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
     credentials: true
 }));
+app.use(authRoutes_1.default);
+app.use(userRoutes_1.default);
+app.use(lembreteRoutes_1.default);
 // const server = https.createServer({key, cert}, app);
-exports.usuarioRepository = dataSource_1.db.getRepository(Usuario_1.Usuario);
-exports.tokenRepository = dataSource_1.db.getRepository(Token_1.Token);
-exports.lembreteRepository = dataSource_1.db.getRepository(Lembrete_1.Lembrete);
-app.post('/checkuser', crud_2.userExists);
-app.post('/user', crud_2.createUser);
-app.put('/user/:id', crud_2.updateUser);
-app.delete('/user/:id', crud_2.removeUser);
-app.post('/auth', auth_1.authenticateUser);
-app.get('/lembretes', crud_1.getLembretes);
-app.post('/lembrete', crud_1.addLembrete);
-app.put('/lembrete/:id', crud_1.updateLembrete);
-app.put('/lembrete/archive/:id', crud_1.archiveLembrete);
-app.put('/lembrete/recover/:id', crud_1.recoverLembrete);
-app.delete('/lembrete/:id', crud_1.removeLembrete);
-app.post('/googlelogin', auth_1.googleLogin);
-app.get('*', (req, res) => {
+(0, core_1.createMap)(mapper_1.default, Lembrete_1.Lembrete, LembreteDto_1.default, (0, core_1.forMember)(dto => dto.usuarioId, (0, core_1.mapFrom)(lembrete => lembrete.usuario.id)));
+app.get('*', (_req, res) => {
     res.sendFile(path_1.default.join(__dirname, "public", "index.html"));
 });
 dataSource_1.db.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {

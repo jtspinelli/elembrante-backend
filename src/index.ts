@@ -1,17 +1,18 @@
 import express, { json, Request, Response } from 'express';
-import { addLembrete, archiveLembrete, getLembretes, recoverLembrete, removeLembrete, updateLembrete } from './features/lembretes/crud';
-import { createUser, removeUser, updateUser, userExists } from './features/users/crud';
-import { authenticateUser, googleLogin } from './features/users/auth';
+import { createMap, forMember, mapFrom } from '@automapper/core';
 import { Lembrete } from './entity/Lembrete';
-import { Usuario } from './entity/Usuario';
-import { Token } from './entity/Token';
 import { db } from './dataSource';
 import path from 'path';
 import "reflect-metadata";
 import fs from 'fs';
 import cors from 'cors';
 import https from 'https';
+import mapper from './mappings/mapper';
+import LembreteDto from './controller/dto/LembreteDto';
 import cookieParser from 'cookie-parser';
+import authRoutes from './routes/authRoutes';
+import userRoutes from './routes/userRoutes';
+import lembreteRoutes from './routes/lembreteRoutes';
 
 const port = process.env.PORT || 8081;
 // const key = fs.readFileSync(__dirname + '/cert/localhost.key');
@@ -25,25 +26,15 @@ app.use(cors({
 	credentials: true
 }));
 
+app.use(authRoutes);
+app.use(userRoutes);
+app.use(lembreteRoutes)
+
 // const server = https.createServer({key, cert}, app);
 
-export const usuarioRepository = db.getRepository(Usuario);
-export const tokenRepository = db.getRepository(Token);
-export const lembreteRepository = db.getRepository(Lembrete);
+createMap(mapper, Lembrete, LembreteDto, forMember(dto => dto.usuarioId, mapFrom(lembrete => lembrete.usuario.id)));
 
-app.post('/checkuser', userExists);
-app.post('/user', createUser);
-app.put('/user/:id', updateUser);
-app.delete('/user/:id', removeUser);
-app.post('/auth', authenticateUser);
-app.get('/lembretes', getLembretes);
-app.post('/lembrete', addLembrete);
-app.put('/lembrete/:id', updateLembrete);
-app.put('/lembrete/archive/:id', archiveLembrete);
-app.put('/lembrete/recover/:id', recoverLembrete);
-app.delete('/lembrete/:id', removeLembrete);
-app.post('/googlelogin', googleLogin)
-app.get('*', (req: Request, res:Response) => {
+app.get('*', (_req: Request, res:Response) => {
 	res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 

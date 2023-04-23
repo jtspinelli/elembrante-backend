@@ -17,4 +17,7 @@ export class Usuario {
 
 	@OneToMany(() => Lembrete, (lembrete) => lembrete.usuario)
 	lembretes: Lembrete[];
+
+	@Column()
+	excluido: boolean;
 }
