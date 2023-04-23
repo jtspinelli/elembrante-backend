@@ -27,13 +27,13 @@ class AuthenticationService {
         return new Promise((res, _rej) => {
             const userData = { id: user.id, nome: user.nome, username: user.username };
             jsonwebtoken_1.default.sign(userData, secret, {
-                expiresIn: 18000 //600
+                expiresIn: 600
             }, (_err, jwtToken) => {
                 const sign = (0, cookie_1.serialize)('sign', jwtToken.split('.')[2], {
                     httpOnly: true,
                     secure: true,
                     sameSite: 'strict',
-                    maxAge: 18000,
+                    maxAge: 600,
                     path: '/',
                 });
                 res({ userData, headerPayload: `${jwtToken.split('.')[0]}.${jwtToken.split('.')[1]}`, sign });
