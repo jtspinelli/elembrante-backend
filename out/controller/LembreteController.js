@@ -9,41 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Lembrete_1 = require("../entity/Lembrete");
-const ValidatedResponse_1 = require("../entity/ValidatedResponse");
-const LembreteViewModel_1 = require("../viewModels/LembreteViewModel");
 const httpResponses_1 = require("./httpResponses");
+const ValidatedResponse_1 = require("../entity/ValidatedResponse");
 class LembreteController {
-    constructor(repository, validationService) {
-        this.getLembrete = (titulo, descricao, criadoEm, usuario) => {
-            const newLembrete = new Lembrete_1.Lembrete();
-            newLembrete.titulo = titulo;
-            newLembrete.descricao = descricao;
-            newLembrete.usuario = usuario;
-            newLembrete.criadoEm = criadoEm;
-            newLembrete.arquivado = false;
-            return newLembrete;
-        };
-        this.repository = repository;
+    constructor(validationService, lembreteService) {
         this.validationService = validationService;
+        this.service = lembreteService;
     }
     getLembretes(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const validation = yield this.validationService.validate(req, res, { strings: [], numbers: [] }, null);
             if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
                 return;
-            const usuario = validation.usuario;
-            const lembretes = usuario.lembretes
-                .map(lembrete => {
-                const viewModel = new LembreteViewModel_1.LembreteViewModel();
-                viewModel.id = lembrete.id;
-                viewModel.arquivado = lembrete.arquivado;
-                viewModel.titulo = lembrete.titulo;
-                viewModel.descricao = lembrete.descricao;
-                viewModel.criadoEm = lembrete.criadoEm;
-                return viewModel;
-            });
-            return res.status(200).send(lembretes);
+            return res.status(200).send(yield this.service.getAll(validation.usuario.id));
         });
     }
     addLembrete(req, res) {
@@ -52,13 +30,10 @@ class LembreteController {
             if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
                 return;
             const { titulo, descricao, usuario } = validation;
-            const newLembrete = this.getLembrete(titulo, descricao, new Date(), usuario);
-            this.repository.save(newLembrete)
-                .then((lembrete) => res.status(201).send(lembrete))
-                .catch((err) => {
-                console.log(err);
-                (0, httpResponses_1.internalError)(res);
-            });
+            const newLembrete = yield this.service.create(titulo, descricao, usuario);
+            if (!newLembrete)
+                return (0, httpResponses_1.internalError)(res);
+            res.status(201).send(newLembrete);
         });
     }
     updateLembrete(req, res) {
@@ -66,14 +41,11 @@ class LembreteController {
             const validation = yield this.validationService.validate(req, res, { strings: ['titulo', 'descricao'], numbers: [] }, req.params.id);
             if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
                 return;
-            const lembrete = yield this.repository.findOneBy({ id: Number(req.params.id) });
-            if (!lembrete)
-                return;
-            lembrete.titulo = req.body.titulo;
-            lembrete.descricao = req.body.descricao;
-            this.repository.save(lembrete)
-                .then((lembrete) => res.status(200).send(lembrete))
-                .catch(() => (0, httpResponses_1.internalError)(res));
+            const lembrete = yield this.service.update(Number(req.params.id), req.body.titulo, req.body.descricao);
+            if (!lembrete) {
+                return (0, httpResponses_1.internalError)(res);
+            }
+            res.status(200).send(lembrete);
         });
     }
     archiveLembrete(req, res) {
@@ -91,13 +63,11 @@ class LembreteController {
             const validation = yield this.validationService.validate(req, res, { strings: [], numbers: [] }, req.params.id);
             if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
                 return;
-            const lembrete = yield this.repository.findOneBy({ id: Number(req.params.id) });
-            if (!lembrete)
-                return;
-            lembrete.arquivado = value;
-            this.repository.save(lembrete)
-                .then(() => (0, httpResponses_1.success)(res))
-                .catch(() => (0, httpResponses_1.internalError)(res));
+            if (!(yield this.service.setArchive(Number(req.params.id), value))) {
+                return (0, httpResponses_1.internalError)(res);
+            }
+            ;
+            (0, httpResponses_1.success)(res);
         });
     }
     removeLembrete(req, res) {
@@ -105,12 +75,10 @@ class LembreteController {
             const validation = yield this.validationService.validate(req, res, { strings: [], numbers: [] }, req.params.id);
             if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
                 return;
-            const lembrete = yield this.repository.findOneBy({ id: Number(req.params.id) });
-            if (!lembrete)
-                return;
-            this.repository.remove(lembrete)
-                .then(() => (0, httpResponses_1.success)(res))
-                .catch(() => (0, httpResponses_1.internalError)(res));
+            if (!(yield this.service.remove(Number(req.params.id)))) {
+                (0, httpResponses_1.internalError)(res);
+            }
+            (0, httpResponses_1.success)(res);
         });
     }
 }

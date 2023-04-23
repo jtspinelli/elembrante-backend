@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { QueryFailedError, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { Usuario } from "../entity/Usuario";
 import { bad, internalError, success, unauthorized } from "./httpResponses";
 import bcrypt from 'bcrypt';

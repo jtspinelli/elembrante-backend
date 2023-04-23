@@ -31,14 +31,14 @@ export class AuthenticationService {
 				userData, 
 				secret,
 				{
-					expiresIn: 600
+					expiresIn: 18000 //600
 				},
 				(_err, jwtToken) => {
 					const sign = serialize('sign', (jwtToken as string).split('.')[2], {
 						httpOnly: true,
 						secure: true,
 						sameSite: 'strict',						
-						maxAge: 600,
+						maxAge: 18000, //600
 						path: '/',
 					});
 
