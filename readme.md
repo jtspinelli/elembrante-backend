@@ -53,10 +53,12 @@ HOSTPASSWORD=<mysqlpassword>
 
 ### 3) Ajuste no dataSource.ts
 
-No diretório raiz do projeto, abra o arquivo [dataSource.ts](https://github.com/jtspinelli/elembrante-backend/blob/master/src/dataSource.ts#L7) e descomente a seguinte linha:
+No diretório raiz do projeto, abra o arquivo [dataSource.ts](https://github.com/jtspinelli/elembrante-backend/blob/master/src/dataSource.ts#L7) e descomente as seguintes linhas:
 
 ```JS
 dotenv.config();
+...
+synchronize: true
 ```
 
 ### 4) Ajustes no index.ts
@@ -80,6 +82,8 @@ Dentro do diretório `out` adicione um diretório `cert` e, dentro deste, os seg
 ### 6) Por fim
 
 Instale as dependências utilizando o comando `npm install`.
+
+Atualize o output do projeto com o comando `tsc`.
 
 Inicie a aplicação com o comando `npm start`.
 
