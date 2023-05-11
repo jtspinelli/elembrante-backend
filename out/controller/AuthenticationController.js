@@ -23,7 +23,10 @@ class AuthenticationController {
             const credential = req.body.credential;
             const url = 'https://oauth2.googleapis.com/tokeninfo?id_token=' + credential;
             const googleResponse = yield axios_1.default.get(url)
-                .then(data => data)
+                .then(data => {
+                console.log(data);
+                return data;
+            })
                 .catch(e => e);
             if (googleResponse.status !== 200)
                 return (0, httpResponses_1.bad)(res, 'Google Token inválido.');
