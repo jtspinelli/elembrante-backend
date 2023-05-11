@@ -5,6 +5,7 @@ import { Usuario } from '../entity/Usuario';
 import { AuthenticationService } from '../services/AuthenticationService';
 import bcrypt from 'bcrypt';
 import axios, { AxiosResponse } from 'axios';
+import { randomUUID } from 'crypto';
 
 class AuthenticationController {
 	private usuarioRepository: Repository<Usuario>;
@@ -58,7 +59,7 @@ class AuthenticationController {
 			return internalError(res);
 		}
 	
-		bcrypt.hash(crypto.randomUUID(), 10, (err, hash) => {
+		bcrypt.hash(randomUUID(), 10, (err, hash) => {
 			if(err) return internalError(res);
 	
 			const newUser = new Usuario();

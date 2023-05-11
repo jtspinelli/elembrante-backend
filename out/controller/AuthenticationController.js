@@ -17,6 +17,7 @@ const Usuario_1 = require("../entity/Usuario");
 const AuthenticationService_1 = require("../services/AuthenticationService");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const axios_1 = __importDefault(require("axios"));
+const crypto_1 = require("crypto");
 class AuthenticationController {
     constructor(usuarioRepository) {
         this.googleLogin = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -39,7 +40,7 @@ class AuthenticationController {
                     return res.status(200).send(data);
                 return (0, httpResponses_1.internalError)(res);
             }
-            bcrypt_1.default.hash(crypto.randomUUID(), 10, (err, hash) => {
+            bcrypt_1.default.hash((0, crypto_1.randomUUID)(), 10, (err, hash) => {
                 if (err)
                     return (0, httpResponses_1.internalError)(res);
                 const newUser = new Usuario_1.Usuario();
