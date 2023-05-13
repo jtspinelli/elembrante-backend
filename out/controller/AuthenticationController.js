@@ -12,15 +12,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const httpResponses_1 = require("./httpResponses");
+const httpResponses_1 = require("./helpers/httpResponses");
+const crypto_1 = require("crypto");
 const Usuario_1 = require("../entity/Usuario");
 const AuthenticationService_1 = require("../services/AuthenticationService");
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const axios_1 = __importDefault(require("axios"));
-const crypto_1 = require("crypto");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 class AuthenticationController {
-    constructor(usuarioRepository) {
-        this.googleLogin = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    constructor(service) {
+        this.service = service;
+    }
+    authenticateUser() {
+        return (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const secret = process.env.SECRET;
+            if (!secret)
+                return;
+            const senha = req.body.senha;
+            const username = req.body.username;
+            if (!senha || !username)
+                return (0, httpResponses_1.bad)(res, 'Erro: dados necessários não encontrados no objeto enviado.');
+            if (username.includes('@'))
+                return (0, httpResponses_1.bad)(res, 'Para logar com Gmail utilize o GoogleLogin');
+            const user = yield this.service.findByUsername(username);
+            if (!user)
+                return (0, httpResponses_1.bad)(res, `Erro: usuário ${username} não encontrado.`);
+            const senhaIsCorrect = yield AuthenticationService_1.AuthenticationService.checkSenha(senha, user.senha);
+            if (!senhaIsCorrect)
+                return (0, httpResponses_1.unauthorized)(res, 'Err: usuário e/ou senha incorretos.');
+            const data = yield AuthenticationService_1.AuthenticationService.createToken(user);
+            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
+            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.sign);
+            if (data)
+                return res.status(200).send(data);
+            return (0, httpResponses_1.internalError)(res);
+        });
+    }
+    googleLogin() {
+        return (req, res) => __awaiter(this, void 0, void 0, function* () {
             const credential = req.body.credential;
             const url = 'https://oauth2.googleapis.com/tokeninfo?id_token=' + credential;
             const googleResponse = yield axios_1.default.get(url)
@@ -28,7 +56,7 @@ class AuthenticationController {
                 .catch(e => e);
             if (googleResponse.status !== 200)
                 return (0, httpResponses_1.bad)(res, 'Google Token inválido.');
-            const user = yield this.usuarioRepository.findOneBy({ username: googleResponse.data.email });
+            const user = yield this.service.findByUsername(googleResponse.data.email);
             if (user) {
                 const data = yield AuthenticationService_1.AuthenticationService.createToken(user);
                 res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
@@ -44,7 +72,7 @@ class AuthenticationController {
                 newUser.nome = googleResponse.data.name;
                 newUser.username = googleResponse.data.email;
                 newUser.senha = hash;
-                this.usuarioRepository.save(newUser)
+                this.service.save(newUser)
                     .then(() => __awaiter(this, void 0, void 0, function* () {
                     const data = yield AuthenticationService_1.AuthenticationService.createToken(newUser);
                     res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
@@ -55,32 +83,6 @@ class AuthenticationController {
                 }))
                     .catch(() => (0, httpResponses_1.internalError)(res));
             });
-        });
-        this.usuarioRepository = usuarioRepository;
-    }
-    authenticateUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const secret = process.env.SECRET;
-            if (!secret)
-                return;
-            const senha = req.body.senha;
-            const username = req.body.username;
-            if (!senha || !username)
-                return (0, httpResponses_1.bad)(res, 'Erro: dados necessários não encontrados no objeto enviado.');
-            if (username.includes('@'))
-                return (0, httpResponses_1.bad)(res, 'Para logar com Gmail utilize o GoogleLogin');
-            const user = yield this.usuarioRepository.findOneBy({ username });
-            if (!user)
-                return (0, httpResponses_1.bad)(res, `Erro: usuário ${username} não encontrado.`);
-            const senhaIsCorrect = yield AuthenticationService_1.AuthenticationService.checkSenha(senha, user.senha);
-            if (!senhaIsCorrect)
-                return (0, httpResponses_1.unauthorized)(res, 'Err: usuário e/ou senha incorretos.');
-            const data = yield AuthenticationService_1.AuthenticationService.createToken(user);
-            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
-            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.sign);
-            if (data)
-                return res.status(200).send(data);
-            return (0, httpResponses_1.internalError)(res);
         });
     }
 }

@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const httpResponses_1 = require("../controller/httpResponses");
-const ValidatedResponse_1 = require("../entity/ValidatedResponse");
+const httpResponses_1 = require("../controller/helpers/httpResponses");
+const ValidatedResponse_1 = require("../controller/helpers/ValidatedResponse");
 class ValidationService {
     constructor(usuarioRepository, lembreteRepository) {
         this.usuarioRepository = usuarioRepository;

@@ -6,6 +6,7 @@ import ValidationService from "../services/ValidationService";
 import UserController from "../controller/UserController";
 import LembreteService from "../services/LembreteService";
 import LembreteController from "../controller/LembreteController";
+import UsuarioService from "../services/UsuarioService";
 
 abstract class Factory {
 	private static _usuarioRepository = db.getRepository(Usuario);
@@ -13,6 +14,7 @@ abstract class Factory {
 	private static _authenticationController: AuthenticationController;
 	private static _validationService: ValidationService;
 	private static _lembreteService: LembreteService;
+	private static _usuarioService: UsuarioService;
 	private static _usuarioController: UserController;
 	private static _lembreteController: LembreteController;
 
@@ -26,7 +28,7 @@ abstract class Factory {
 
 	public static get authenticationController() {
 		if(!Factory._authenticationController) {
-			Factory._authenticationController = new AuthenticationController(Factory._usuarioRepository);
+			Factory._authenticationController = new AuthenticationController(Factory.usuarioService);
 		}
 
 		return Factory._authenticationController;
@@ -48,9 +50,17 @@ abstract class Factory {
 		return Factory._lembreteService;
 	}
 
+	private static get usuarioService() {
+		if(!Factory._usuarioService) {
+			Factory._usuarioService = new UsuarioService(Factory.usuarioRepository);
+		}
+		
+		return Factory._usuarioService;
+	}
+
 	public static get usuarioControler() {
 		if(!Factory._usuarioController) {
-			Factory._usuarioController = new UserController(Factory.usuarioRepository, Factory.validationService);
+			Factory._usuarioController = new UserController(Factory.usuarioService, Factory.validationService);
 		}
 
 		return Factory._usuarioController;

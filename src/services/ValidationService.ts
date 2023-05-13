@@ -3,8 +3,8 @@ import { Repository } from "typeorm";
 import { Usuario } from "../entity/Usuario";
 import { Lembrete } from "../entity/Lembrete";
 import { Request, Response } from "express";
-import { bad, unauthorized } from "../controller/httpResponses";
-import { ValidatedResponse } from '../entity/ValidatedResponse';
+import { bad, unauthorized } from "../controller/helpers/httpResponses";
+import { ValidatedResponse } from '../controller/helpers/ValidatedResponse';
 
 class ValidationService {
 	private usuarioRepository: Repository<Usuario>;

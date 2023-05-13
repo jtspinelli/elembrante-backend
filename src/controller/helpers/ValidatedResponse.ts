@@ -1,4 +1,4 @@
-import { Usuario } from './Usuario';
+import { Usuario } from '../../entity/Usuario';
 
 export class ValidatedResponse {
 	public pass: boolean;

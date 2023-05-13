@@ -11,6 +11,7 @@ const ValidationService_1 = __importDefault(require("../services/ValidationServi
 const UserController_1 = __importDefault(require("../controller/UserController"));
 const LembreteService_1 = __importDefault(require("../services/LembreteService"));
 const LembreteController_1 = __importDefault(require("../controller/LembreteController"));
+const UsuarioService_1 = __importDefault(require("../services/UsuarioService"));
 class Factory {
     static get usuarioRepository() {
         return Factory._usuarioRepository;
@@ -20,7 +21,7 @@ class Factory {
     }
     static get authenticationController() {
         if (!Factory._authenticationController) {
-            Factory._authenticationController = new AuthenticationController_1.default(Factory._usuarioRepository);
+            Factory._authenticationController = new AuthenticationController_1.default(Factory.usuarioService);
         }
         return Factory._authenticationController;
     }
@@ -36,9 +37,15 @@ class Factory {
         }
         return Factory._lembreteService;
     }
+    static get usuarioService() {
+        if (!Factory._usuarioService) {
+            Factory._usuarioService = new UsuarioService_1.default(Factory.usuarioRepository);
+        }
+        return Factory._usuarioService;
+    }
     static get usuarioControler() {
         if (!Factory._usuarioController) {
-            Factory._usuarioController = new UserController_1.default(Factory.usuarioRepository, Factory.validationService);
+            Factory._usuarioController = new UserController_1.default(Factory.usuarioService, Factory.validationService);
         }
         return Factory._usuarioController;
     }

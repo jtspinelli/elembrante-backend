@@ -3,9 +3,9 @@ import Factory from "../factory/Factory";
 
 const userRoutes = Router();
 
-userRoutes.post('/checkuser', Factory.usuarioControler.userExists.bind(Factory.usuarioControler));
-userRoutes.post('/user', Factory.usuarioControler.createUser.bind(Factory.usuarioControler));
-userRoutes.put('/user/:id', Factory.usuarioControler.updateUser.bind(Factory.usuarioControler));
-userRoutes.delete('/user/:id', Factory.usuarioControler.removeUser.bind(Factory.usuarioControler));
+userRoutes.post('/checkuser', Factory.usuarioControler.userExists());
+userRoutes.post('/user', Factory.usuarioControler.createUser());
+userRoutes.put('/user/:id', Factory.usuarioControler.updateUser());
+userRoutes.delete('/user/:id', Factory.usuarioControler.removeUser());
 
 export default userRoutes;

@@ -9,23 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const httpResponses_1 = require("./httpResponses");
-const ValidatedResponse_1 = require("../entity/ValidatedResponse");
+const httpResponses_1 = require("./helpers/httpResponses");
+const ValidatedResponse_1 = require("./helpers/ValidatedResponse");
 class LembreteController {
     constructor(validationService, lembreteService) {
         this.validationService = validationService;
         this.service = lembreteService;
     }
-    getLembretes(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+    getLembretes() {
+        return (req, res) => __awaiter(this, void 0, void 0, function* () {
             const validation = yield this.validationService.validate(req, res, { strings: [], numbers: [] }, null);
             if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
                 return;
             return res.status(200).send(yield this.service.getAll(validation.usuario.id));
         });
     }
-    addLembrete(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+    addLembrete() {
+        return (req, res) => __awaiter(this, void 0, void 0, function* () {
             const validation = yield this.validationService.validate(req, res, { strings: ['titulo', 'descricao'], numbers: [] }, null);
             if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
                 return;
@@ -36,8 +36,8 @@ class LembreteController {
             res.status(201).send(newLembrete);
         });
     }
-    updateLembrete(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+    updateLembrete() {
+        return (req, res) => __awaiter(this, void 0, void 0, function* () {
             const validation = yield this.validationService.validate(req, res, { strings: ['titulo', 'descricao'], numbers: [] }, req.params.id);
             if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
                 return;
@@ -48,18 +48,14 @@ class LembreteController {
             res.status(200).send(lembrete);
         });
     }
-    archiveLembrete(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.setArchive(req, res, true);
-        });
+    archiveLembrete() {
+        return this.setArchive(true);
     }
-    recoverLembrete(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.setArchive(req, res, false);
-        });
+    recoverLembrete() {
+        return this.setArchive(false);
     }
-    setArchive(req, res, value) {
-        return __awaiter(this, void 0, void 0, function* () {
+    setArchive(value) {
+        return (req, res) => __awaiter(this, void 0, void 0, function* () {
             const validation = yield this.validationService.validate(req, res, { strings: [], numbers: [] }, req.params.id);
             if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
                 return;
@@ -70,15 +66,15 @@ class LembreteController {
             (0, httpResponses_1.success)(res);
         });
     }
-    removeLembrete(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+    removeLembrete() {
+        return (req, res) => __awaiter(this, void 0, void 0, function* () {
             const validation = yield this.validationService.validate(req, res, { strings: [], numbers: [] }, req.params.id);
             if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
                 return;
             if (!(yield this.service.remove(Number(req.params.id)))) {
                 (0, httpResponses_1.internalError)(res);
             }
-            (0, httpResponses_1.success)(res);
+            return (0, httpResponses_1.success)(res);
         });
     }
 }

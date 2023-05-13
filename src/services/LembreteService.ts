@@ -1,13 +1,13 @@
-import { Repository } from 'typeorm';
+import { LembreteRepository } from '../controller/helpers/types';
 import { Lembrete } from './../entity/Lembrete';
 import { Usuario } from '../entity/Usuario';
 import LembreteDto from '../controller/dto/LembreteDto';
 import mapper from '../mappings/mapper';
 
 class LembreteService {
-	private repository: Repository<Lembrete>;
+	private repository: LembreteRepository;
 
-	constructor(lembreteRepository: Repository<Lembrete>) {
+	constructor(lembreteRepository: LembreteRepository) {
 		this.repository = lembreteRepository;
 	}
 
