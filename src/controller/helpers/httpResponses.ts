@@ -15,3 +15,7 @@ export const bad = (res: Response, message: string) => {
 export const unauthorized = (res: Response, message: string) => {
 	return res.status(401).send(message);
 }
+
+export const notfound = (res: Response, message: string) => {
+	return res.status(404).send(message);
+}

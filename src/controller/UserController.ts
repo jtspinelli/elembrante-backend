@@ -1,4 +1,4 @@
-import { bad, internalError, success, unauthorized } from "./helpers/httpResponses";
+import { bad, internalError, notfound, success, unauthorized } from "./helpers/httpResponses";
 import { AuthenticationService } from "../services/AuthenticationService";
 import { Request, Response } from "express";
 import { TokenExpiredError } from "jsonwebtoken";
@@ -24,7 +24,7 @@ class UserController {
 			if(!username) return;
 			
 			const user = await this.service.findByUsername(username);
-			if(!user) return bad(res, 'Erro: usuário não encontrado.');
+			if(!user) return notfound(res, 'Erro: usuário não encontrado.');
 			
 			res.status(200).send();
 		}

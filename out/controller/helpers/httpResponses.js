@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unauthorized = exports.bad = exports.success = exports.internalError = void 0;
+exports.notfound = exports.unauthorized = exports.bad = exports.success = exports.internalError = void 0;
 const internalError = (res) => {
     return res.status(500).send('Erro interno no servidor.');
 };
@@ -17,3 +17,7 @@ const unauthorized = (res, message) => {
     return res.status(401).send(message);
 };
 exports.unauthorized = unauthorized;
+const notfound = (res, message) => {
+    return res.status(404).send(message);
+};
+exports.notfound = notfound;

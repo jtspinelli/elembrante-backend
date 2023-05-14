@@ -53,7 +53,7 @@ class UserController {
                 return;
             const user = yield this.service.findByUsername(username);
             if (!user)
-                return (0, httpResponses_1.bad)(res, 'Erro: usuário não encontrado.');
+                return (0, httpResponses_1.notfound)(res, 'Erro: usuário não encontrado.');
             res.status(200).send();
         });
     }
