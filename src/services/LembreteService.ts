@@ -1,5 +1,5 @@
 import { LembreteRepository } from '../controller/helpers/types';
-import { Lembrete } from './../entity/Lembrete';
+import { Lembrete } from '../entity/Lembrete';
 import { Usuario } from '../entity/Usuario';
 import LembreteDto from '../controller/dto/LembreteDto';
 import mapper from '../mappings/mapper';

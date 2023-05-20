@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Lembrete_1 = require("./../entity/Lembrete");
+const Lembrete_1 = require("../entity/Lembrete");
 const LembreteDto_1 = __importDefault(require("../controller/dto/LembreteDto"));
 const mapper_1 = __importDefault(require("../mappings/mapper"));
 class LembreteService {
