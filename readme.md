@@ -15,7 +15,7 @@ O Backend da aplicação basicamente consiste em um servidor [Node.js](https://n
 - Criptografia de senha com [bcrypt](https://www.npmjs.com/package/bcrypt)
 - Autenticação de usuário com JWT* ([jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken))
 - HTTPS e cookies 'httponly'
-- Banco de dados [MySQL](https://www.mysql.com/)
+- Banco de dados [PostgreSQL](https://www.postgresql.org/)
 - ORM com [TypeORM](https://typeorm.io/)
 - Arquitetura com Repositórios, Serviços e Controladores
 
@@ -31,37 +31,43 @@ Mas se desejar rodar localmente, realize os seguintes ajustes:
 
 ### 1) Banco de dados
 
-Configure um servidor local MySQL com um schema (database) de nome **elembrante**.
+Configure um servidor local PostgreSQL com um schema (database) de nome **elembrante**.
 
-Isso é suficiente, pois o TypeORM criará automaticamente as tabelas necessárias.
+Isso é suficiente, pois usaremos o TypeORM para criar automaticamente as tabelas necessárias.
 
 ### 2) Variáveis de ambiente
 
-No diretório do projeto, crie um arquivo `.env` com 4 informações:
+No diretório do projeto, crie um arquivo `.env` com 2 informações:
 
 ```
 SECRET=elembrante_dev 
-HOST=localhost
-HOSTUSERNAME=<mysqlusername>
-HOSTPASSWORD=<mysqlpassword>
+DB_URL=<url de conexão com o database>
 ```
 
 - SECRET: adicione qualquer valor; será utilizada para gerar e posteriormente decodificar os tokens JWT
-- HOST: insira 'localhost', como no exemplo acima
-- HOSTUSERNAME: insira o username configurado ao instalar o MySQL (ignore no exemplo acima os sinais <>)
-- HOSTPASSWORD: insira a senha configurada ao instalar o MySQL (ignore no exemplo acima os sinais <>)
+- DB_URL: url de conexão com o banco de dados postgreSQL
 
 ### 3) Ajuste no dataSource.ts
 
-No diretório raiz do projeto, abra o arquivo [dataSource.ts](https://github.com/jtspinelli/elembrante-backend/blob/master/src/dataSource.ts#L7) e descomente as seguintes linhas:
+No diretório raiz do projeto, abra o arquivo [dataSource.ts](https://github.com/jtspinelli/elembrante-backend/blob/master/src/dataSource.ts#L7) e descomente a seguinte linha:
 
 ```JS
+...
 dotenv.config();
 ...
-synchronize: true
 ```
 
-### 4) Ajustes no index.ts
+### 4) Gerando as tabelas no banco de dados
+
+O projeto já possui um script para gerar as tabelas no banco de dados.
+Basta executar o comando:
+
+```
+npm run migration:r
+```
+
+
+### 5) Ajustes no index.ts
 
 No diretório raiz do projeto, abra o arquivo [index.ts](https://github.com/jtspinelli/elembrante-backend/blob/master/src/index.ts) e **descomente todas as linhas comentadas**.
 
@@ -71,7 +77,7 @@ Por fim, comente a seguinte linha:
 // app.listen(port, () => console.log("APP RUNNING ON PORT " + port));
 ```
 
-### 5) Certificado SSL
+### 6) Certificado SSL
 
 Dentro do diretório `out` adicione um diretório `cert` e, dentro deste, os seguintes arquivos:
 
@@ -79,7 +85,7 @@ Dentro do diretório `out` adicione um diretório `cert` e, dentro deste, os seg
 - [localhost.key](https://drive.google.com/file/d/1dSiFidCFtZv171C3JIZVe0TAC20KnEaH/view?usp=share_link)
 
 
-### 6) Por fim
+### 7) Por fim
 
 Instale as dependências utilizando o comando `npm install`.
 
