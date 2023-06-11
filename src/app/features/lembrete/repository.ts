@@ -32,9 +32,17 @@ export class LembreteRepository {
 		return newLembrete;
 	}
 
+	async findOneById(id: number) {
+		return await this.repository.findOneBy({id});
+	}
+
 	async create(titulo: string, descricao: string, usuario: Usuario) {
 		const lembrete = this.getLembrete(titulo, descricao, new Date(), usuario);
 
 		return await this.repository.save(lembrete);
+	}
+
+	async remove(lembrete: Lembrete) {
+		await this.repository.remove(lembrete);
 	}
 }

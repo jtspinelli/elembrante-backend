@@ -39,10 +39,20 @@ class LembreteRepository {
         newLembrete.arquivado = false;
         return newLembrete;
     }
+    findOneById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.repository.findOneBy({ id });
+        });
+    }
     create(titulo, descricao, usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             const lembrete = this.getLembrete(titulo, descricao, new Date(), usuario);
             return yield this.repository.save(lembrete);
+        });
+    }
+    remove(lembrete) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.repository.remove(lembrete);
         });
     }
 }

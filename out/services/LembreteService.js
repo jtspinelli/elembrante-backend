@@ -17,34 +17,21 @@ const LembreteDto_1 = __importDefault(require("../controller/dto/LembreteDto"));
 const mapper_1 = __importDefault(require("../mappings/mapper"));
 class LembreteService {
     constructor(lembreteRepository) {
-        this.getLembrete = (titulo, descricao, criadoEm, usuario) => {
-            const newLembrete = new Lembrete_1.Lembrete();
-            newLembrete.titulo = titulo;
-            newLembrete.descricao = descricao;
-            newLembrete.usuario = usuario;
-            newLembrete.criadoEm = criadoEm;
-            newLembrete.arquivado = false;
-            return newLembrete;
-        };
         this.repository = lembreteRepository;
     }
-    getAll(usuarioId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const lembretes = yield this.repository.createQueryBuilder('lembrete')
-                .leftJoinAndSelect("lembrete.usuario", "usuario")
-                .where('usuario.id = ' + usuarioId)
-                .getMany();
-            return mapper_1.default.mapArray(lembretes, Lembrete_1.Lembrete, LembreteDto_1.default);
-        });
-    }
-    create(titulo, descricao, usuario) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const lembrete = this.getLembrete(titulo, descricao, new Date(), usuario);
-            return this.repository.save(lembrete)
-                .then((lembrete) => mapper_1.default.map(lembrete, Lembrete_1.Lembrete, LembreteDto_1.default))
-                .catch(() => null);
-        });
-    }
+    // public async getAll(usuarioId: number) {
+    // 	const lembretes = await this.repository.createQueryBuilder('lembrete')
+    // 		.leftJoinAndSelect("lembrete.usuario", "usuario")
+    // 		.where('usuario.id = ' + usuarioId)
+    // 		.getMany();
+    // 	return mapper.mapArray(lembretes, Lembrete, LembreteDto);
+    // }
+    // public async create(titulo: string, descricao: string, usuario: Usuario ) {
+    // 	const lembrete = this.getLembrete(titulo, descricao, new Date(), usuario);
+    // 	return this.repository.save(lembrete)
+    // 		.then((lembrete: Lembrete) =>  mapper.map(lembrete, Lembrete, LembreteDto))
+    // 		.catch(() => null);
+    // }
     update(id, novoTitulo, novaDescricao) {
         return __awaiter(this, void 0, void 0, function* () {
             const lembrete = yield this.repository.findOne({ where: { id }, relations: { usuario: true } });
@@ -57,16 +44,13 @@ class LembreteService {
                 .catch(() => undefined);
         });
     }
-    remove(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const lembrete = yield this.repository.findOneBy({ id });
-            if (!lembrete)
-                return;
-            return this.repository.remove(lembrete)
-                .then(() => true)
-                .catch(() => false);
-        });
-    }
+    // public async remove(id: number) {
+    // 	const lembrete = await this.repository.findOneBy({id});
+    // 	if(!lembrete) return;
+    // 	return this.repository.remove(lembrete)
+    // 		.then(() => true)
+    // 		.catch(() => false);
+    // }
     setArchive(id, value) {
         return __awaiter(this, void 0, void 0, function* () {
             const lembrete = yield this.repository.findOneBy({ id });

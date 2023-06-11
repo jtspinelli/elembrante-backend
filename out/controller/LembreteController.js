@@ -63,16 +63,5 @@ class LembreteController {
             (0, httpResponses_1.success)(res);
         });
     }
-    removeLembrete() {
-        return (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const validation = yield this.validationService.validate(req, res, { strings: [], numbers: [] }, req.params.id);
-            if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
-                return;
-            if (!(yield this.service.remove(Number(req.params.id)))) {
-                (0, httpResponses_1.internalError)(res);
-            }
-            return (0, httpResponses_1.success)(res);
-        });
-    }
 }
 exports.default = LembreteController;

@@ -11,5 +11,5 @@ const lembreteRoutes = (0, express_1.Router)();
 lembreteRoutes.put('/lembrete/:id', Factory_1.default.lembreteController.updateLembrete());
 lembreteRoutes.put('/lembrete/archive/:id', Factory_1.default.lembreteController.archiveLembrete());
 lembreteRoutes.put('/lembrete/recover/:id', Factory_1.default.lembreteController.recoverLembrete());
-lembreteRoutes.delete('/lembrete/:id', Factory_1.default.lembreteController.removeLembrete());
+// lembreteRoutes.delete('/lembrete/:id', Factory.lembreteController.removeLembrete());
 exports.default = lembreteRoutes;

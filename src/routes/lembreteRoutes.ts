@@ -8,6 +8,6 @@ const lembreteRoutes = Router();
 lembreteRoutes.put('/lembrete/:id', Factory.lembreteController.updateLembrete());
 lembreteRoutes.put('/lembrete/archive/:id', Factory.lembreteController.archiveLembrete());
 lembreteRoutes.put('/lembrete/recover/:id', Factory.lembreteController.recoverLembrete());
-lembreteRoutes.delete('/lembrete/:id', Factory.lembreteController.removeLembrete());
+// lembreteRoutes.delete('/lembrete/:id', Factory.lembreteController.removeLembrete());
 
 export default lembreteRoutes;

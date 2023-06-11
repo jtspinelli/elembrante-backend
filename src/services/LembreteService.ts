@@ -39,14 +39,14 @@ class LembreteService {
 			.catch(() => undefined);
 	}
 
-	public async remove(id: number) {
-		const lembrete = await this.repository.findOneBy({id});
-		if(!lembrete) return;
+	// public async remove(id: number) {
+	// 	const lembrete = await this.repository.findOneBy({id});
+	// 	if(!lembrete) return;
 	
-		return this.repository.remove(lembrete)
-			.then(() => true)
-			.catch(() => false);
-	}
+	// 	return this.repository.remove(lembrete)
+	// 		.then(() => true)
+	// 		.catch(() => false);
+	// }
 
 	public async setArchive(id: number, value: boolean) {
 		const lembrete = await this.repository.findOneBy({id});

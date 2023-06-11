@@ -74,18 +74,18 @@ class LembreteController {
 		}
 	}
 
-	public removeLembrete() : ExpressRouteFunc {
-		return async (req: Request, res: Response) => {
-			const validation = await this.validationService.validate(req, res, {strings: [], numbers: []}, req.params.id);
-			if(!(validation instanceof ValidatedResponse)) return;
+	// public removeLembrete() : ExpressRouteFunc {
+	// 	return async (req: Request, res: Response) => {
+	// 		const validation = await this.validationService.validate(req, res, {strings: [], numbers: []}, req.params.id);
+	// 		if(!(validation instanceof ValidatedResponse)) return;
 			
-			if(!(await this.service.remove(Number(req.params.id)))) {
-				internalError(res);
-			}
+	// 		if(!(await this.service.remove(Number(req.params.id)))) {
+	// 			internalError(res);
+	// 		}
 			
-			return success(res);
-		}
-	}
+	// 		return success(res);
+	// 	}
+	// }
 }
 
 export default LembreteController;
