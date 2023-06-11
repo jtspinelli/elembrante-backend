@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateLembreteController = exports.recoverLembreteController = exports.archiveLembreteController = exports.removeLembreteController = exports.addLembreteController = exports.getLembretesController = void 0;
-const ValidatedResponse_1 = require("../../../controller/helpers/ValidatedResponse");
 const getLembretesUsecase_1 = require("./usecases/getLembretesUsecase");
 const addLembreteUsecase_1 = require("./usecases/addLembreteUsecase");
 const removeLembreteUsecase_1 = require("./usecases/removeLembreteUsecase");
@@ -19,6 +18,7 @@ const recoverLembreteUsecase_1 = require("./usecases/recoverLembreteUsecase");
 const validators_1 = require("./validators");
 const httpResponses_1 = require("../../shared/helpers/httpResponses");
 const updateLembreteUsecase_1 = require("./usecases/updateLembreteUsecase");
+const ValidatedResponse_1 = require("../../shared/helpers/ValidatedResponse");
 const getLembretesController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const validation = yield (0, validators_1.validate)(req, res, { strings: [], numbers: [] }, null);
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))

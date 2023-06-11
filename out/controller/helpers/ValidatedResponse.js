@@ -1,6 +1,9 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ValidatedResponse = void 0;
-class ValidatedResponse {
-}
-exports.ValidatedResponse = ValidatedResponse;
+// import { Usuario } from "../../app/shared/database/entities/Usuario";
+// export class ValidatedResponse {
+// 	public pass: boolean;
+// 	public titulo: string;
+// 	public descricao: string;
+// 	public criadoEm: Date;
+// 	public usuario: Usuario;
+// }

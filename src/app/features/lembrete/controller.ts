@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { ValidatedResponse } from "../../../controller/helpers/ValidatedResponse";
 import { GetLembretesUsecase } from "./usecases/getLembretesUsecase";
 import { AddLembreteUsecase } from "./usecases/addLembreteUsecase";
 import { RemoveLembreteUsecase } from "./usecases/removeLembreteUsecase";
@@ -8,6 +7,7 @@ import { RecoverLembreteUsecase } from "./usecases/recoverLembreteUsecase";
 import { validate } from "./validators";
 import { success } from "../../shared/helpers/httpResponses";
 import { UpdateLembreteUsecase } from "./usecases/updateLembreteUsecase";
+import { ValidatedResponse } from "../../shared/helpers/ValidatedResponse";
 
 export const getLembretesController = async (req: Request, res: Response) => {
 	const validation = await validate(req, res, {strings: [], numbers: []}, null);

@@ -1,9 +1,9 @@
 import { Repository } from "typeorm";
-import mapper from "../../../mappings/mapper";
-import LembreteDto from "./dto/LembreteDto";
-import db from "../../../main/config/dataSource";
 import { Lembrete } from "../../shared/database/entities/Lembrete";
 import { Usuario } from "../../shared/database/entities/Usuario";
+import LembreteDto from "./dto/LembreteDto";
+import db from "../../../main/config/dataSource";
+import mapper from "../../shared/mappings/mapper";
 
 export class LembreteRepository {
 	private repository: Repository<Lembrete>;

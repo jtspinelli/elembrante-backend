@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { bad, unauthorized } from '../../shared/helpers/httpResponses';
-import { ValidatedResponse } from '../../../controller/helpers/ValidatedResponse';
 import { appEnv } from '../../env/appEnv';
-import jwt from 'jsonwebtoken';
-import db from '../../../main/config/dataSource';
 import { Lembrete } from '../../shared/database/entities/Lembrete';
 import { Usuario } from '../../shared/database/entities/Usuario';
+import { ValidatedResponse } from '../../shared/helpers/ValidatedResponse';
+import jwt from 'jsonwebtoken';
+import db from '../../../main/config/dataSource';
 
 function tokenIsPresent(req: Request) {
 	return req.cookies.sign !== undefined && req.cookies.token !== undefined;

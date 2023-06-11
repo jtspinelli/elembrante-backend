@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LembreteRepository = void 0;
-const mapper_1 = __importDefault(require("../../../mappings/mapper"));
+const Lembrete_1 = require("../../shared/database/entities/Lembrete");
 const LembreteDto_1 = __importDefault(require("./dto/LembreteDto"));
 const dataSource_1 = __importDefault(require("../../../main/config/dataSource"));
-const Lembrete_1 = require("../../shared/database/entities/Lembrete");
+const mapper_1 = __importDefault(require("../../shared/mappings/mapper"));
 class LembreteRepository {
     constructor() {
         this.repository = dataSource_1.default.getRepository(Lembrete_1.Lembrete);

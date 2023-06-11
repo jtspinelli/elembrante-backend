@@ -1,9 +1,9 @@
 
 import { LembreteRepository } from "../repository";
 import { Lembrete } from "../../../shared/database/entities/Lembrete";
-import mapper from "../../../../mappings/mapper";
-import LembreteDto from "../dto/LembreteDto";
 import { Usuario } from "../../../shared/database/entities/Usuario";
+import LembreteDto from "../dto/LembreteDto";
+import mapper from "../../../shared/mappings/mapper";
 
 export class AddLembreteUsecase {
 	private lembreteRepository: LembreteRepository;

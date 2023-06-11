@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateLembreteUsecase = void 0;
-const mapper_1 = __importDefault(require("../../../../mappings/mapper"));
 const Lembrete_1 = require("../../../shared/database/entities/Lembrete");
-const LembreteDto_1 = __importDefault(require("../dto/LembreteDto"));
 const repository_1 = require("../repository");
+const LembreteDto_1 = __importDefault(require("../dto/LembreteDto"));
+const mapper_1 = __importDefault(require("../../../shared/mappings/mapper"));
 class UpdateLembreteUsecase {
     constructor() {
         this.repository = new repository_1.LembreteRepository();

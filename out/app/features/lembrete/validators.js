@@ -14,12 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validate = void 0;
 const httpResponses_1 = require("../../shared/helpers/httpResponses");
-const ValidatedResponse_1 = require("../../../controller/helpers/ValidatedResponse");
 const appEnv_1 = require("../../env/appEnv");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const dataSource_1 = __importDefault(require("../../../main/config/dataSource"));
 const Lembrete_1 = require("../../shared/database/entities/Lembrete");
 const Usuario_1 = require("../../shared/database/entities/Usuario");
+const ValidatedResponse_1 = require("../../shared/helpers/ValidatedResponse");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const dataSource_1 = __importDefault(require("../../../main/config/dataSource"));
 function tokenIsPresent(req) {
     return req.cookies.sign !== undefined && req.cookies.token !== undefined;
 }

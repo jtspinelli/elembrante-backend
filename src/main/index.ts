@@ -9,9 +9,9 @@ import path from 'path';
 import fs from 'fs';
 import cors from 'cors';
 import https from 'https';
-import mapper from '../mappings/mapper';
 import cookieParser from 'cookie-parser';
 import LembreteDto from "../app/features/lembrete/dto/LembreteDto";
+import mapper from "../app/shared/mappings/mapper";
 
 const key = fs.readFileSync(path.join(__dirname, '..', '/cert/localhost.key'));
 const cert = fs.readFileSync(path.join(__dirname, '..', '/cert/localhost.crt'));

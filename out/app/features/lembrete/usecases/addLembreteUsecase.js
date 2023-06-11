@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AddLembreteUsecase = void 0;
 const repository_1 = require("../repository");
 const Lembrete_1 = require("../../../shared/database/entities/Lembrete");
-const mapper_1 = __importDefault(require("../../../../mappings/mapper"));
 const LembreteDto_1 = __importDefault(require("../dto/LembreteDto"));
+const mapper_1 = __importDefault(require("../../../shared/mappings/mapper"));
 class AddLembreteUsecase {
     constructor() {
         this.lembreteRepository = new repository_1.LembreteRepository();
