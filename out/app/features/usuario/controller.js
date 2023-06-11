@@ -9,11 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeUserController = exports.createUserController = exports.checkUserExistsController = void 0;
+exports.updateUserController = exports.removeUserController = exports.createUserController = exports.checkUserExistsController = void 0;
 const repository_1 = require("./repository");
-const httpResponses_1 = require("../../helpers/httpResponses");
+const httpResponses_1 = require("../../shared/helpers/httpResponses");
 const createUsuarioUsecase_1 = require("./usecases/createUsuarioUsecase");
 const removeUsuarioUsecase_1 = require("./usecases/removeUsuarioUsecase");
+const updateUsuarioUsecase_1 = require("./usecases/updateUsuarioUsecase");
 const checkUserExistsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const usuarioRepository = new repository_1.UsuarioRepository();
     const username = req.body.username;
@@ -52,3 +53,14 @@ const removeUserController = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.removeUserController = removeUserController;
+const updateUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const updateUsuarioUsecase = new updateUsuarioUsecase_1.UpdateUsuarioUsecase();
+        yield updateUsuarioUsecase.execute(req);
+        return (0, httpResponses_1.success)(res);
+    }
+    catch (error) {
+        return (0, httpResponses_1.internalError)(res);
+    }
+});
+exports.updateUserController = updateUserController;

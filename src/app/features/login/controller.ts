@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { Request, Response } from "express";
-import { bad, internalError } from "../../helpers/httpResponses";
+import { bad, internalError } from "../../shared/helpers/httpResponses";
 import { UsuarioRepository } from "../usuario/repository";
 import { Usuario } from "../../../entity/Usuario";
 import { serialize } from 'cookie';

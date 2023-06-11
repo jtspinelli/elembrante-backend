@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { UsuarioRepository } from "./repository";
-import { bad, internalError, notfound, success } from "../../helpers/httpResponses";
+import { bad, internalError, notfound, success } from "../../shared/helpers/httpResponses";
 import { CreateUsuarioUsecase } from "./usecases/createUsuarioUsecase";
-import { Usuario } from "../../../entity/Usuario";
 import { RemoveUsuarioUsecase } from "./usecases/removeUsuarioUsecase";
+import { UpdateUsuarioUsecase } from "./usecases/updateUsuarioUsecase";
 
 export const checkUserExistsController = async (req: Request, res: Response) => {
 	const usuarioRepository = new UsuarioRepository();
@@ -37,6 +37,17 @@ export const removeUserController = async (req: Request, res: Response) => {
 	try {
 		const removeUsuarioUsecase = new RemoveUsuarioUsecase();
 		await removeUsuarioUsecase.execute(req);
+
+		return success(res);
+	} catch (error: any) {
+		return internalError(res);
+	}
+}
+
+export const updateUserController = async (req: Request, res: Response) => {
+	try {
+		const updateUsuarioUsecase = new UpdateUsuarioUsecase();
+		await updateUsuarioUsecase.execute(req);
 
 		return success(res);
 	} catch (error: any) {

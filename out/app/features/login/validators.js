@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateLogin = void 0;
-const httpResponses_1 = require("../../helpers/httpResponses");
+const httpResponses_1 = require("../../shared/helpers/httpResponses");
 const repository_1 = require("../usuario/repository");
 const validateLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const secret = process.env.SECRET;

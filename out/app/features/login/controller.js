@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.googleLoginController = exports.loginController = exports.createToken = void 0;
 const axios_1 = __importDefault(require("axios"));
-const httpResponses_1 = require("../../helpers/httpResponses");
+const httpResponses_1 = require("../../shared/helpers/httpResponses");
 const repository_1 = require("../usuario/repository");
 const Usuario_1 = require("../../../entity/Usuario");
 const cookie_1 = require("cookie");

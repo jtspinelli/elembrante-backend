@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { bad, unauthorized } from '../../helpers/httpResponses';
+import { bad, unauthorized } from '../../shared/helpers/httpResponses';
 import { UsuarioRepository } from '../usuario/repository';
 
 export const validateLogin = async (req: Request, res: Response, next: NextFunction) => {

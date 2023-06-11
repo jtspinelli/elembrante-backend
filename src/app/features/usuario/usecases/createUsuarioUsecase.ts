@@ -2,7 +2,7 @@ import { UsuarioRepository } from "../repository";
 import bcrypt from 'bcrypt';
 import { Request } from "express";
 import { Usuario } from "../../../../entity/Usuario";
-import { internalError } from "../../../helpers/httpResponses";
+import { internalError } from "../../../shared/helpers/httpResponses";
 import { createToken } from "../../login/controller";
 
 export class CreateUsuarioUsecase {

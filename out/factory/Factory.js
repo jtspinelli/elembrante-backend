@@ -7,7 +7,7 @@ const Lembrete_1 = require("../entity/Lembrete");
 const Usuario_1 = require("../entity/Usuario");
 // import AuthenticationController from "../controller/AuthenticationController";
 const ValidationService_1 = __importDefault(require("../services/ValidationService"));
-const UserController_1 = __importDefault(require("../controller/UserController"));
+// import UserController from "../controller/UserController";
 const LembreteService_1 = __importDefault(require("../services/LembreteService"));
 const LembreteController_1 = __importDefault(require("../controller/LembreteController"));
 const UsuarioService_1 = __importDefault(require("../services/UsuarioService"));
@@ -43,12 +43,12 @@ class Factory {
         }
         return Factory._usuarioService;
     }
-    static get usuarioControler() {
-        if (!Factory._usuarioController) {
-            Factory._usuarioController = new UserController_1.default(Factory.usuarioService, Factory.validationService);
-        }
-        return Factory._usuarioController;
-    }
+    // public static get usuarioControler() {
+    // 	if(!Factory._usuarioController) {
+    // 		Factory._usuarioController = new UserController(Factory.usuarioService, Factory.validationService);
+    // 	}
+    // 	return Factory._usuarioController;
+    // }
     static get lembreteController() {
         if (!Factory._lembreteController) {
             Factory._lembreteController = new LembreteController_1.default(Factory.validationService, Factory.lembreteService);

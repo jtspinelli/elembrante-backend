@@ -2,7 +2,7 @@ import { Lembrete } from "../entity/Lembrete";
 import { Usuario } from "../entity/Usuario";
 // import AuthenticationController from "../controller/AuthenticationController";
 import ValidationService from "../services/ValidationService";
-import UserController from "../controller/UserController";
+// import UserController from "../controller/UserController";
 import LembreteService from "../services/LembreteService";
 import LembreteController from "../controller/LembreteController";
 import UsuarioService from "../services/UsuarioService";
@@ -15,7 +15,7 @@ abstract class Factory {
 	private static _validationService: ValidationService;
 	private static _lembreteService: LembreteService;
 	private static _usuarioService: UsuarioService;
-	private static _usuarioController: UserController;
+	// private static _usuarioController: UserController;
 	private static _lembreteController: LembreteController;
 
 	public static get usuarioRepository() {
@@ -58,13 +58,13 @@ abstract class Factory {
 		return Factory._usuarioService;
 	}
 
-	public static get usuarioControler() {
-		if(!Factory._usuarioController) {
-			Factory._usuarioController = new UserController(Factory.usuarioService, Factory.validationService);
-		}
+	// public static get usuarioControler() {
+	// 	if(!Factory._usuarioController) {
+	// 		Factory._usuarioController = new UserController(Factory.usuarioService, Factory.validationService);
+	// 	}
 
-		return Factory._usuarioController;
-	}
+	// 	return Factory._usuarioController;
+	// }
 
 	public static get lembreteController() {
 		if(!Factory._lembreteController) {
