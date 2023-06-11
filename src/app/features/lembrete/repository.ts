@@ -1,9 +1,9 @@
 import { Repository } from "typeorm";
-import { Lembrete } from "../../../entity/Lembrete";
-import { Usuario } from "../../../entity/Usuario";
 import mapper from "../../../mappings/mapper";
 import LembreteDto from "./dto/LembreteDto";
 import db from "../../../main/config/dataSource";
+import { Lembrete } from "../../shared/database/entities/Lembrete";
+import { Usuario } from "../../shared/database/entities/Usuario";
 
 export class LembreteRepository {
 	private repository: Repository<Lembrete>;
@@ -36,6 +36,10 @@ export class LembreteRepository {
 		return await this.repository.findOneBy({id});
 	}
 
+	async findOneByIdWithRelations(id: number) {
+		return await this.repository.findOne({where: {id}, relations: {usuario: true}});
+	}
+
 	async create(titulo: string, descricao: string, usuario: Usuario) {
 		const lembrete = this.getLembrete(titulo, descricao, new Date(), usuario);
 
@@ -44,5 +48,9 @@ export class LembreteRepository {
 
 	async remove(lembrete: Lembrete) {
 		await this.repository.remove(lembrete);
+	}
+
+	async save(lembrete: Lembrete) {
+		return await this.repository.save(lembrete);
 	}
 }

@@ -9,13 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeLembreteController = exports.addLembreteController = exports.getLembretesController = void 0;
+exports.updateLembreteController = exports.recoverLembreteController = exports.archiveLembreteController = exports.removeLembreteController = exports.addLembreteController = exports.getLembretesController = void 0;
 const ValidatedResponse_1 = require("../../../controller/helpers/ValidatedResponse");
 const getLembretesUsecase_1 = require("./usecases/getLembretesUsecase");
 const addLembreteUsecase_1 = require("./usecases/addLembreteUsecase");
-const validators_1 = require("./validators");
 const removeLembreteUsecase_1 = require("./usecases/removeLembreteUsecase");
+const archiveLembreteUsecase_1 = require("./usecases/archiveLembreteUsecase");
+const recoverLembreteUsecase_1 = require("./usecases/recoverLembreteUsecase");
+const validators_1 = require("./validators");
 const httpResponses_1 = require("../../shared/helpers/httpResponses");
+const updateLembreteUsecase_1 = require("./usecases/updateLembreteUsecase");
 const getLembretesController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const validation = yield (0, validators_1.validate)(req, res, { strings: [], numbers: [] }, null);
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
@@ -44,3 +47,30 @@ const removeLembreteController = (req, res) => __awaiter(void 0, void 0, void 0,
     return (0, httpResponses_1.success)(res);
 });
 exports.removeLembreteController = removeLembreteController;
+const archiveLembreteController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const validation = yield (0, validators_1.validate)(req, res, { strings: [], numbers: [] }, req.params.id);
+    if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
+        return;
+    const archiveLembreteUsecase = new archiveLembreteUsecase_1.ArchiveLembreteUsecase();
+    yield archiveLembreteUsecase.execute(Number(req.params.id));
+    return (0, httpResponses_1.success)(res);
+});
+exports.archiveLembreteController = archiveLembreteController;
+const recoverLembreteController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const validation = yield (0, validators_1.validate)(req, res, { strings: [], numbers: [] }, req.params.id);
+    if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
+        return;
+    const recoverLembreteUsecase = new recoverLembreteUsecase_1.RecoverLembreteUsecase();
+    yield recoverLembreteUsecase.execute(Number(req.params.id));
+    return (0, httpResponses_1.success)(res);
+});
+exports.recoverLembreteController = recoverLembreteController;
+const updateLembreteController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const validation = yield (0, validators_1.validate)(req, res, { strings: ['titulo', 'descricao'], numbers: [] }, req.params.id);
+    if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
+        return;
+    const updateLembreteUsecase = new updateLembreteUsecase_1.UpdateLembreteUsecase();
+    const savedLembrete = yield updateLembreteUsecase.execute(Number(req.params.id), req.body.titulo, req.body.descricao);
+    return res.status(200).send(savedLembrete);
+});
+exports.updateLembreteController = updateLembreteController;

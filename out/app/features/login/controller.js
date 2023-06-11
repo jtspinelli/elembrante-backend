@@ -16,9 +16,9 @@ exports.googleLoginController = exports.loginController = exports.createToken = 
 const axios_1 = __importDefault(require("axios"));
 const httpResponses_1 = require("../../shared/helpers/httpResponses");
 const repository_1 = require("../usuario/repository");
-const Usuario_1 = require("../../../entity/Usuario");
 const cookie_1 = require("cookie");
 const crypto_1 = require("crypto");
+const Usuario_1 = require("../../shared/database/entities/Usuario");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 function createToken(user) {

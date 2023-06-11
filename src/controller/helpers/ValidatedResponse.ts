@@ -1,4 +1,4 @@
-import { Usuario } from '../../entity/Usuario';
+import { Usuario } from "../../app/shared/database/entities/Usuario";
 
 export class ValidatedResponse {
 	public pass: boolean;

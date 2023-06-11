@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { UsuarioRepository } from "../repository";
-import { Usuario } from "../../../../entity/Usuario";
+import { Usuario } from "../../../shared/database/entities/Usuario";
 
 export class RemoveUsuarioUsecase {
 	private usuarioRepository: UsuarioRepository;

@@ -1,8 +1,8 @@
 import dotenv from 'dotenv-safe';
 import { DataSourceOptions } from "typeorm";
-import { Usuario } from "../../entity/Usuario";
-import { Lembrete } from "../../entity/Lembrete";
 import { GenerateDb1684598200838 } from "../../migrations/1684598200838-GenerateDb";
+import { Lembrete } from '../../app/shared/database/entities/Lembrete';
+import { Usuario } from '../../app/shared/database/entities/Usuario';
 
 dotenv.config();
 

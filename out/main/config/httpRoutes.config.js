@@ -11,6 +11,5 @@ function registerRoutes(app) {
     app.use(routes_1.loginRouter);
     app.use(routes_2.default);
     app.use(routes_3.default);
-    // app.use(lembreteRoutes);
 }
 exports.registerRoutes = registerRoutes;

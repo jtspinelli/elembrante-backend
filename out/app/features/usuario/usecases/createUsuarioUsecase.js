@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUsuarioUsecase = void 0;
 const repository_1 = require("../repository");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const Usuario_1 = require("../../../../entity/Usuario");
 const controller_1 = require("../../login/controller");
+const Usuario_1 = require("../../../shared/database/entities/Usuario");
 class CreateUsuarioUsecase {
     constructor() {
         this.usuarioRepository = new repository_1.UsuarioRepository();

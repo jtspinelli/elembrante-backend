@@ -12,33 +12,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsuarioRepository = void 0;
-const dataSource_1 = __importDefault(require("../../../main/config/dataSource"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const Usuario_1 = require("../../shared/database/entities/Usuario");
-class UsuarioRepository {
+exports.UpdateLembreteUsecase = void 0;
+const mapper_1 = __importDefault(require("../../../../mappings/mapper"));
+const Lembrete_1 = require("../../../shared/database/entities/Lembrete");
+const LembreteDto_1 = __importDefault(require("../dto/LembreteDto"));
+const repository_1 = require("../repository");
+class UpdateLembreteUsecase {
     constructor() {
-        this.repository = dataSource_1.default.getRepository(Usuario_1.Usuario);
+        this.repository = new repository_1.LembreteRepository();
     }
-    findByUsername(username) {
+    execute(id, novoTitulo, novaDescricao) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.repository.findOneBy({ username });
+            const lembrete = yield this.repository.findOneByIdWithRelations(id);
+            if (!lembrete)
+                return;
+            lembrete.titulo = novoTitulo;
+            lembrete.descricao = novaDescricao;
+            const savedLembrete = yield this.repository.save(lembrete);
+            return mapper_1.default.map(savedLembrete, Lembrete_1.Lembrete, LembreteDto_1.default);
         });
-    }
-    findById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield this.repository.findOneBy({ id });
-        });
-    }
-    checkSenha(senha, savedSenha) {
-        return new Promise((res, _rej) => {
-            bcrypt_1.default.compare(senha, savedSenha).then(pass => {
-                res(pass);
-            });
-        });
-    }
-    save(usuario) {
-        return this.repository.save(usuario);
     }
 }
-exports.UsuarioRepository = UsuarioRepository;
+exports.UpdateLembreteUsecase = UpdateLembreteUsecase;

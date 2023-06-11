@@ -1,4 +1,4 @@
-import { Usuario } from '../entity/Usuario';
+import { Usuario } from '../app/shared/database/entities/Usuario';
 import { UsuarioRepository } from '../controller/helpers/types';
 
 class UsuarioService {

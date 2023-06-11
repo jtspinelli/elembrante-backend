@@ -2,9 +2,9 @@ import axios, { AxiosResponse } from "axios";
 import { Request, Response } from "express";
 import { bad, internalError } from "../../shared/helpers/httpResponses";
 import { UsuarioRepository } from "../usuario/repository";
-import { Usuario } from "../../../entity/Usuario";
 import { serialize } from 'cookie';
 import { randomUUID } from 'crypto';
+import { Usuario } from "../../shared/database/entities/Usuario";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 

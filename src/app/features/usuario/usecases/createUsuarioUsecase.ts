@@ -1,9 +1,9 @@
 import { UsuarioRepository } from "../repository";
 import bcrypt from 'bcrypt';
 import { Request } from "express";
-import { Usuario } from "../../../../entity/Usuario";
 import { internalError } from "../../../shared/helpers/httpResponses";
 import { createToken } from "../../login/controller";
+import { Usuario } from "../../../shared/database/entities/Usuario";
 
 export class CreateUsuarioUsecase {
 	private usuarioRepository: UsuarioRepository;

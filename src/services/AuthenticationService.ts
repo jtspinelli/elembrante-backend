@@ -1,7 +1,7 @@
 import { serialize } from 'cookie';
-import { Usuario } from '../entity/Usuario';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import { Usuario } from '../app/shared/database/entities/Usuario';
 
 export class AuthenticationService {
 	public static checkSenha(senha: string, savedSenha: string): Promise<boolean> {

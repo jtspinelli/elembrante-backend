@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LembreteRepository = void 0;
-const Lembrete_1 = require("../../../entity/Lembrete");
 const mapper_1 = __importDefault(require("../../../mappings/mapper"));
 const LembreteDto_1 = __importDefault(require("./dto/LembreteDto"));
 const dataSource_1 = __importDefault(require("../../../main/config/dataSource"));
+const Lembrete_1 = require("../../shared/database/entities/Lembrete");
 class LembreteRepository {
     constructor() {
         this.repository = dataSource_1.default.getRepository(Lembrete_1.Lembrete);
@@ -44,6 +44,11 @@ class LembreteRepository {
             return yield this.repository.findOneBy({ id });
         });
     }
+    findOneByIdWithRelations(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.repository.findOne({ where: { id }, relations: { usuario: true } });
+        });
+    }
     create(titulo, descricao, usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             const lembrete = this.getLembrete(titulo, descricao, new Date(), usuario);
@@ -53,6 +58,11 @@ class LembreteRepository {
     remove(lembrete) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.repository.remove(lembrete);
+        });
+    }
+    save(lembrete) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.repository.save(lembrete);
         });
     }
 }
