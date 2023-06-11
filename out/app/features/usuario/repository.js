@@ -25,6 +25,11 @@ class UsuarioRepository {
             return yield this.repository.findOneBy({ username });
         });
     }
+    findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.repository.findOneBy({ id });
+        });
+    }
     checkSenha(senha, savedSenha) {
         return new Promise((res, _rej) => {
             bcrypt_1.default.compare(senha, savedSenha).then(pass => {

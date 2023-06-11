@@ -6,4 +6,5 @@ const validators_1 = require("./validators");
 const usuarioRouter = (0, express_1.Router)();
 usuarioRouter.post('/checkuser', controller_1.checkUserExistsController);
 usuarioRouter.post('/user', validators_1.validateCreateUser, controller_1.createUserController);
+usuarioRouter.delete('/user/:id', validators_1.validateRemoveUser, controller_1.removeUserController);
 exports.default = usuarioRouter;

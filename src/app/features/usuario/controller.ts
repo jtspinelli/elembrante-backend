@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { UsuarioRepository } from "./repository";
 import { bad, internalError, notfound, success } from "../../helpers/httpResponses";
 import { CreateUsuarioUsecase } from "./usecases/createUsuarioUsecase";
+import { Usuario } from "../../../entity/Usuario";
+import { RemoveUsuarioUsecase } from "./usecases/removeUsuarioUsecase";
 
 export const checkUserExistsController = async (req: Request, res: Response) => {
 	const usuarioRepository = new UsuarioRepository();
@@ -28,5 +30,16 @@ export const createUserController = async (req: Request, res: Response) => {
 		}
 		
 		internalError(res);
+	}
+}
+
+export const removeUserController = async (req: Request, res: Response) => {
+	try {
+		const removeUsuarioUsecase = new RemoveUsuarioUsecase();
+		await removeUsuarioUsecase.execute(req);
+
+		return success(res);
+	} catch (error: any) {
+		return internalError(res);
 	}
 }

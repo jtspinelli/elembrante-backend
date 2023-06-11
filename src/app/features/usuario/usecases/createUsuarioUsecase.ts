@@ -22,9 +22,7 @@ export class CreateUsuarioUsecase {
 			sign: string;
 		} | null | undefined>((res, rej) => {
 
-			bcrypt.hash(req.body.senha, 10, async (err, hash) => {
-				// if(err) return internalError(res);
-				
+			bcrypt.hash(req.body.senha, 10, async (err, hash) => {			
 				const newUser = new Usuario();
 				newUser.nome = req.body.nome;
 				newUser.username = req.body.username;
@@ -33,9 +31,6 @@ export class CreateUsuarioUsecase {
 				await this.usuarioRepository.save(newUser);
 			
 				res(await createToken(newUser));
-				// res.setHeader('Set-Cookie', data?.headerPayload as string);
-				// res.setHeader('Set-Cookie', data?.sign as string);
-				// success(res);
 				
 			});
 		})

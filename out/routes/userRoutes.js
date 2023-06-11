@@ -9,5 +9,5 @@ const userRoutes = (0, express_1.Router)();
 // userRoutes.post('/checkuser', Factory.usuarioControler.userExists());
 // userRoutes.post('/user', Factory.usuarioControler.createUser());
 userRoutes.put('/user/:id', Factory_1.default.usuarioControler.updateUser());
-userRoutes.delete('/user/:id', Factory_1.default.usuarioControler.removeUser());
+// userRoutes.delete('/user/:id', Factory.usuarioControler.removeUser());
 exports.default = userRoutes;

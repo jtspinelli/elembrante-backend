@@ -115,32 +115,32 @@ class UserController {
 		}
 	}
 
-	public removeUser() : ExpressRouteFunc {
-		return async (req: Request, res: Response) => {
+	// public removeUser() : ExpressRouteFunc {
+	// 	return async (req: Request, res: Response) => {
 
-			if(!req.body.senha) return bad(res, 'Erro: procedimento não autorizado sem informar senha.');
+	// 		if(!req.body.senha) return bad(res, 'Erro: procedimento não autorizado sem informar senha.');
 			
-			const id = Number(req.params.id);
-			if(isNaN(id)) return bad(res, 'Erro: id informado está em formato inválido.');
+	// 		const id = Number(req.params.id);
+	// 		if(isNaN(id)) return bad(res, 'Erro: id informado está em formato inválido.');
 			
-			const user = await this.service.findById(id);
-			if(!user) return bad(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
+	// 		const user = await this.service.findById(id);
+	// 		if(!user) return bad(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
 			
-			bcrypt.compare(req.body.senha, user.senha).then(async (pass) => {
-				if(!pass) return bad(res, 'Erro: senha incorreta.');
+	// 		bcrypt.compare(req.body.senha, user.senha).then(async (pass) => {
+	// 			if(!pass) return bad(res, 'Erro: senha incorreta.');
 				
-				const user = await this.service.findById(id);
-				if(!user) return;
+	// 			const user = await this.service.findById(id);
+	// 			if(!user) return;
 				
-			user.excluido = true;
-			user.username += ' [Registro excluído] - ' + Math.floor(new Date().getTime() / 1000);
+	// 		user.excluido = true;
+	// 		user.username += ' [Registro excluído] - ' + Math.floor(new Date().getTime() / 1000);
 			
-			this.service.save(user)
-				.then(() => success(res))
-				.catch(() => internalError(res));
-			});
-		}
-	}
+	// 		this.service.save(user)
+	// 			.then(() => success(res))
+	// 			.catch(() => internalError(res));
+	// 		});
+	// 	}
+	// }
 }
 
 export default UserController;

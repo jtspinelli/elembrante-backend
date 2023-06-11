@@ -32,9 +32,6 @@ class CreateUsuarioUsecase {
                     newUser.senha = hash;
                     yield this.usuarioRepository.save(newUser);
                     res(yield (0, controller_1.createToken)(newUser));
-                    // res.setHeader('Set-Cookie', data?.headerPayload as string);
-                    // res.setHeader('Set-Cookie', data?.sign as string);
-                    // success(res);
                 }));
             });
         });

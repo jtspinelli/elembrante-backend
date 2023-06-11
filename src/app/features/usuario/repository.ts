@@ -14,6 +14,10 @@ export class UsuarioRepository {
 		return await this.repository.findOneBy({username});
 	}
 
+	async findById(id: number) {
+		return await this.repository.findOneBy({id});
+	}
+
 	checkSenha(senha: string, savedSenha: string): Promise<boolean> {
 		return new Promise((res, _rej) => {
 			bcrypt.compare(senha, savedSenha).then(pass => {

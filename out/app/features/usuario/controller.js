@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUserController = exports.checkUserExistsController = void 0;
+exports.removeUserController = exports.createUserController = exports.checkUserExistsController = void 0;
 const repository_1 = require("./repository");
 const httpResponses_1 = require("../../helpers/httpResponses");
 const createUsuarioUsecase_1 = require("./usecases/createUsuarioUsecase");
+const removeUsuarioUsecase_1 = require("./usecases/removeUsuarioUsecase");
 const checkUserExistsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const usuarioRepository = new repository_1.UsuarioRepository();
     const username = req.body.username;
@@ -40,3 +41,14 @@ const createUserController = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.createUserController = createUserController;
+const removeUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const removeUsuarioUsecase = new removeUsuarioUsecase_1.RemoveUsuarioUsecase();
+        yield removeUsuarioUsecase.execute(req);
+        return (0, httpResponses_1.success)(res);
+    }
+    catch (error) {
+        return (0, httpResponses_1.internalError)(res);
+    }
+});
+exports.removeUserController = removeUserController;

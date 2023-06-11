@@ -31,14 +31,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const httpResponses_1 = require("./helpers/httpResponses");
 const jsonwebtoken_1 = require("jsonwebtoken");
 const jsonwebtoken_2 = __importStar(require("jsonwebtoken"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
 class UserController {
     constructor(service, validationService) {
         this.service = service;
@@ -125,30 +121,6 @@ class UserController {
                     return (0, httpResponses_1.bad)(res, 'Token não encontrado ou inválido.');
                 }
             }
-        });
-    }
-    removeUser() {
-        return (req, res) => __awaiter(this, void 0, void 0, function* () {
-            if (!req.body.senha)
-                return (0, httpResponses_1.bad)(res, 'Erro: procedimento não autorizado sem informar senha.');
-            const id = Number(req.params.id);
-            if (isNaN(id))
-                return (0, httpResponses_1.bad)(res, 'Erro: id informado está em formato inválido.');
-            const user = yield this.service.findById(id);
-            if (!user)
-                return (0, httpResponses_1.bad)(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
-            bcrypt_1.default.compare(req.body.senha, user.senha).then((pass) => __awaiter(this, void 0, void 0, function* () {
-                if (!pass)
-                    return (0, httpResponses_1.bad)(res, 'Erro: senha incorreta.');
-                const user = yield this.service.findById(id);
-                if (!user)
-                    return;
-                user.excluido = true;
-                user.username += ' [Registro excluído] - ' + Math.floor(new Date().getTime() / 1000);
-                this.service.save(user)
-                    .then(() => (0, httpResponses_1.success)(res))
-                    .catch(() => (0, httpResponses_1.internalError)(res));
-            }));
         });
     }
 }
