@@ -14,27 +14,27 @@ class LembreteController {
 		this.service = lembreteService;
 	}
 
-	public getLembretes() : ExpressRouteFunc {
-		return async(req: Request, res: Response) => {
-			const validation = await this.validationService.validate(req, res, { strings: [], numbers: []}, null);
-			if(!(validation instanceof ValidatedResponse)) return;
+	// public getLembretes() : ExpressRouteFunc {
+	// 	return async(req: Request, res: Response) => {
+	// 		const validation = await this.validationService.validate(req, res, { strings: [], numbers: []}, null);
+	// 		if(!(validation instanceof ValidatedResponse)) return;
 			
-			return res.status(200).send(await this.service.getAll(validation.usuario.id));
-		}
-	}
+	// 		return res.status(200).send(await this.service.getAll(validation.usuario.id));
+	// 	}
+	// }
 
-	public addLembrete() : ExpressRouteFunc {
-		return async (req: Request, res: Response) => {
-			const validation = await this.validationService.validate(req, res, { strings: ['titulo', 'descricao'], numbers: []}, null);
-			if(!(validation instanceof ValidatedResponse)) return;
+	// public addLembrete() : ExpressRouteFunc {
+	// 	return async (req: Request, res: Response) => {
+	// 		const validation = await this.validationService.validate(req, res, { strings: ['titulo', 'descricao'], numbers: []}, null);
+	// 		if(!(validation instanceof ValidatedResponse)) return;
 			
-			const { titulo, descricao, usuario } = validation;
-			const newLembrete = await this.service.create(titulo, descricao, usuario);
-			if(!newLembrete) return internalError(res);
+	// 		const { titulo, descricao, usuario } = validation;
+	// 		const newLembrete = await this.service.create(titulo, descricao, usuario);
+	// 		if(!newLembrete) return internalError(res);
 			
-			res.status(201).send(newLembrete);
-		}
-	}
+	// 		res.status(201).send(newLembrete);
+	// 	}
+	// }
 
 	public updateLembrete() {
 		return async (req: Request, res: Response) => {

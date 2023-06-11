@@ -4,4 +4,5 @@ const express_1 = require("express");
 const controller_1 = require("./controller");
 const lembreteRouter = (0, express_1.Router)();
 lembreteRouter.get('/lembretes', controller_1.getLembretesController);
+lembreteRouter.post('/lembrete', controller_1.addLembreteController);
 exports.default = lembreteRouter;

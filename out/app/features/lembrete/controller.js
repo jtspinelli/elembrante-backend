@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLembretesController = void 0;
+exports.addLembreteController = exports.getLembretesController = void 0;
 const ValidatedResponse_1 = require("../../../controller/helpers/ValidatedResponse");
-const validators_1 = require("./validators");
 const getLembretesUsecase_1 = require("./usecases/getLembretesUsecase");
+const addLembreteUsecase_1 = require("./usecases/addLembreteUsecase");
+const validators_1 = require("./validators");
 const getLembretesController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const validation = yield (0, validators_1.validate)(req, res, { strings: [], numbers: [] }, null);
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
@@ -22,3 +23,13 @@ const getLembretesController = (req, res) => __awaiter(void 0, void 0, void 0, f
     return res.status(200).send(lembretes);
 });
 exports.getLembretesController = getLembretesController;
+const addLembreteController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const validation = yield (0, validators_1.validate)(req, res, { strings: ['titulo', 'descricao'], numbers: [] }, null);
+    if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
+        return;
+    const { titulo, descricao, usuario } = validation;
+    const addLembreteUsecase = new addLembreteUsecase_1.AddLembreteUsecase();
+    const savedLembreteDto = yield addLembreteUsecase.execute(titulo, descricao, usuario);
+    return res.status(200).send(savedLembreteDto);
+});
+exports.addLembreteController = addLembreteController;

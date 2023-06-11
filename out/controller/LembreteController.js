@@ -16,26 +16,23 @@ class LembreteController {
         this.validationService = validationService;
         this.service = lembreteService;
     }
-    getLembretes() {
-        return (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const validation = yield this.validationService.validate(req, res, { strings: [], numbers: [] }, null);
-            if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
-                return;
-            return res.status(200).send(yield this.service.getAll(validation.usuario.id));
-        });
-    }
-    addLembrete() {
-        return (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const validation = yield this.validationService.validate(req, res, { strings: ['titulo', 'descricao'], numbers: [] }, null);
-            if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
-                return;
-            const { titulo, descricao, usuario } = validation;
-            const newLembrete = yield this.service.create(titulo, descricao, usuario);
-            if (!newLembrete)
-                return (0, httpResponses_1.internalError)(res);
-            res.status(201).send(newLembrete);
-        });
-    }
+    // public getLembretes() : ExpressRouteFunc {
+    // 	return async(req: Request, res: Response) => {
+    // 		const validation = await this.validationService.validate(req, res, { strings: [], numbers: []}, null);
+    // 		if(!(validation instanceof ValidatedResponse)) return;
+    // 		return res.status(200).send(await this.service.getAll(validation.usuario.id));
+    // 	}
+    // }
+    // public addLembrete() : ExpressRouteFunc {
+    // 	return async (req: Request, res: Response) => {
+    // 		const validation = await this.validationService.validate(req, res, { strings: ['titulo', 'descricao'], numbers: []}, null);
+    // 		if(!(validation instanceof ValidatedResponse)) return;
+    // 		const { titulo, descricao, usuario } = validation;
+    // 		const newLembrete = await this.service.create(titulo, descricao, usuario);
+    // 		if(!newLembrete) return internalError(res);
+    // 		res.status(201).send(newLembrete);
+    // 	}
+    // }
     updateLembrete() {
         return (req, res) => __awaiter(this, void 0, void 0, function* () {
             const validation = yield this.validationService.validate(req, res, { strings: ['titulo', 'descricao'], numbers: [] }, req.params.id);

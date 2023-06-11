@@ -2,16 +2,16 @@ import "reflect-metadata";
 import express, { json, Request, Response } from 'express';
 import { createMap, forMember, mapFrom } from '@automapper/core';
 import { registerRoutes } from './config/httpRoutes.config';
-import { Lembrete } from '../entity/Lembrete';
 import { appEnv } from '../app/env/appEnv';
+import { Lembrete } from "../app/shared/database/entities/Lembrete";
 import db from './config/dataSource';
 import path from 'path';
 import fs from 'fs';
 import cors from 'cors';
 import https from 'https';
 import mapper from '../mappings/mapper';
-import LembreteDto from '../controller/dto/LembreteDto';
 import cookieParser from 'cookie-parser';
+import LembreteDto from "../app/features/lembrete/dto/LembreteDto";
 
 const key = fs.readFileSync(path.join(__dirname, '..', '/cert/localhost.key'));
 const cert = fs.readFileSync(path.join(__dirname, '..', '/cert/localhost.crt'));
