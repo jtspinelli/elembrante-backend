@@ -7,8 +7,10 @@ exports.registerRoutes = void 0;
 const routes_1 = require("../../app/features/login/routes");
 const userRoutes_1 = __importDefault(require("../../routes/userRoutes"));
 const lembreteRoutes_1 = __importDefault(require("../../routes/lembreteRoutes"));
+const routes_2 = __importDefault(require("../../app/features/usuario/routes"));
 function registerRoutes(app) {
     app.use(routes_1.loginRouter);
+    app.use(routes_2.default);
     app.use(userRoutes_1.default);
     app.use(lembreteRoutes_1.default);
 }

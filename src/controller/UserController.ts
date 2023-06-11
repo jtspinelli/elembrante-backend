@@ -18,17 +18,17 @@ class UserController {
 		this.validationService = validationService;
 	}
 
-	public userExists() : ExpressRouteFunc {
-		return async (req: Request, res: Response) => {			
-			const username = req.body.username;
-			if(!username) return;
+	// public userExists() : ExpressRouteFunc {
+	// 	return async (req: Request, res: Response) => {			
+	// 		const username = req.body.username;
+	// 		if(!username) return;
 			
-			const user = await this.service.findByUsername(username);
-			if(!user) return notfound(res, 'Erro: usuário não encontrado.');
+	// 		const user = await this.service.findByUsername(username);
+	// 		if(!user) return notfound(res, 'Erro: usuário não encontrado.');
 			
-			res.status(200).send();
-		}
-	}
+	// 		res.status(200).send();
+	// 	}
+	// }
 
 	public createUser() : ExpressRouteFunc {
 		return async (req: Request, res: Response) => {
