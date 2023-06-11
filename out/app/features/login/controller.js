@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.googleLoginController = exports.loginController = void 0;
+exports.googleLoginController = exports.loginController = exports.createToken = void 0;
 const axios_1 = __importDefault(require("axios"));
 const httpResponses_1 = require("../../helpers/httpResponses");
 const repository_1 = require("../usuario/repository");
@@ -43,6 +43,7 @@ function createToken(user) {
         });
     });
 }
+exports.createToken = createToken;
 const loginController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = yield createToken(req.body.user);
     res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);

@@ -36,9 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const httpResponses_1 = require("./helpers/httpResponses");
-const AuthenticationService_1 = require("../services/AuthenticationService");
 const jsonwebtoken_1 = require("jsonwebtoken");
-const Usuario_1 = require("../entity/Usuario");
 const jsonwebtoken_2 = __importStar(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 class UserController {
@@ -55,39 +53,36 @@ class UserController {
     // 		res.status(200).send();
     // 	}
     // }
-    createUser() {
-        return (req, res) => __awaiter(this, void 0, void 0, function* () {
-            if (!req.body.nome || !req.body.username || !req.body.senha)
-                return (0, httpResponses_1.bad)(res, 'Impossível criar usuário com o objeto enviado.');
-            const user = yield this.service.findByUsername(req.body.username);
-            if (user)
-                return res.status(409).send('Nome de usuário não disponível.');
-            bcrypt_1.default.hash(req.body.senha, 10, (err, hash) => {
-                if (err)
-                    return (0, httpResponses_1.internalError)(res);
-                if (req.body.username.includes('@')) {
-                    return (0, httpResponses_1.bad)(res, 'Para registrar-se com email utilize o loggin via Google');
-                }
-                const newUser = new Usuario_1.Usuario();
-                newUser.nome = req.body.nome;
-                newUser.username = req.body.username;
-                newUser.senha = hash;
-                this.service.save(newUser)
-                    .then(() => __awaiter(this, void 0, void 0, function* () {
-                    const data = yield AuthenticationService_1.AuthenticationService.createToken(newUser);
-                    res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
-                    res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.sign);
-                    (0, httpResponses_1.success)(res);
-                }))
-                    .catch((e) => {
-                    if (e.message.includes('Duplicate entry') && e.message.includes('usuario.username')) {
-                        return (0, httpResponses_1.bad)(res, 'Nome de usuário não disponível');
-                    }
-                    (0, httpResponses_1.internalError)(res);
-                });
-            });
-        });
-    }
+    // public createUser() : ExpressRouteFunc {
+    // 	return async (req: Request, res: Response) => {
+    // 		if(!req.body.nome || !req.body.username || !req.body.senha) return bad(res, 'Impossível criar usuário com o objeto enviado.');
+    // 		const user = await this.service.findByUsername(req.body.username);
+    // 		if(user) return res.status(409).send('Nome de usuário não disponível.');
+    // 		bcrypt.hash(req.body.senha, 10, (err, hash) => {
+    // 			if(err) return internalError(res);
+    // 			if(req.body.username.includes('@')){
+    // 				return bad(res, 'Para registrar-se com email utilize o loggin via Google');
+    // 			}
+    // 			const newUser = new Usuario();
+    // 			newUser.nome = req.body.nome;
+    // 			newUser.username = req.body.username;
+    // 			newUser.senha = hash;
+    // 			this.service.save(newUser)
+    // 			.then(async () => {
+    // 				const data = await AuthenticationService.createToken(newUser);
+    // 				res.setHeader('Set-Cookie', data?.headerPayload as string);
+    // 				res.setHeader('Set-Cookie', data?.sign as string);
+    // 				success(res);
+    // 			})
+    // 			.catch((e) => {
+    // 				if(e.message.includes('Duplicate entry') && e.message.includes('usuario.username')){
+    // 					return bad(res, 'Nome de usuário não disponível');
+    // 				}
+    // 				internalError(res);
+    // 			});
+    // 		});
+    // 	}
+    // }
     updateUser() {
         return (req, res) => __awaiter(this, void 0, void 0, function* () {
             const secret = process.env.SECRET;

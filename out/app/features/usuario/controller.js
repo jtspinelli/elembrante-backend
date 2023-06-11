@@ -9,9 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkUserExistsController = void 0;
+exports.createUserController = exports.checkUserExistsController = void 0;
 const repository_1 = require("./repository");
 const httpResponses_1 = require("../../helpers/httpResponses");
+const createUsuarioUsecase_1 = require("./usecases/createUsuarioUsecase");
 const checkUserExistsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const usuarioRepository = new repository_1.UsuarioRepository();
     const username = req.body.username;
@@ -23,3 +24,19 @@ const checkUserExistsController = (req, res) => __awaiter(void 0, void 0, void 0
     res.status(200).send();
 });
 exports.checkUserExistsController = checkUserExistsController;
+const createUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const createUsuarioUsecase = new createUsuarioUsecase_1.CreateUsuarioUsecase();
+        const newUserToken = yield createUsuarioUsecase.execute(req);
+        res.setHeader('Set-Cookie', newUserToken === null || newUserToken === void 0 ? void 0 : newUserToken.headerPayload);
+        res.setHeader('Set-Cookie', newUserToken === null || newUserToken === void 0 ? void 0 : newUserToken.sign);
+        return (0, httpResponses_1.success)(res);
+    }
+    catch (error) {
+        if (error.message.includes('Duplicate entry') && error.message.includes('usuario.username')) {
+            return (0, httpResponses_1.bad)(res, 'Nome de usuário não disponível');
+        }
+        (0, httpResponses_1.internalError)(res);
+    }
+});
+exports.createUserController = createUserController;

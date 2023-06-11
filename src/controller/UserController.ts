@@ -30,42 +30,42 @@ class UserController {
 	// 	}
 	// }
 
-	public createUser() : ExpressRouteFunc {
-		return async (req: Request, res: Response) => {
-			if(!req.body.nome || !req.body.username || !req.body.senha) return bad(res, 'Impossível criar usuário com o objeto enviado.');
+	// public createUser() : ExpressRouteFunc {
+	// 	return async (req: Request, res: Response) => {
+	// 		if(!req.body.nome || !req.body.username || !req.body.senha) return bad(res, 'Impossível criar usuário com o objeto enviado.');
 
-			const user = await this.service.findByUsername(req.body.username);
-			if(user) return res.status(409).send('Nome de usuário não disponível.');
+	// 		const user = await this.service.findByUsername(req.body.username);
+	// 		if(user) return res.status(409).send('Nome de usuário não disponível.');
 			
-			bcrypt.hash(req.body.senha, 10, (err, hash) => {
-				if(err) return internalError(res);
+	// 		bcrypt.hash(req.body.senha, 10, (err, hash) => {
+	// 			if(err) return internalError(res);
 				
-				if(req.body.username.includes('@')){
-					return bad(res, 'Para registrar-se com email utilize o loggin via Google');
-				}
+	// 			if(req.body.username.includes('@')){
+	// 				return bad(res, 'Para registrar-se com email utilize o loggin via Google');
+	// 			}
 				
-				const newUser = new Usuario();
-				newUser.nome = req.body.nome;
-				newUser.username = req.body.username;
-				newUser.senha = hash;
+	// 			const newUser = new Usuario();
+	// 			newUser.nome = req.body.nome;
+	// 			newUser.username = req.body.username;
+	// 			newUser.senha = hash;
 				
-				this.service.save(newUser)
-				.then(async () => {
-					const data = await AuthenticationService.createToken(newUser);
-					res.setHeader('Set-Cookie', data?.headerPayload as string);
-					res.setHeader('Set-Cookie', data?.sign as string);
-					success(res);
-				})
-				.catch((e) => {
-					if(e.message.includes('Duplicate entry') && e.message.includes('usuario.username')){
-						return bad(res, 'Nome de usuário não disponível');
-					}
+	// 			this.service.save(newUser)
+	// 			.then(async () => {
+	// 				const data = await AuthenticationService.createToken(newUser);
+	// 				res.setHeader('Set-Cookie', data?.headerPayload as string);
+	// 				res.setHeader('Set-Cookie', data?.sign as string);
+	// 				success(res);
+	// 			})
+	// 			.catch((e) => {
+	// 				if(e.message.includes('Duplicate entry') && e.message.includes('usuario.username')){
+	// 					return bad(res, 'Nome de usuário não disponível');
+	// 				}
 					
-					internalError(res);
-				});
-			});
-		}
-	}
+	// 				internalError(res);
+	// 			});
+	// 		});
+	// 	}
+	// }
 
 	public updateUser() : ExpressRouteFunc {
 		return async (req: Request, res: Response) => {

@@ -8,7 +8,7 @@ import { randomUUID } from 'crypto';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-async function createToken(user: Usuario) {
+export async function createToken(user: Usuario) {
 	const secret = process.env.SECRET;
 	if(!secret) return;
 	
