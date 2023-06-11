@@ -4,7 +4,7 @@ import userRoutes from '../../routes/userRoutes';
 import lembreteRoutes from '../../routes/lembreteRoutes';
 
 export function registerRoutes(app: Express) {
-	app.use('/auth', loginRouter);
+	app.use(loginRouter);
 	app.use(userRoutes);
 	app.use(lembreteRoutes);
 }

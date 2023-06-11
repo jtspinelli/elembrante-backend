@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Lembrete_1 = require("../entity/Lembrete");
 const Usuario_1 = require("../entity/Usuario");
-const AuthenticationController_1 = __importDefault(require("../controller/AuthenticationController"));
+// import AuthenticationController from "../controller/AuthenticationController";
 const ValidationService_1 = __importDefault(require("../services/ValidationService"));
 const UserController_1 = __importDefault(require("../controller/UserController"));
 const LembreteService_1 = __importDefault(require("../services/LembreteService"));
@@ -19,12 +19,12 @@ class Factory {
     static get lembreteRepository() {
         return Factory._lembreteRepository;
     }
-    static get authenticationController() {
-        if (!Factory._authenticationController) {
-            Factory._authenticationController = new AuthenticationController_1.default(Factory.usuarioService);
-        }
-        return Factory._authenticationController;
-    }
+    // public static get authenticationController() {
+    // 	if(!Factory._authenticationController) {
+    // 		Factory._authenticationController = new AuthenticationController(Factory.usuarioService);
+    // 	}
+    // 	return Factory._authenticationController;
+    // }
     static get validationService() {
         if (!Factory._validationService) {
             Factory._validationService = new ValidationService_1.default(Factory.usuarioRepository, Factory.lembreteRepository);

@@ -32,5 +32,8 @@ class UsuarioRepository {
             });
         });
     }
+    save(usuario) {
+        return this.repository.save(usuario);
+    }
 }
 exports.UsuarioRepository = UsuarioRepository;

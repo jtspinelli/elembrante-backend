@@ -21,4 +21,8 @@ export class UsuarioRepository {
 			})
 		});
 	}
+
+	save(usuario: Usuario) {
+		return this.repository.save(usuario);
+	}
 }
