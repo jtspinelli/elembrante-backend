@@ -1,12 +1,12 @@
 import { Lembrete } from "../entity/Lembrete";
 import { Usuario } from "../entity/Usuario";
-import { db } from "../dataSource";
 import AuthenticationController from "../controller/AuthenticationController";
 import ValidationService from "../services/ValidationService";
 import UserController from "../controller/UserController";
 import LembreteService from "../services/LembreteService";
 import LembreteController from "../controller/LembreteController";
 import UsuarioService from "../services/UsuarioService";
+import db from "../main/config/dataSource";
 
 abstract class Factory {
 	private static _usuarioRepository = db.getRepository(Usuario);

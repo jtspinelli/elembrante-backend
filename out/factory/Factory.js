@@ -5,13 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Lembrete_1 = require("../entity/Lembrete");
 const Usuario_1 = require("../entity/Usuario");
-const dataSource_1 = require("../dataSource");
 const AuthenticationController_1 = __importDefault(require("../controller/AuthenticationController"));
 const ValidationService_1 = __importDefault(require("../services/ValidationService"));
 const UserController_1 = __importDefault(require("../controller/UserController"));
 const LembreteService_1 = __importDefault(require("../services/LembreteService"));
 const LembreteController_1 = __importDefault(require("../controller/LembreteController"));
 const UsuarioService_1 = __importDefault(require("../services/UsuarioService"));
+const dataSource_1 = __importDefault(require("../main/config/dataSource"));
 class Factory {
     static get usuarioRepository() {
         return Factory._usuarioRepository;
@@ -56,6 +56,6 @@ class Factory {
         return Factory._lembreteController;
     }
 }
-Factory._usuarioRepository = dataSource_1.db.getRepository(Usuario_1.Usuario);
-Factory._lembreteRepository = dataSource_1.db.getRepository(Lembrete_1.Lembrete);
+Factory._usuarioRepository = dataSource_1.default.getRepository(Usuario_1.Usuario);
+Factory._lembreteRepository = dataSource_1.default.getRepository(Lembrete_1.Lembrete);
 exports.default = Factory;
