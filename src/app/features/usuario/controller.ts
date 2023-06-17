@@ -18,8 +18,10 @@ export const checkUserExistsController = async (req: Request, res: Response) => 
 
 export const createUserController = async (req: Request, res: Response) => {
 	try {
-		const createUsuarioUsecase = new CreateUsuarioUsecase();
-		const newUserToken = await createUsuarioUsecase.execute(req);
+		const usuarioRepository = new UsuarioRepository();
+		const createUsuarioUsecase = new CreateUsuarioUsecase(usuarioRepository);
+		const { nome, username, senha } = req.body;
+		const newUserToken = await createUsuarioUsecase.execute(nome, username, senha);
 		
 		res.setHeader('Set-Cookie', newUserToken?.headerPayload as string);
 		res.setHeader('Set-Cookie', newUserToken?.sign as string);
@@ -35,8 +37,9 @@ export const createUserController = async (req: Request, res: Response) => {
 
 export const removeUserController = async (req: Request, res: Response) => {
 	try {
-		const removeUsuarioUsecase = new RemoveUsuarioUsecase();
-		await removeUsuarioUsecase.execute(req);
+		const usuarioRepository = new UsuarioRepository();
+		const removeUsuarioUsecase = new RemoveUsuarioUsecase(usuarioRepository);
+		await removeUsuarioUsecase.execute(req.body.user);
 
 		return success(res);
 	} catch (error: any) {
@@ -46,8 +49,10 @@ export const removeUserController = async (req: Request, res: Response) => {
 
 export const updateUserController = async (req: Request, res: Response) => {
 	try {
-		const updateUsuarioUsecase = new UpdateUsuarioUsecase();
-		await updateUsuarioUsecase.execute(req);
+		const { user, nome, username } = req.body;
+		const usuarioRepository = new UsuarioRepository();
+		const updateUsuarioUsecase = new UpdateUsuarioUsecase(usuarioRepository);
+		await updateUsuarioUsecase.execute(user, nome, username);
 
 		return success(res);
 	} catch (error: any) {

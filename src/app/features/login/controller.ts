@@ -6,7 +6,7 @@ import { serialize } from 'cookie';
 import { randomUUID } from 'crypto';
 import { Usuario } from "../../shared/database/entities/Usuario";
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 export async function createToken(user: Usuario) {
 	const secret = process.env.SECRET;

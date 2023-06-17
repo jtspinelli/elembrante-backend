@@ -1,21 +1,18 @@
 import { Request } from "express";
 import { UsuarioRepository } from "../repository";
+import { Usuario } from "../../../shared/database/entities/Usuario";
 
 export class UpdateUsuarioUsecase {
 	private usuarioRepository: UsuarioRepository;
 
-	constructor(){
-		this.usuarioRepository = new UsuarioRepository();
+	constructor(usuarioRepository: UsuarioRepository){
+		this.usuarioRepository = usuarioRepository;
 	}
 
-	async execute(req: Request) {
-		const nome = req.body.nome;
-		const username = req.body.username;
-		const user = req.body.user;
-
+	async execute(user: Usuario, nome: string, username: string) {
 		user.nome = nome ?? user.nome;
 		user.username = username ?? user.username;
 
-		await this.usuarioRepository.save(user);
+		return await this.usuarioRepository.save(user);
 	}
 }

@@ -1,18 +1,20 @@
 import { UsuarioRepository } from "../repository";
-import bcrypt from 'bcrypt';
-import { Request } from "express";
-import { internalError } from "../../../shared/helpers/httpResponses";
 import { createToken } from "../../login/controller";
 import { Usuario } from "../../../shared/database/entities/Usuario";
+import bcrypt from 'bcryptjs';
 
 export class CreateUsuarioUsecase {
 	private usuarioRepository: UsuarioRepository;
 
-	constructor(){
-		this.usuarioRepository = new UsuarioRepository();
+	constructor(usuarioRepository: UsuarioRepository){
+		this.usuarioRepository = usuarioRepository;
 	}
 
-	async execute(req: Request) {
+	async createToken(usuario: Usuario) {
+		return await createToken(usuario);
+	}
+
+	async execute(nome: string, username: string, senha: string) {
 		return new Promise<{
 			userData: {
 				nome: string;
@@ -20,19 +22,15 @@ export class CreateUsuarioUsecase {
 			};
 			headerPayload: string;
 			sign: string;
-		} | null | undefined>((res, rej) => {
-
-			bcrypt.hash(req.body.senha, 10, async (err, hash) => {			
-				const newUser = new Usuario();
-				newUser.nome = req.body.nome;
-				newUser.username = req.body.username;
-				newUser.senha = hash;
-				
-				await this.usuarioRepository.save(newUser);
+		} | null | undefined>(async (res) => {
+			const newUser = new Usuario();
+			newUser.nome = nome;
+			newUser.username = username;
+			newUser.senha = await bcrypt.hash(senha, 10);
 			
-				res(await createToken(newUser));
-				
-			});
-		})
+			await this.usuarioRepository.save(newUser);
+		
+			res(await this.createToken(newUser));			
+		});
 	}
 }

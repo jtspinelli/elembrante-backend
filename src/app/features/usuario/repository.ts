@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
-import db from "../../../main/config/dataSource";
-import bcrypt from 'bcrypt';
 import { Usuario } from "../../shared/database/entities/Usuario";
+import db from "../../../main/config/dataSource";
+import bcrypt from 'bcryptjs';
 
 export class UsuarioRepository {
 	private repository: Repository<Usuario>;

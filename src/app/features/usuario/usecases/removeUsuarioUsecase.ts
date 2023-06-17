@@ -5,15 +5,14 @@ import { Usuario } from "../../../shared/database/entities/Usuario";
 export class RemoveUsuarioUsecase {
 	private usuarioRepository: UsuarioRepository;
 
-	constructor(){
-		this.usuarioRepository = new UsuarioRepository();
+	constructor(usuarioRepository: UsuarioRepository){
+		this.usuarioRepository = usuarioRepository;
 	}
 
-	async execute(req: Request) {
-		const user: Usuario = req.body.user;
+	async execute(user: Usuario) {
 		user.excluido = true;
 		user.username += ' [Registro excluído] - ' + Math.floor(new Date().getTime() / 1000);
 
-		await this.usuarioRepository.save(user);
+		return await this.usuarioRepository.save(user);
 	}
 }
