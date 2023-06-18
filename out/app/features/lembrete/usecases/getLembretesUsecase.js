@@ -10,10 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetLembretesUsecase = void 0;
-const repository_1 = require("../repository");
 class GetLembretesUsecase {
-    constructor() {
-        this.lembreteRepository = new repository_1.LembreteRepository();
+    constructor(lembreteRepository) {
+        this.lembreteRepository = lembreteRepository;
     }
     execute(usuarioId) {
         return __awaiter(this, void 0, void 0, function* () {

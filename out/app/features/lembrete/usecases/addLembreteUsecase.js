@@ -13,18 +13,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AddLembreteUsecase = void 0;
-const repository_1 = require("../repository");
 const Lembrete_1 = require("../../../shared/database/entities/Lembrete");
 const LembreteDto_1 = __importDefault(require("../dto/LembreteDto"));
 const mapper_1 = __importDefault(require("../../../shared/mappings/mapper"));
 class AddLembreteUsecase {
-    constructor() {
-        this.lembreteRepository = new repository_1.LembreteRepository();
+    constructor(lembreteRepository) {
+        this.lembreteRepository = lembreteRepository;
+    }
+    getDto(lembrete) {
+        return mapper_1.default.map(lembrete, Lembrete_1.Lembrete, LembreteDto_1.default);
     }
     execute(titulo, descricao, usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             const savedLembrete = yield this.lembreteRepository.create(titulo, descricao, usuario);
-            return mapper_1.default.map(savedLembrete, Lembrete_1.Lembrete, LembreteDto_1.default);
+            return this.getDto(savedLembrete);
         });
     }
 }

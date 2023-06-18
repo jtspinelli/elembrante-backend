@@ -10,19 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateUsuarioUsecase = void 0;
-const repository_1 = require("../repository");
 class UpdateUsuarioUsecase {
-    constructor() {
-        this.usuarioRepository = new repository_1.UsuarioRepository();
+    constructor(usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
     }
-    execute(req) {
+    execute(user, nome, username) {
         return __awaiter(this, void 0, void 0, function* () {
-            const nome = req.body.nome;
-            const username = req.body.username;
-            const user = req.body.user;
             user.nome = nome !== null && nome !== void 0 ? nome : user.nome;
             user.username = username !== null && username !== void 0 ? username : user.username;
-            yield this.usuarioRepository.save(user);
+            return yield this.usuarioRepository.save(user);
         });
     }
 }

@@ -13,10 +13,15 @@ import cookieParser from 'cookie-parser';
 import LembreteDto from "../app/features/lembrete/dto/LembreteDto";
 import mapper from "../app/shared/mappings/mapper";
 
-const key = fs.readFileSync(path.join(__dirname, '..', '/cert/localhost.key'));
-const cert = fs.readFileSync(path.join(__dirname, '..', '/cert/localhost.crt'));
+// const key = fs.readFileSync(path.join(__dirname, '..', '/cert/localhost.key'));
+// const cert = fs.readFileSync(path.join(__dirname, '..', '/cert/localhost.crt'));
 
-const app = express();
+// Use when running tests:
+const key = fs.readFileSync(path.join(__dirname, '..', '..', '/out/cert/localhost.key'));
+const cert = fs.readFileSync(path.join(__dirname, '..', '..', '/out/cert/localhost.crt'));
+/////////
+
+export const app = express();
 app.use(express.static(path.join(__dirname, '..', "public")));
 app.use(json());
 app.use(cookieParser());

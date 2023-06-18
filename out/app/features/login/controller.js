@@ -20,7 +20,7 @@ const cookie_1 = require("cookie");
 const crypto_1 = require("crypto");
 const Usuario_1 = require("../../shared/database/entities/Usuario");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 function createToken(user) {
     return __awaiter(this, void 0, void 0, function* () {
         const secret = process.env.SECRET;
@@ -71,7 +71,7 @@ const googleLoginController = (req, res) => __awaiter(void 0, void 0, void 0, fu
             return res.status(200).send(data);
         return (0, httpResponses_1.internalError)(res);
     }
-    bcrypt_1.default.hash((0, crypto_1.randomUUID)(), 10, (err, hash) => {
+    bcryptjs_1.default.hash((0, crypto_1.randomUUID)(), 10, (err, hash) => {
         if (err)
             return (0, httpResponses_1.internalError)(res);
         const newUser = new Usuario_1.Usuario();

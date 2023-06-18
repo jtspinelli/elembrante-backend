@@ -19,11 +19,13 @@ const validators_1 = require("./validators");
 const httpResponses_1 = require("../../shared/helpers/httpResponses");
 const updateLembreteUsecase_1 = require("./usecases/updateLembreteUsecase");
 const ValidatedResponse_1 = require("../../shared/helpers/ValidatedResponse");
+const repository_1 = require("./repository");
 const getLembretesController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const validation = yield (0, validators_1.validate)(req, res, { strings: [], numbers: [] }, null);
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
         return;
-    const getLembretesUsecase = new getLembretesUsecase_1.GetLembretesUsecase();
+    const repository = new repository_1.LembreteRepository();
+    const getLembretesUsecase = new getLembretesUsecase_1.GetLembretesUsecase(repository);
     const lembretes = yield getLembretesUsecase.execute(validation.usuario.id);
     return res.status(200).send(lembretes);
 });
@@ -33,7 +35,8 @@ const addLembreteController = (req, res) => __awaiter(void 0, void 0, void 0, fu
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
         return;
     const { titulo, descricao, usuario } = validation;
-    const addLembreteUsecase = new addLembreteUsecase_1.AddLembreteUsecase();
+    const repository = new repository_1.LembreteRepository();
+    const addLembreteUsecase = new addLembreteUsecase_1.AddLembreteUsecase(repository);
     const savedLembreteDto = yield addLembreteUsecase.execute(titulo, descricao, usuario);
     return res.status(200).send(savedLembreteDto);
 });
@@ -42,7 +45,8 @@ const removeLembreteController = (req, res) => __awaiter(void 0, void 0, void 0,
     const validation = yield (0, validators_1.validate)(req, res, { strings: [], numbers: [] }, req.params.id);
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
         return;
-    const removeLembreteUsecase = new removeLembreteUsecase_1.RemoveLembreteUsecase();
+    const repository = new repository_1.LembreteRepository();
+    const removeLembreteUsecase = new removeLembreteUsecase_1.RemoveLembreteUsecase(repository);
     yield removeLembreteUsecase.execute(Number(req.params.id));
     return (0, httpResponses_1.success)(res);
 });
@@ -51,7 +55,8 @@ const archiveLembreteController = (req, res) => __awaiter(void 0, void 0, void 0
     const validation = yield (0, validators_1.validate)(req, res, { strings: [], numbers: [] }, req.params.id);
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
         return;
-    const archiveLembreteUsecase = new archiveLembreteUsecase_1.ArchiveLembreteUsecase();
+    const repository = new repository_1.LembreteRepository();
+    const archiveLembreteUsecase = new archiveLembreteUsecase_1.ArchiveLembreteUsecase(repository);
     yield archiveLembreteUsecase.execute(Number(req.params.id));
     return (0, httpResponses_1.success)(res);
 });
@@ -60,7 +65,8 @@ const recoverLembreteController = (req, res) => __awaiter(void 0, void 0, void 0
     const validation = yield (0, validators_1.validate)(req, res, { strings: [], numbers: [] }, req.params.id);
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
         return;
-    const recoverLembreteUsecase = new recoverLembreteUsecase_1.RecoverLembreteUsecase();
+    const repository = new repository_1.LembreteRepository();
+    const recoverLembreteUsecase = new recoverLembreteUsecase_1.RecoverLembreteUsecase(repository);
     yield recoverLembreteUsecase.execute(Number(req.params.id));
     return (0, httpResponses_1.success)(res);
 });
@@ -69,7 +75,8 @@ const updateLembreteController = (req, res) => __awaiter(void 0, void 0, void 0,
     const validation = yield (0, validators_1.validate)(req, res, { strings: ['titulo', 'descricao'], numbers: [] }, req.params.id);
     if (!(validation instanceof ValidatedResponse_1.ValidatedResponse))
         return;
-    const updateLembreteUsecase = new updateLembreteUsecase_1.UpdateLembreteUsecase();
+    const repository = new repository_1.LembreteRepository();
+    const updateLembreteUsecase = new updateLembreteUsecase_1.UpdateLembreteUsecase(repository);
     const savedLembrete = yield updateLembreteUsecase.execute(Number(req.params.id), req.body.titulo, req.body.descricao);
     return res.status(200).send(savedLembrete);
 });

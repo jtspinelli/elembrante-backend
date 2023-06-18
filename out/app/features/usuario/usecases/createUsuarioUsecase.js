@@ -13,26 +13,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUsuarioUsecase = void 0;
-const repository_1 = require("../repository");
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const controller_1 = require("../../login/controller");
 const Usuario_1 = require("../../../shared/database/entities/Usuario");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 class CreateUsuarioUsecase {
-    constructor() {
-        this.usuarioRepository = new repository_1.UsuarioRepository();
+    constructor(usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
     }
-    execute(req) {
+    createToken(usuario) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((res, rej) => {
-                bcrypt_1.default.hash(req.body.senha, 10, (err, hash) => __awaiter(this, void 0, void 0, function* () {
-                    const newUser = new Usuario_1.Usuario();
-                    newUser.nome = req.body.nome;
-                    newUser.username = req.body.username;
-                    newUser.senha = hash;
-                    yield this.usuarioRepository.save(newUser);
-                    res(yield (0, controller_1.createToken)(newUser));
-                }));
-            });
+            return yield (0, controller_1.createToken)(usuario);
+        });
+    }
+    execute(nome, username, senha) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((res) => __awaiter(this, void 0, void 0, function* () {
+                const newUser = new Usuario_1.Usuario();
+                newUser.nome = nome;
+                newUser.username = username;
+                newUser.senha = yield bcryptjs_1.default.hash(senha, 10);
+                yield this.usuarioRepository.save(newUser);
+                res(yield this.createToken(newUser));
+            }));
         });
     }
 }

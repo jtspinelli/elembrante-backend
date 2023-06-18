@@ -39,7 +39,7 @@ exports.validateUpdateUser = exports.validateRemoveUser = exports.validateCreate
 const jsonwebtoken_1 = __importStar(require("jsonwebtoken"));
 const httpResponses_1 = require("../../shared/helpers/httpResponses");
 const repository_1 = require("./repository");
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const appEnv_1 = require("../../env/appEnv");
 const validateCreateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.nome || !req.body.username || !req.body.senha)
@@ -64,7 +64,7 @@ const validateRemoveUser = (req, res, next) => __awaiter(void 0, void 0, void 0,
     const user = yield usuarioRepository.findById(id);
     if (!user || user.excluido)
         return (0, httpResponses_1.bad)(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
-    const senhaPass = yield bcrypt_1.default.compare(req.body.senha, user.senha);
+    const senhaPass = yield bcryptjs_1.default.compare(req.body.senha, user.senha);
     if (!senhaPass)
         return (0, httpResponses_1.bad)(res, 'Erro: senha incorreta.');
     req.body.user = user;

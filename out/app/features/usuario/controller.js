@@ -28,8 +28,10 @@ const checkUserExistsController = (req, res) => __awaiter(void 0, void 0, void 0
 exports.checkUserExistsController = checkUserExistsController;
 const createUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const createUsuarioUsecase = new createUsuarioUsecase_1.CreateUsuarioUsecase();
-        const newUserToken = yield createUsuarioUsecase.execute(req);
+        const usuarioRepository = new repository_1.UsuarioRepository();
+        const createUsuarioUsecase = new createUsuarioUsecase_1.CreateUsuarioUsecase(usuarioRepository);
+        const { nome, username, senha } = req.body;
+        const newUserToken = yield createUsuarioUsecase.execute(nome, username, senha);
         res.setHeader('Set-Cookie', newUserToken === null || newUserToken === void 0 ? void 0 : newUserToken.headerPayload);
         res.setHeader('Set-Cookie', newUserToken === null || newUserToken === void 0 ? void 0 : newUserToken.sign);
         return (0, httpResponses_1.success)(res);
@@ -44,8 +46,9 @@ const createUserController = (req, res) => __awaiter(void 0, void 0, void 0, fun
 exports.createUserController = createUserController;
 const removeUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const removeUsuarioUsecase = new removeUsuarioUsecase_1.RemoveUsuarioUsecase();
-        yield removeUsuarioUsecase.execute(req);
+        const usuarioRepository = new repository_1.UsuarioRepository();
+        const removeUsuarioUsecase = new removeUsuarioUsecase_1.RemoveUsuarioUsecase(usuarioRepository);
+        yield removeUsuarioUsecase.execute(req.body.user);
         return (0, httpResponses_1.success)(res);
     }
     catch (error) {
@@ -55,8 +58,10 @@ const removeUserController = (req, res) => __awaiter(void 0, void 0, void 0, fun
 exports.removeUserController = removeUserController;
 const updateUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updateUsuarioUsecase = new updateUsuarioUsecase_1.UpdateUsuarioUsecase();
-        yield updateUsuarioUsecase.execute(req);
+        const { user, nome, username } = req.body;
+        const usuarioRepository = new repository_1.UsuarioRepository();
+        const updateUsuarioUsecase = new updateUsuarioUsecase_1.UpdateUsuarioUsecase(usuarioRepository);
+        yield updateUsuarioUsecase.execute(user, nome, username);
         return (0, httpResponses_1.success)(res);
     }
     catch (error) {

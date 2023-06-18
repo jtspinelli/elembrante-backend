@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsuarioRepository = void 0;
-const dataSource_1 = __importDefault(require("../../../main/config/dataSource"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const Usuario_1 = require("../../shared/database/entities/Usuario");
+const dataSource_1 = __importDefault(require("../../../main/config/dataSource"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 class UsuarioRepository {
     constructor() {
         this.repository = dataSource_1.default.getRepository(Usuario_1.Usuario);
@@ -32,7 +32,7 @@ class UsuarioRepository {
     }
     checkSenha(senha, savedSenha) {
         return new Promise((res, _rej) => {
-            bcrypt_1.default.compare(senha, savedSenha).then(pass => {
+            bcryptjs_1.default.compare(senha, savedSenha).then(pass => {
                 res(pass);
             });
         });

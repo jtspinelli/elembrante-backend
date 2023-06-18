@@ -35,6 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.app = void 0;
 require("reflect-metadata");
 const express_1 = __importStar(require("express"));
 const core_1 = require("@automapper/core");
@@ -51,17 +52,17 @@ const LembreteDto_1 = __importDefault(require("../app/features/lembrete/dto/Lemb
 const mapper_1 = __importDefault(require("../app/shared/mappings/mapper"));
 const key = fs_1.default.readFileSync(path_1.default.join(__dirname, '..', '/cert/localhost.key'));
 const cert = fs_1.default.readFileSync(path_1.default.join(__dirname, '..', '/cert/localhost.crt'));
-const app = (0, express_1.default)();
-app.use(express_1.default.static(path_1.default.join(__dirname, '..', "public")));
-app.use((0, express_1.json)());
-app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)({
+exports.app = (0, express_1.default)();
+exports.app.use(express_1.default.static(path_1.default.join(__dirname, '..', "public")));
+exports.app.use((0, express_1.json)());
+exports.app.use((0, cookie_parser_1.default)());
+exports.app.use((0, cors_1.default)({
     credentials: true
 }));
-(0, httpRoutes_config_1.registerRoutes)(app);
-const server = https_1.default.createServer({ key, cert }, app);
+(0, httpRoutes_config_1.registerRoutes)(exports.app);
+const server = https_1.default.createServer({ key, cert }, exports.app);
 (0, core_1.createMap)(mapper_1.default, Lembrete_1.Lembrete, LembreteDto_1.default, (0, core_1.forMember)(dto => dto.usuarioId, (0, core_1.mapFrom)(lembrete => lembrete.usuario.id)));
-app.get('*', (_req, res) => {
+exports.app.get('*', (_req, res) => {
     res.sendFile(path_1.default.join(__dirname, '..', "public", "index.html"));
 });
 dataSource_1.default.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {

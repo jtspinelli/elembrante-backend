@@ -10,17 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RemoveUsuarioUsecase = void 0;
-const repository_1 = require("../repository");
 class RemoveUsuarioUsecase {
-    constructor() {
-        this.usuarioRepository = new repository_1.UsuarioRepository();
+    constructor(usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
     }
-    execute(req) {
+    execute(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = req.body.user;
             user.excluido = true;
             user.username += ' [Registro excluído] - ' + Math.floor(new Date().getTime() / 1000);
-            yield this.usuarioRepository.save(user);
+            return yield this.usuarioRepository.save(user);
         });
     }
 }

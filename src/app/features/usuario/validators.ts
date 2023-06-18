@@ -2,7 +2,7 @@ import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { NextFunction, Request, Response } from "express";
 import { bad, unauthorized } from "../../shared/helpers/httpResponses";
 import { UsuarioRepository } from "./repository";
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { appEnv } from '../../env/appEnv';
 
 export const validateCreateUser = async (req: Request, res: Response, next: NextFunction) => {

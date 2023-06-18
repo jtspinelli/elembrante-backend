@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { bad, unauthorized } from '../../shared/helpers/httpResponses';
+import { bad, notfound, unauthorized } from '../../shared/helpers/httpResponses';
 import { UsuarioRepository } from '../usuario/repository';
 
 export const validateLogin = async (req: Request, res: Response, next: NextFunction) => {
@@ -15,7 +15,7 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
 	const usuarioRepository = new UsuarioRepository();
 
 	const user = await usuarioRepository.findByUsername(username);
-	if(!user) return bad(res, `Erro: usuário ${username} não encontrado.`);
+	if(!user) return notfound(res, `Erro: usuário ${username} não encontrado.`);
 
 	const senhaIsCorrect = await usuarioRepository.checkSenha(senha, user.senha);
 	if(!senhaIsCorrect) return unauthorized(res, 'Err: usuário e/ou senha incorretos.');
