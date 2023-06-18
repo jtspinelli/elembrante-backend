@@ -263,4 +263,74 @@ describe('[LEMBRETE ROUTES]', () => {
 				.set('Cookie', process.env.VALID_TOKEN_EXAMPLE as string);
 		});
 	});
+
+	describe('[PUT /lembrete/:id]', () => {
+		test('Retorna 400 (bad request) se token ausente', async () => {
+			expectTokenNotFoundResponse(await request(app).put('/lembrete/1'));
+		});
+
+		test('Retorna 400 (Bad Request) se token inválido', async () => {
+			expectInvalidTokenResponse(
+				await request(app)
+					.put('/lembrete/1')
+					.set('Cookie', 'token')
+			);
+		});
+
+		test('Retorna 401 (não autorizado) se token expirado', async () => {			
+			expectExpiredTokenResponse(
+				await request(app)
+					.put('/lembrete/1')
+					.send({titulo: 'title', descricao: 'updated description'})
+					.set('Cookie', process.env.EXPIRED_TOKEN_EXAMPLE as string)
+			);
+		});
+
+		test('Retorna 404 (not found) se o usuário não for encontrado', async () => {
+			expectUsuarioNotFoundResponse(
+				await request(app)
+					.put('/lembrete/1')
+					.send({titulo: 'title', descricao: 'updated description'})
+					.set('Cookie', process.env.USER_NOT_FOUND_TOKEN_EXAMPLE as string)
+			);
+		});
+
+		test('Retorna 404 (not found) se o lembrete não for encontrado', async () => {		
+			expectLembreteNotFoundResponse(
+				await request(app)
+					.put('/lembrete/1000')
+					.send({titulo: 'title', descricao: 'updated description'})
+					.set('Cookie', process.env.VALID_TOKEN_EXAMPLE as string)
+			);
+		});
+
+		test('Retorna 400 (Bad Request) se \'titulo\' ou \'descricao\' estiver ausente no objeto enviado', async () => {
+			const insertResult = await request(app)
+				.post('/lembrete')
+				.set('Cookie', process.env.VALID_TOKEN_EXAMPLE as string)
+				.send({titulo: 'title', descricao: 'description'});
+			
+			const result = await request(app)
+				.put('/lembrete/' + insertResult.body.id)
+				.set('Cookie', process.env.VALID_TOKEN_EXAMPLE as string)
+				.send({description: 'new description'});
+			
+			expect(result.statusCode).toBe(400);
+			expect(result.text).toBe('Erro: impossível criar um lembrete com o objeto enviado.');
+		});
+
+		test('Retorna 200 (Ok) quando Lembrete atualizado com sucesso', async () => {
+			const insertResult = await request(app)
+				.post('/lembrete')
+				.set('Cookie', process.env.VALID_TOKEN_EXAMPLE as string)
+				.send({titulo: 'title', descricao: 'description'});
+			
+			const result = await request(app)
+				.put('/lembrete/' + insertResult.body.id)
+				.set('Cookie', process.env.VALID_TOKEN_EXAMPLE as string)
+				.send({titulo: 'title', descricao: 'new description'});
+			
+			expect(result.statusCode).toBe(200);			
+		});
+	});
 });
