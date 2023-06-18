@@ -30,7 +30,7 @@ export const addLembreteController = async (req: Request, res: Response) => {
 	const addLembreteUsecase = new AddLembreteUsecase(repository);
 	const savedLembreteDto = await addLembreteUsecase.execute(titulo, descricao, usuario);
 
-	return res.status(200).send(savedLembreteDto);
+	return res.status(201).send(savedLembreteDto);
 }
 
 export const removeLembreteController = async (req: Request, res: Response) => {

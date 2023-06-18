@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -18,7 +41,7 @@ const appEnv_1 = require("../../env/appEnv");
 const Lembrete_1 = require("../../shared/database/entities/Lembrete");
 const Usuario_1 = require("../../shared/database/entities/Usuario");
 const ValidatedResponse_1 = require("../../shared/helpers/ValidatedResponse");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const jsonwebtoken_1 = __importStar(require("jsonwebtoken"));
 const dataSource_1 = __importDefault(require("../../../main/config/dataSource"));
 function tokenIsPresent(req) {
     return req.cookies.sign !== undefined && req.cookies.token !== undefined;
@@ -64,7 +87,7 @@ const validate = (req, res, requiredFields, lembreteId) => __awaiter(void 0, voi
             relations: { lembretes: true }
         });
         if (!usuario)
-            return (0, httpResponses_1.bad)(res, 'Usuário não encontrado');
+            return (0, httpResponses_1.notfound)(res, 'Usuário não encontrado');
         const lembreteRepository = dataSource_1.default.getRepository(Lembrete_1.Lembrete);
         let lembrete = null;
         if (lembreteId) {
@@ -75,7 +98,7 @@ const validate = (req, res, requiredFields, lembreteId) => __awaiter(void 0, voi
                 relations: { usuario: true }
             });
             if (!lembrete)
-                return (0, httpResponses_1.bad)(res, `Erro: o id ${lembreteId} não está vinculado a nenhum lembrete`);
+                return (0, httpResponses_1.notfound)(res, `Erro: o id ${lembreteId} não está vinculado a nenhum lembrete`);
         }
         if (lembrete && lembrete.usuario.id !== usuario.id)
             return (0, httpResponses_1.unauthorized)(res, 'Erro: não autorizado.');
@@ -91,6 +114,9 @@ const validate = (req, res, requiredFields, lembreteId) => __awaiter(void 0, voi
         return response;
     }
     catch (error) {
+        if (error instanceof jsonwebtoken_1.TokenExpiredError) {
+            return (0, httpResponses_1.unauthorized)(res, 'Erro: o usuário não possui token válido. Autentique-se novamente.');
+        }
         return (0, httpResponses_1.bad)(res, 'Token inválido.');
     }
 });

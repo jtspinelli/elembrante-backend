@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { bad, unauthorized } from '../../shared/helpers/httpResponses';
+import { bad, notfound, unauthorized } from '../../shared/helpers/httpResponses';
 import { appEnv } from '../../env/appEnv';
 import { Lembrete } from '../../shared/database/entities/Lembrete';
 import { Usuario } from '../../shared/database/entities/Usuario';
 import { ValidatedResponse } from '../../shared/helpers/ValidatedResponse';
-import jwt from 'jsonwebtoken';
+import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import db from '../../../main/config/dataSource';
 
 function tokenIsPresent(req: Request) {
@@ -51,6 +51,7 @@ export const validate = async (req: Request, res: Response, requiredFields: { st
 		const payload = jwt.verify(accessToken, appEnv.secret);
 
 		const tokenExpired = Date.now() > (payload as { exp: number }).exp * 1000;		
+		
 		if(tokenExpired) return bad(res, 'Erro: o usuário não possui token válido. Autentique-se novamente.');
 
 		const usuarioRepository = db.getRepository(Usuario);
@@ -59,7 +60,7 @@ export const validate = async (req: Request, res: Response, requiredFields: { st
 			where: {username: username},
 			relations: { lembretes: true }
 		});
-		if(!usuario) return bad(res, 'Usuário não encontrado');
+		if(!usuario) return notfound(res, 'Usuário não encontrado');
 
 		const lembreteRepository = db.getRepository(Lembrete);
 		let lembrete: Lembrete | null = null;
@@ -71,7 +72,7 @@ export const validate = async (req: Request, res: Response, requiredFields: { st
 				relations: { usuario: true }
 			});
 
-			if(!lembrete) return bad(res, `Erro: o id ${lembreteId} não está vinculado a nenhum lembrete`);
+			if(!lembrete) return notfound(res, `Erro: o id ${lembreteId} não está vinculado a nenhum lembrete`);
 		}
 
 		if(lembrete && lembrete.usuario.id !== usuario.id) return unauthorized(res, 'Erro: não autorizado.');
@@ -88,6 +89,9 @@ export const validate = async (req: Request, res: Response, requiredFields: { st
 
 		return response;
 	} catch (error: any) {
+		if(error instanceof TokenExpiredError) {
+			return unauthorized(res, 'Erro: o usuário não possui token válido. Autentique-se novamente.')
+		}
 		return bad(res, 'Token inválido.');
 	}
 }

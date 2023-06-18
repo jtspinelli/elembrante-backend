@@ -25,7 +25,7 @@ const validateLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     const usuarioRepository = new repository_1.UsuarioRepository();
     const user = yield usuarioRepository.findByUsername(username);
     if (!user)
-        return (0, httpResponses_1.bad)(res, `Erro: usuário ${username} não encontrado.`);
+        return (0, httpResponses_1.notfound)(res, `Erro: usuário ${username} não encontrado.`);
     const senhaIsCorrect = yield usuarioRepository.checkSenha(senha, user.senha);
     if (!senhaIsCorrect)
         return (0, httpResponses_1.unauthorized)(res, 'Err: usuário e/ou senha incorretos.');

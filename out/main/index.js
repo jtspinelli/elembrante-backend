@@ -50,8 +50,12 @@ const https_1 = __importDefault(require("https"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const LembreteDto_1 = __importDefault(require("../app/features/lembrete/dto/LembreteDto"));
 const mapper_1 = __importDefault(require("../app/shared/mappings/mapper"));
-const key = fs_1.default.readFileSync(path_1.default.join(__dirname, '..', '/cert/localhost.key'));
-const cert = fs_1.default.readFileSync(path_1.default.join(__dirname, '..', '/cert/localhost.crt'));
+// const key = fs.readFileSync(path.join(__dirname, '..', '/cert/localhost.key'));
+// const cert = fs.readFileSync(path.join(__dirname, '..', '/cert/localhost.crt'));
+// Use when running tests:
+const key = fs_1.default.readFileSync(path_1.default.join(__dirname, '..', '..', '/out/cert/localhost.key'));
+const cert = fs_1.default.readFileSync(path_1.default.join(__dirname, '..', '..', '/out/cert/localhost.crt'));
+/////////
 exports.app = (0, express_1.default)();
 exports.app.use(express_1.default.static(path_1.default.join(__dirname, '..', "public")));
 exports.app.use((0, express_1.json)());
@@ -65,7 +69,9 @@ const server = https_1.default.createServer({ key, cert }, exports.app);
 exports.app.get('*', (_req, res) => {
     res.sendFile(path_1.default.join(__dirname, '..', "public", "index.html"));
 });
-dataSource_1.default.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {
-    // app.listen(appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv.port));
-    server.listen(appEnv_1.appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv_1.appEnv.port));
-}));
+if (process.env.NODE_ENV !== 'test') {
+    dataSource_1.default.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {
+        // app.listen(appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv.port));
+        server.listen(appEnv_1.appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv_1.appEnv.port));
+    }));
+}

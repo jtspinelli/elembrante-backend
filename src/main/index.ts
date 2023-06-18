@@ -39,7 +39,9 @@ app.get('*', (_req: Request, res:Response) => {
 	res.sendFile(path.join(__dirname, '..', "public", "index.html"));
 });
 
-db.initialize().then(async () => {
-	// app.listen(appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv.port));
-	server.listen(appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv.port));
-});
+if(process.env.NODE_ENV !== 'test') {
+	db.initialize().then(async () => {
+		// app.listen(appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv.port));
+		server.listen(appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv.port));
+	});
+}

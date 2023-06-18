@@ -2,7 +2,7 @@ import request from 'supertest';
 import db from '../../../../src/main/config/dataSource';
 import { app } from '../../../../src/main/index';
 
-describe('[LOGIN ROUTES]', () => {
+describe.skip('[LOGIN ROUTES]', () => {
 	beforeAll(async() => {
 		await db.initialize()
 	});

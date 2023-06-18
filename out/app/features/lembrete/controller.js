@@ -38,7 +38,7 @@ const addLembreteController = (req, res) => __awaiter(void 0, void 0, void 0, fu
     const repository = new repository_1.LembreteRepository();
     const addLembreteUsecase = new addLembreteUsecase_1.AddLembreteUsecase(repository);
     const savedLembreteDto = yield addLembreteUsecase.execute(titulo, descricao, usuario);
-    return res.status(200).send(savedLembreteDto);
+    return res.status(201).send(savedLembreteDto);
 });
 exports.addLembreteController = addLembreteController;
 const removeLembreteController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
