@@ -24,3 +24,8 @@ export const expectLembreteNotFoundResponse = (res: Response) => {
 	expect(res.statusCode).toBe(404);
 	expect(res.text).toBe('Erro: o id 1000 não está vinculado a nenhum lembrete')
 };
+
+export const expectBadCreateUserRequestResponse = (res: Response) => {
+	expect(res.statusCode).toBe(400);
+	expect(res.text).toBe('Impossível criar usuário com o objeto enviado.');
+}

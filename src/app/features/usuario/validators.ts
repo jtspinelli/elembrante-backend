@@ -1,6 +1,6 @@
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { NextFunction, Request, Response } from "express";
-import { bad, unauthorized } from "../../shared/helpers/httpResponses";
+import { bad, notfound, unauthorized } from "../../shared/helpers/httpResponses";
 import { UsuarioRepository } from "./repository";
 import bcrypt from 'bcryptjs';
 import { appEnv } from '../../env/appEnv';
@@ -19,17 +19,17 @@ export const validateCreateUser = async (req: Request, res: Response, next: Next
 }
 
 export const validateRemoveUser = async (req: Request, res: Response, next: NextFunction) => {
-	if(!req.body.senha) return bad(res, 'Erro: procedimento não autorizado sem informar senha.');
+	if(!req.body.senha) return unauthorized(res, 'Erro: procedimento não autorizado sem informar senha.');
 	
 	const id = Number(req.params.id);
 	if(isNaN(id)) return bad(res, 'Erro: id informado está em formato inválido.');
 
 	const usuarioRepository = new UsuarioRepository();
 	const user = await usuarioRepository.findById(id);
-	if(!user || user.excluido) return bad(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
+	if(!user || user.excluido) return notfound(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
 
 	const senhaPass = await bcrypt.compare(req.body.senha, user.senha);
-	if(!senhaPass) return bad(res, 'Erro: senha incorreta.');
+	if(!senhaPass) return unauthorized(res, 'Erro: senha incorreta.');
 
 	req.body.user = user;
 
@@ -53,7 +53,7 @@ export const validateUpdateUser = async (req: Request, res: Response, next: Next
 
 		const usuarioRepository = new UsuarioRepository();
 		const user = await usuarioRepository.findById(id);
-		if(!user || user.excluido) return bad(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
+		if(!user || user.excluido) return notfound(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
 
 		if((tokenPayload as {id: number}).id !== id) return unauthorized(res, 'Não autorizado.');
 
@@ -64,7 +64,7 @@ export const validateUpdateUser = async (req: Request, res: Response, next: Next
 		if(username){
 			const userWithSameUsername = await usuarioRepository.findByUsername(username);
 			const usernameInUse = !!userWithSameUsername && userWithSameUsername.id !== id;
-			if(usernameInUse) return bad(res, 'Erro: este nome de usuário não está disponível.');
+			if(usernameInUse) return res.status(409).send('Erro: este nome de usuário não está disponível.');
 		}
 
 		req.body.user = user;
