@@ -8,12 +8,16 @@ import mapper from "../../../shared/mappings/mapper";
 export class AddLembreteUsecase {
 	private lembreteRepository: LembreteRepository;
 
-	constructor() {
-		this.lembreteRepository = new LembreteRepository();
+	constructor(lembreteRepository: LembreteRepository) {
+		this.lembreteRepository = lembreteRepository;
+	}
+
+	getDto(lembrete: Lembrete) {
+		return mapper.map(lembrete, Lembrete, LembreteDto)
 	}
 
 	async execute(titulo: string, descricao: string, usuario: Usuario) {
 		const savedLembrete = await this.lembreteRepository.create(titulo, descricao, usuario);
-		return mapper.map(savedLembrete, Lembrete, LembreteDto);	
+		return this.getDto(savedLembrete);
 	}
 }

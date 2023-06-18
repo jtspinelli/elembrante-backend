@@ -6,8 +6,12 @@ import mapper from "../../../shared/mappings/mapper";
 export class UpdateLembreteUsecase {
 	private repository: LembreteRepository;
 
-	constructor() {
-		this.repository = new LembreteRepository();
+	constructor(repository: LembreteRepository) {
+		this.repository = repository;
+	}
+
+	getDto(lembrete: Lembrete) {
+		return mapper.map(lembrete, Lembrete, LembreteDto);
 	}
 
 	async execute(id: number, novoTitulo: string, novaDescricao: string) {
@@ -19,6 +23,6 @@ export class UpdateLembreteUsecase {
 
 		const savedLembrete = await this.repository.save(lembrete);
 
-		return mapper.map(savedLembrete, Lembrete, LembreteDto);
+		return this.getDto(savedLembrete);
 	}
 }

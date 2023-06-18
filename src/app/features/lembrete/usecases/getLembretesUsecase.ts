@@ -3,8 +3,8 @@ import { LembreteRepository } from "../repository";
 export class GetLembretesUsecase {
 	private lembreteRepository: LembreteRepository;
 
-	constructor() {
-		this.lembreteRepository = new LembreteRepository();
+	constructor(lembreteRepository: LembreteRepository) {
+		this.lembreteRepository = lembreteRepository;
 	}
 
 	async execute(usuarioId: number) {
