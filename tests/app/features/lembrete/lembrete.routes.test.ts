@@ -198,6 +198,65 @@ describe('[LEMBRETE ROUTES]', () => {
 				.set('Cookie', process.env.VALID_TOKEN_EXAMPLE as string);
 
 			expect(result.statusCode).toBe(200);
+			expect(result.text).toBe('Operação realizada com sucesso!');
+
+			await request(app)
+				.delete('/lembrete/' + insertResult.body.id)
+				.set('Cookie', process.env.VALID_TOKEN_EXAMPLE as string);
+		});
+	});
+
+	describe('[PUT /lembrete/recover/:id]', () => {
+		test('Retorna 400 (bad request) se token ausente', async () => {
+			expectTokenNotFoundResponse(await request(app).put('/lembrete/recover/1'));
+		});
+
+		test('Retorna 400 (Bad Request) se token inválido', async () => {
+			expectInvalidTokenResponse(
+				await request(app)
+					.put('/lembrete/recover/1')
+					.set('Cookie', 'token')
+			);
+		});
+
+		test('Retorna 401 (não autorizado) se token expirado', async () => {
+			expectExpiredTokenResponse(
+				await request(app)
+					.put('/lembrete/recover/1')
+					.set('Cookie', process.env.EXPIRED_TOKEN_EXAMPLE as string)
+			);
+		});
+
+		test('Retorna 404 (not found) se o usuário não for encontrado', async () => {
+			expectUsuarioNotFoundResponse(
+				await request(app)
+					.put('/lembrete/recover/1')
+					.set('Cookie', process.env.USER_NOT_FOUND_TOKEN_EXAMPLE as string)
+			);
+		});
+
+		test('Retorna 404 (not found) se o lembrete não for encontrado', async () => {
+			expectLembreteNotFoundResponse(
+				await request(app)
+					.put('/lembrete/recover/1000')
+					.set('Cookie', process.env.VALID_TOKEN_EXAMPLE as string)
+			);
+		});
+
+		test('Retorna 200 (Ok) quando o lembrete é recuperado com sucesso', async () => {
+			const insertResult = await request(app)
+				.post('/lembrete')
+				.set('Cookie', process.env.VALID_TOKEN_EXAMPLE as string)
+				.send({titulo: 'test title', descricao: 'test description'});
+			
+			await request(app).put('/lembrete/archive/' + insertResult.body.id);
+
+			const result = await request(app)
+				.put('/lembrete/recover/' + insertResult.body.id)
+				.set('Cookie', process.env.VALID_TOKEN_EXAMPLE as string);
+
+			expect(result.statusCode).toBe(200);
+			expect(result.text).toBe('Operação realizada com sucesso!');
 
 			await request(app)
 				.delete('/lembrete/' + insertResult.body.id)
