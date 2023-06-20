@@ -21,8 +21,8 @@ if(process.env.NODE_ENV === 'test') {
 	typeormconfig = {
 		type: 'sqlite',
 		database: './dbtest.sqlite',
-		logging: true,
-		synchronize: false,
+		logging: false,
+		synchronize: true,
 		entities: [Usuario, Lembrete],
 		migrations: [GenerateDb1687053124264]
 	}
