@@ -1,14 +1,10 @@
 import request from 'supertest';
-import db from '../../../../src/main/config/dataSource';
 import { app } from '../../../../src/main/index';
+import { dbOnClose, initializeDb } from '../../../db.setups';
 
-describe.skip('[LOGIN ROUTES]', () => {
-	beforeAll(async() => {
-		await db.initialize()
-	});
-	afterAll(async() => {
-		await db.destroy()
-	});
+describe('[LOGIN ROUTES]', () => {
+	beforeAll(initializeDb);
+	afterAll(dbOnClose);
 
 	describe('[POST /auth]', () => {
 		test('Retorna 400 (bad request) quando não enviados dados para autenticação', async() => {
@@ -39,7 +35,7 @@ describe.skip('[LOGIN ROUTES]', () => {
 		test('Retorna 401 (não autorizado) se senha incorreta', async () => {
 			const result = await request(app)
 			.post('/auth')
-			.send({username: 'user', senha: 'pass123*'});
+			.send({username: 'user', senha: 'pass123'});
 			
 			expect(result.statusCode).toBe(401);
 			expect(result.text).toBe('Err: usuário e/ou senha incorretos.');	
@@ -48,7 +44,7 @@ describe.skip('[LOGIN ROUTES]', () => {
 		test('Retorna 200 (Ok) com token quando Login realizado com sucesso', async () => {
 			const result = await request(app)
 			.post('/auth')
-			.send({username: 'user', senha: 'password123*'});
+			.send({username: 'user', senha: 'pass123*'});
 			
 			expect(result.statusCode).toBe(200);
 			expect(result.body.userData).toBeDefined();

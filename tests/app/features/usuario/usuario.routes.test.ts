@@ -2,20 +2,17 @@ import { app } from '../../../../src/main/index';
 import { expectBadCreateUserRequestResponse } from '../../../expectations';
 import { randomUUID } from 'crypto';
 import { Usuario } from '../../../../src/app/shared/database/entities/Usuario';
+import { dbOnClose, initializeDb } from '../../../db.setups';
 import request from 'supertest';
 import bcrypt from 'bcryptjs';
 import db from "../../../../src/main/config/dataSource";
 
 
 describe('[USUARIO ROUTES]', () => {
-	beforeAll(async() => {
-		await db.initialize();
-	});
-	afterAll(async() => {
-		await db.destroy();
-	});
+	beforeAll(initializeDb);
+	afterAll(dbOnClose);
 
-	describe.skip('[POST /checkuser]', () => {
+	describe('[POST /checkuser]', () => {
 		test('Retorna 404 (not found) se usuário não for encontrado', async () => {
 			const result = await request(app)
 				.post('/checkuser')
@@ -33,7 +30,7 @@ describe('[USUARIO ROUTES]', () => {
 		});
 	});
 
-	describe.skip('[POST /user]', () => {
+	describe('[POST /user]', () => {
 		test('Retorna 400 (Bad Request) se \'nome\' ausente no objeto enviado', async () => {
 			expectBadCreateUserRequestResponse(
 				await request(app)
@@ -85,7 +82,7 @@ describe('[USUARIO ROUTES]', () => {
 		});
 	});
 
-	describe.skip('[DELETE /user:id]', () => {
+	describe('[DELETE /user:id]', () => {
 		test('Retorna 401 (Não autorizado) se senha não for informada', async () => {
 			const result = await request(app).delete('/user/3');
 

@@ -1,18 +1,14 @@
 import { expectExpiredTokenResponse, expectInvalidTokenResponse, expectLembreteNotFoundResponse, expectTokenNotFoundResponse, expectUsuarioNotFoundResponse } from '../../../expectations';
 import { app } from '../../../../src/main/index';
+import { dbOnClose, initializeDb } from '../../../db.setups';
 import request from 'supertest';
 import dotenv from 'dotenv-safe';
-import db from '../../../../src/main/config/dataSource';
 
 dotenv.config();
 
 describe('[LEMBRETE ROUTES]', () => {
-	beforeAll(async() => {
-		await db.initialize();
-	});
-	afterAll(async() => {
-		await db.destroy();
-	});	
+	beforeAll(initializeDb);
+	afterAll(dbOnClose);
 
 	describe('[GET /lembretes]', () => {
 		test('Retorna 400 (Bad Request) se token ausente', async () => {

@@ -8,6 +8,7 @@ import { RecoverLembreteUsecase } from '../../../../../src/app/features/lembrete
 import { RemoveLembreteUsecase } from '../../../../../src/app/features/lembrete/usecases/removeLembreteUsecase';
 import { UpdateLembreteUsecase } from '../../../../../src/app/features/lembrete/usecases/updateLembreteUsecase';
 import LembreteDto from '../../../../../src/app/features/lembrete/dto/LembreteDto';
+import mapper from '../../../../../src/app/shared/mappings/mapper';
 
 describe('[LEMBRETE USECASES]', () => {
 	describe('[Add Lembrete Usecase]', () => {
@@ -22,7 +23,7 @@ describe('[LEMBRETE USECASES]', () => {
 		lembrete.id = 1;
 		lembrete.usuario = usuario;
 		
-		const repository = new LembreteRepository();
+		const repository = new LembreteRepository(mapper);
 		jest.spyOn(repository, 'create').mockResolvedValue(lembrete);
 		
 		const makeSut = () => new AddLembreteUsecase(repository);
@@ -72,7 +73,7 @@ describe('[LEMBRETE USECASES]', () => {
 			}
 		];
 	
-		const repository = new LembreteRepository();
+		const repository = new LembreteRepository(mapper);
 		jest.spyOn(repository, 'getAll').mockResolvedValue(lembretes);
 	
 		const makeSut = () => new GetLembretesUsecase(repository);
@@ -110,7 +111,7 @@ describe('[LEMBRETE USECASES]', () => {
 		const lembreteArquivado: Lembrete = {...lembrete};
 		lembreteArquivado.arquivado = true;
 		
-		const repository = new LembreteRepository();
+		const repository = new LembreteRepository(mapper);
 		jest.spyOn(repository, 'findOneById').mockResolvedValue(lembrete);
 		jest.spyOn(repository, 'save').mockResolvedValue(lembreteArquivado);
 	
@@ -143,7 +144,7 @@ describe('[LEMBRETE USECASES]', () => {
 		const lembreteRecuperado: Lembrete = {...lembrete};
 		lembreteRecuperado.arquivado = false;
 		
-		const repository = new LembreteRepository();
+		const repository = new LembreteRepository(mapper);
 		jest.spyOn(repository, 'findOneById').mockResolvedValue(lembrete);
 		jest.spyOn(repository, 'save').mockResolvedValue(lembreteRecuperado);
 	
@@ -166,7 +167,7 @@ describe('[LEMBRETE USECASES]', () => {
 	});
 
 	describe('[Remove Lembrete Usecase]', () => {
-		const repository = new LembreteRepository();
+		const repository = new LembreteRepository(mapper);
 		jest.spyOn(repository, 'findOneById').mockResolvedValue(new Lembrete());
 		jest.spyOn(repository, 'remove').mockImplementation((lembrete: Lembrete) => {return new Promise<void>(res => {res()})});
 	
@@ -193,7 +194,7 @@ describe('[LEMBRETE USECASES]', () => {
 		updatedLembrete.titulo = 'Hey!';
 		updatedLembrete.descricao = 'Go!';
 		
-		const repository = new LembreteRepository();
+		const repository = new LembreteRepository(mapper);
 		jest.spyOn(repository, 'findOneByIdWithRelations').mockResolvedValue(lembrete);
 		jest.spyOn(repository, 'save').mockResolvedValue(updatedLembrete);
 	
