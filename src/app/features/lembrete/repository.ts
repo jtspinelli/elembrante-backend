@@ -1,15 +1,21 @@
 import { Repository } from "typeorm";
 import { Lembrete } from "../../shared/database/entities/Lembrete";
 import { Usuario } from "../../shared/database/entities/Usuario";
+import { Mapper } from "@automapper/core";
 import LembreteDto from "./dto/LembreteDto";
 import db from "../../../main/config/dataSource";
-import mapper from "../../shared/mappings/mapper";
 
 export class LembreteRepository {
 	private repository: Repository<Lembrete>;
+	private mapper: Mapper;
 
-	constructor() {
+	constructor(mapper: Mapper) {
 		this.repository = db.getRepository(Lembrete);
+		this.mapper = mapper;
+	}
+
+	getDtos(lembretes: Lembrete[]) {
+		return this.mapper.mapArray(lembretes, Lembrete, LembreteDto);
 	}
 
 	async getAll(usuarioId: number) {
@@ -18,7 +24,7 @@ export class LembreteRepository {
 			.where('usuario.id = ' + usuarioId)
 			.getMany();
 		
-			return mapper.mapArray(lembretes, Lembrete, LembreteDto);
+			return this.getDtos(lembretes);
 	}
 
 	private getLembrete(titulo: string, descricao: string, criadoEm: Date, usuario: Usuario) {
