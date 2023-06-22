@@ -13,14 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.googleLoginController = exports.loginController = exports.createToken = void 0;
-const axios_1 = __importDefault(require("axios"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const httpResponses_1 = require("../../shared/helpers/httpResponses");
 const repository_1 = require("../usuario/repository");
 const cookie_1 = require("cookie");
-const crypto_1 = require("crypto");
-const Usuario_1 = require("../../shared/database/entities/Usuario");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const googleLoginUsecase_1 = require("./usecases/googleLoginUsecase");
+const InvalidGoogleTokenError_1 = require("../../shared/errors/InvalidGoogleTokenError");
 function createToken(user) {
     return __awaiter(this, void 0, void 0, function* () {
         const secret = process.env.SECRET;
@@ -54,40 +52,17 @@ const loginController = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 exports.loginController = loginController;
 const googleLoginController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const credential = req.body.credential;
-    const url = 'https://oauth2.googleapis.com/tokeninfo?id_token=' + credential;
-    const googleResponse = yield axios_1.default.get(url)
-        .then(data => data)
-        .catch(e => e);
-    if (googleResponse.status !== 200)
-        return (0, httpResponses_1.bad)(res, 'Google Token inválido.');
-    const usuarioRepository = new repository_1.UsuarioRepository();
-    const user = yield usuarioRepository.findByUsername(googleResponse.data.email);
-    if (user) {
-        const data = yield createToken(user);
+    const repository = new repository_1.UsuarioRepository();
+    const googleLoginUsecase = new googleLoginUsecase_1.GoogleLoginUsecase(repository);
+    try {
+        const data = yield googleLoginUsecase.execute(req.body.credential);
         res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
         res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.sign);
-        if (data)
-            return res.status(200).send(data);
-        return (0, httpResponses_1.internalError)(res);
+        return res.status(200).send(data);
     }
-    bcryptjs_1.default.hash((0, crypto_1.randomUUID)(), 10, (err, hash) => {
-        if (err)
-            return (0, httpResponses_1.internalError)(res);
-        const newUser = new Usuario_1.Usuario();
-        newUser.nome = googleResponse.data.name;
-        newUser.username = googleResponse.data.email;
-        newUser.senha = hash;
-        usuarioRepository.save(newUser)
-            .then(() => __awaiter(void 0, void 0, void 0, function* () {
-            const data = yield createToken(newUser);
-            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
-            res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.sign);
-            if (data)
-                return res.status(200).send(data);
-            return (0, httpResponses_1.internalError)(res);
-        }))
-            .catch(() => (0, httpResponses_1.internalError)(res));
-    });
+    catch (error) {
+        if (error instanceof InvalidGoogleTokenError_1.InvalidGoogleTokenError)
+            return error.respond(res);
+    }
 });
 exports.googleLoginController = googleLoginController;

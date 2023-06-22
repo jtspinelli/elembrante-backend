@@ -1,6 +1,6 @@
 import { UsuarioRepository } from "../repository";
-import { createToken } from "../../login/controller";
 import { Usuario } from "../../../shared/database/entities/Usuario";
+import { LoginUsecase } from "../../login/usecases/loginUsecase";
 import bcrypt from 'bcryptjs';
 
 export class CreateUsuarioUsecase {
@@ -11,7 +11,7 @@ export class CreateUsuarioUsecase {
 	}
 
 	async createToken(usuario: Usuario) {
-		return await createToken(usuario);
+		return await LoginUsecase.createToken(usuario);
 	}
 
 	async execute(nome: string, username: string, senha: string) {
@@ -30,7 +30,7 @@ export class CreateUsuarioUsecase {
 			
 			await this.usuarioRepository.save(newUser);
 		
-			res(await this.createToken(newUser));			
+			res(await this.createToken(newUser));
 		});
 	}
 }

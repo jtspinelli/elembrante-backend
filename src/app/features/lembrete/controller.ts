@@ -9,12 +9,13 @@ import { success } from "../../shared/helpers/httpResponses";
 import { UpdateLembreteUsecase } from "./usecases/updateLembreteUsecase";
 import { ValidatedResponse } from "../../shared/helpers/ValidatedResponse";
 import { LembreteRepository } from "./repository";
+import mapper from "../../shared/mappings/mapper";
 
 export const getLembretesController = async (req: Request, res: Response) => {
 	const validation = await validate(req, res, {strings: [], numbers: []}, null);
 	if(!(validation instanceof ValidatedResponse)) return;
 
-	const repository = new LembreteRepository();
+	const repository = new LembreteRepository(mapper);
 	const getLembretesUsecase = new GetLembretesUsecase(repository);
 	const lembretes = await getLembretesUsecase.execute(validation.usuario.id);
 
@@ -26,7 +27,7 @@ export const addLembreteController = async (req: Request, res: Response) => {
 	if(!(validation instanceof ValidatedResponse)) return;
 
 	const { titulo, descricao, usuario } = validation;
-	const repository = new LembreteRepository();
+	const repository = new LembreteRepository(mapper);
 	const addLembreteUsecase = new AddLembreteUsecase(repository);
 	const savedLembreteDto = await addLembreteUsecase.execute(titulo, descricao, usuario);
 
@@ -37,7 +38,7 @@ export const removeLembreteController = async (req: Request, res: Response) => {
 	const validation = await validate(req, res, {strings: [], numbers: []}, req.params.id);
 	if(!(validation instanceof ValidatedResponse)) return;
 
-	const repository = new LembreteRepository();
+	const repository = new LembreteRepository(mapper);
 	const removeLembreteUsecase = new RemoveLembreteUsecase(repository);
 	await removeLembreteUsecase.execute(Number(req.params.id));
 
@@ -48,7 +49,7 @@ export const archiveLembreteController = async (req: Request, res: Response) => 
 	const validation = await validate(req, res, {strings: [], numbers: []}, req.params.id);
 	if(!(validation instanceof ValidatedResponse)) return;
 
-	const repository = new LembreteRepository();
+	const repository = new LembreteRepository(mapper);
 	const archiveLembreteUsecase = new ArchiveLembreteUsecase(repository);
 	await archiveLembreteUsecase.execute(Number(req.params.id));
 
@@ -59,7 +60,7 @@ export const recoverLembreteController = async (req: Request, res: Response) => 
 	const validation = await validate(req, res, {strings: [], numbers: []}, req.params.id);
 	if(!(validation instanceof ValidatedResponse)) return;
 
-	const repository = new LembreteRepository();
+	const repository = new LembreteRepository(mapper);
 	const recoverLembreteUsecase = new RecoverLembreteUsecase(repository);
 	await recoverLembreteUsecase.execute(Number(req.params.id));
 
@@ -70,7 +71,7 @@ export const updateLembreteController = async (req: Request, res: Response) =>  
 	const validation = await validate(req, res, { strings: ['titulo', 'descricao'], numbers: [] }, req.params.id);
 	if(!(validation instanceof ValidatedResponse)) return;
 
-	const repository = new LembreteRepository();
+	const repository = new LembreteRepository(mapper);
 	const updateLembreteUsecase = new UpdateLembreteUsecase(repository);
 	const savedLembrete = await updateLembreteUsecase.execute(Number(req.params.id), req.body.titulo, req.body.descricao);
 

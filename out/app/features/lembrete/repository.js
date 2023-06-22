@@ -16,10 +16,13 @@ exports.LembreteRepository = void 0;
 const Lembrete_1 = require("../../shared/database/entities/Lembrete");
 const LembreteDto_1 = __importDefault(require("./dto/LembreteDto"));
 const dataSource_1 = __importDefault(require("../../../main/config/dataSource"));
-const mapper_1 = __importDefault(require("../../shared/mappings/mapper"));
 class LembreteRepository {
-    constructor() {
+    constructor(mapper) {
         this.repository = dataSource_1.default.getRepository(Lembrete_1.Lembrete);
+        this.mapper = mapper;
+    }
+    getDtos(lembretes) {
+        return this.mapper.mapArray(lembretes, Lembrete_1.Lembrete, LembreteDto_1.default);
     }
     getAll(usuarioId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -27,7 +30,7 @@ class LembreteRepository {
                 .leftJoinAndSelect("lembrete.usuario", "usuario")
                 .where('usuario.id = ' + usuarioId)
                 .getMany();
-            return mapper_1.default.mapArray(lembretes, Lembrete_1.Lembrete, LembreteDto_1.default);
+            return this.getDtos(lembretes);
         });
     }
     getLembrete(titulo, descricao, criadoEm, usuario) {

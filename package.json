@@ -12,12 +12,12 @@
         "test:integration:verbose": "cross-env NODE_ENV=test jest -c jest.integration.config.ts --verbose --runInBand --detectOpenHandles --forceExit",
         "test:integration:coverage": "cross-env NODE_ENV=test jest -c jest.integration.config.ts --silent --noStackTrace --runInBand --coverage",
         "test:integration:watch": "cross-env NODE_ENV=test jest -c jest.integration.config.ts --silent --noStackTrace --runInBand --watchAll",
-        "start": "node out/main/index.js",
+        "test:coverage": "cross-env NODE_ENV=test jest --silent --noStackTrace --runInBand --coverage",
+		"start": "node out/main/index.js",
         "typeorm": "typeorm-ts-node-commonjs",
         "migration:r": "npm run typeorm -- migration:run -d src/dataSource.ts",
         "migration:g:test": "cross-env NODE_ENV=test npm run typeorm migration:generate -- src/app/shared/database/migrations/GenerateDb -d src/main/config/dataSource.ts",
 		"migration:r:test": "cross-env NODE_ENV=test npm run typeorm -- migration:run -d src/main/config/dataSource.ts"
-
 	},
     "author": "",
     "license": "ISC",

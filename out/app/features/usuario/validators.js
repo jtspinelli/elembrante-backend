@@ -56,17 +56,17 @@ const validateCreateUser = (req, res, next) => __awaiter(void 0, void 0, void 0,
 exports.validateCreateUser = validateCreateUser;
 const validateRemoveUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.senha)
-        return (0, httpResponses_1.bad)(res, 'Erro: procedimento não autorizado sem informar senha.');
+        return (0, httpResponses_1.unauthorized)(res, 'Erro: procedimento não autorizado sem informar senha.');
     const id = Number(req.params.id);
     if (isNaN(id))
         return (0, httpResponses_1.bad)(res, 'Erro: id informado está em formato inválido.');
     const usuarioRepository = new repository_1.UsuarioRepository();
     const user = yield usuarioRepository.findById(id);
     if (!user || user.excluido)
-        return (0, httpResponses_1.bad)(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
+        return (0, httpResponses_1.notfound)(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
     const senhaPass = yield bcryptjs_1.default.compare(req.body.senha, user.senha);
     if (!senhaPass)
-        return (0, httpResponses_1.bad)(res, 'Erro: senha incorreta.');
+        return (0, httpResponses_1.unauthorized)(res, 'Erro: senha incorreta.');
     req.body.user = user;
     next();
 });
@@ -86,7 +86,7 @@ const validateUpdateUser = (req, res, next) => __awaiter(void 0, void 0, void 0,
         const usuarioRepository = new repository_1.UsuarioRepository();
         const user = yield usuarioRepository.findById(id);
         if (!user || user.excluido)
-            return (0, httpResponses_1.bad)(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
+            return (0, httpResponses_1.notfound)(res, `Erro: o id ${id} não está vinculado a nenhum usuário ativo.`);
         if (tokenPayload.id !== id)
             return (0, httpResponses_1.unauthorized)(res, 'Não autorizado.');
         const nome = req.body.nome;
@@ -97,7 +97,7 @@ const validateUpdateUser = (req, res, next) => __awaiter(void 0, void 0, void 0,
             const userWithSameUsername = yield usuarioRepository.findByUsername(username);
             const usernameInUse = !!userWithSameUsername && userWithSameUsername.id !== id;
             if (usernameInUse)
-                return (0, httpResponses_1.bad)(res, 'Erro: este nome de usuário não está disponível.');
+                return res.status(409).send('Erro: este nome de usuário não está disponível.');
         }
         req.body.user = user;
         next();

@@ -1,14 +1,15 @@
-import { LembreteRepository } from '../../../../../src/app/features/lembrete/repository';
-import { Lembrete } from '../../../../../src/app/shared/database/entities/Lembrete';
-import { Usuario } from '../../../../../src/app/shared/database/entities/Usuario';
-import { AddLembreteUsecase } from '../../../../../src/app/features/lembrete/usecases/addLembreteUsecase';
-import { GetLembretesUsecase } from '../../../../../src/app/features/lembrete/usecases/getLembretesUsecase';
-import { ArchiveLembreteUsecase } from '../../../../../src/app/features/lembrete/usecases/archiveLembreteUsecase';
-import { RecoverLembreteUsecase } from '../../../../../src/app/features/lembrete/usecases/recoverLembreteUsecase';
-import { RemoveLembreteUsecase } from '../../../../../src/app/features/lembrete/usecases/removeLembreteUsecase';
-import { UpdateLembreteUsecase } from '../../../../../src/app/features/lembrete/usecases/updateLembreteUsecase';
-import LembreteDto from '../../../../../src/app/features/lembrete/dto/LembreteDto';
-import mapper from '../../../../../src/app/shared/mappings/mapper';
+import { UsuarioRepository } from './../../../../src/app/features/usuario/repository';
+import { LembreteRepository } from '../../../../src/app/features/lembrete/repository';
+import { Lembrete } from '../../../../src/app/shared/database/entities/Lembrete';
+import { Usuario } from '../../../../src/app/shared/database/entities/Usuario';
+import { AddLembreteUsecase } from '../../../../src/app/features/lembrete/usecases/addLembreteUsecase';
+import { GetLembretesUsecase } from '../../../../src/app/features/lembrete/usecases/getLembretesUsecase';
+import { ArchiveLembreteUsecase } from '../../../../src/app/features/lembrete/usecases/archiveLembreteUsecase';
+import { RecoverLembreteUsecase } from '../../../../src/app/features/lembrete/usecases/recoverLembreteUsecase';
+import { RemoveLembreteUsecase } from '../../../../src/app/features/lembrete/usecases/removeLembreteUsecase';
+import { UpdateLembreteUsecase } from '../../../../src/app/features/lembrete/usecases/updateLembreteUsecase';
+import LembreteDto from '../../../../src/app/features/lembrete/dto/LembreteDto';
+import mapper from '../../../../src/app/shared/mappings/mapper';
 
 describe('[LEMBRETE USECASES]', () => {
 	describe('[Add Lembrete Usecase]', () => {
@@ -131,6 +132,15 @@ describe('[LEMBRETE USECASES]', () => {
 	
 			expect(result?.arquivado).toBeTruthy();
 		});
+
+		test('Retorna undefined (função é interrompida) se o Lembrete não for encontrado', async () => {
+			const repository = new LembreteRepository(mapper);
+			jest.spyOn(repository, 'findOneById').mockResolvedValue(null);		
+			const sut = new ArchiveLembreteUsecase(repository);
+			const result = await sut.execute(1);
+
+			expect(result).toBeUndefined();
+		});
 	});
 
 	describe('[Recover Lembrete Usecase]', () => {
@@ -164,6 +174,15 @@ describe('[LEMBRETE USECASES]', () => {
 	
 			expect(result?.arquivado).toBeFalsy();
 		});
+
+		test('Retorna undefined (função é interrompida) quando o Lembrete não é encontrado', async () => {
+			const repository = new LembreteRepository(mapper);
+			jest.spyOn(repository, 'findOneById').mockResolvedValue(null);
+			const sut = new RecoverLembreteUsecase(repository);
+			const result = await sut.execute(1);
+
+			expect(result).toBeUndefined();
+		});
 	});
 
 	describe('[Remove Lembrete Usecase]', () => {
@@ -179,6 +198,15 @@ describe('[LEMBRETE USECASES]', () => {
 	
 			expect(repository.findOneById).toBeCalled();
 			expect(repository.remove).toBeCalled();
+		});
+
+		test('Retorna undefined (função é interrompida) se o Lembrete não é encontrado', async () => {
+			const repository = new LembreteRepository(mapper);
+			jest.spyOn(repository, 'findOneById').mockResolvedValue(null);
+			const sut = new RemoveLembreteUsecase(repository);
+			const result = await sut.execute(1);
+
+			expect(result).toBeUndefined();
 		});
 	});
 
@@ -225,6 +253,15 @@ describe('[LEMBRETE USECASES]', () => {
 			expect(result).toBeInstanceOf(LembreteDto);
 			expect(result?.titulo).toBe('Hey!');
 			expect(result?.descricao).toBe('Go!');
+		});
+
+		test('Retorna undefined (função é interrompida) se o Lembrete não é encontrado', async () => {
+			const repository = new LembreteRepository(mapper);
+			jest.spyOn(repository, 'findOneByIdWithRelations').mockResolvedValue(null);
+			const sut = new UpdateLembreteUsecase(repository);
+			const result = await sut.execute(1, 'New Title', 'New Description');
+			
+			expect(result).toBeUndefined();
 		});
 	});
 });

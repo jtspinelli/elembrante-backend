@@ -50,6 +50,16 @@ describe('[LOGIN ROUTES]', () => {
 			expect(result.body.userData).toBeDefined();
 			expect(result.body.headerPayload).toBeDefined();
 			expect(result.body.sign).toBeDefined();
+			expect(result.headers['set-cookie']).toBeDefined();
 		});
+
+		test('Retorna 400 (Bad Request) se Google Token inválido', async () => {
+			const result = await request(app)
+				.post('/googlelogin')
+				.send({credential: 'googlecredentials'});
+			
+			expect(result.statusCode).toBe(400);
+			expect(result.body.message).toBe('Google Token inválido.');
+		});		
 	});
 });

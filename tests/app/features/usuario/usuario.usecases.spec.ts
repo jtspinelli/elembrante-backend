@@ -1,8 +1,8 @@
-import { CreateUsuarioUsecase } from '../../../../../src/app/features/usuario/usecases/createUsuarioUsecase';
-import { UsuarioRepository } from '../../../../../src/app/features/usuario/repository';
-import { Usuario } from "../../../../../src/app/shared/database/entities/Usuario";
-import { UpdateUsuarioUsecase } from '../../../../../src/app/features/usuario/usecases/updateUsuarioUsecase';
-import { RemoveUsuarioUsecase } from '../../../../../src/app/features/usuario/usecases/removeUsuarioUsecase';
+import { CreateUsuarioUsecase } from '../../../../src/app/features/usuario/usecases/createUsuarioUsecase';
+import { UsuarioRepository } from '../../../../src/app/features/usuario/repository';
+import { Usuario } from "../../../../src/app/shared/database/entities/Usuario";
+import { UpdateUsuarioUsecase } from '../../../../src/app/features/usuario/usecases/updateUsuarioUsecase';
+import { RemoveUsuarioUsecase } from '../../../../src/app/features/usuario/usecases/removeUsuarioUsecase';
 import bcrypt from 'bcryptjs';
 
 describe('[USUARIO USECASES]', () => {
