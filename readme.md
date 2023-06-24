@@ -1,4 +1,4 @@
-<img src='./src/images/ElembranteLogo.png' width=330>
+<img src='./ElembranteLogo.png' width=330>
 
 #### Aplicação para gerencimento de lembretes/notas.
 
