@@ -19,8 +19,8 @@ const resolveCertPath = () => {
 		: [__dirname, '..', 'cert'];
 };
 
-const key = fs.readFileSync(path.join(...resolveCertPath(), 'localhost.key'));
-const cert = fs.readFileSync(path.join(...resolveCertPath(), 'localhost.crt'));
+// const key = fs.readFileSync(path.join(...resolveCertPath(), 'localhost.key'));
+// const cert = fs.readFileSync(path.join(...resolveCertPath(), 'localhost.crt'));
 
 export const app = express();
 app.use(express.static(path.join(__dirname, '..', "public")));
@@ -32,7 +32,7 @@ app.use(cors({
 
 registerRoutes(app);
 
-const server = https.createServer({key, cert}, app);
+// const server = https.createServer({key, cert}, app);
 
 createMap(mapper, Lembrete, LembreteDto, forMember(dto => dto.usuarioId, mapFrom(lembrete => lembrete.usuario.id)));
 
@@ -42,7 +42,7 @@ app.get('*', (_req: Request, res:Response) => {
 
 if(process.env.NODE_ENV !== 'test') {
 	db.initialize().then(async () => {
-		// app.listen(appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv.port));
-		server.listen(appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv.port));
+		app.listen(appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv.port));
+		// server.listen(appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv.port));
 	});
 }

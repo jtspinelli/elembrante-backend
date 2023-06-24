@@ -5,7 +5,7 @@ import { Usuario } from '../../app/shared/database/entities/Usuario';
 import { GenerateDb1684598200838 } from '../../app/shared/database/migrations/1684598200838-GenerateDb';
 import { GenerateDb1687053124264 } from '../../app/shared/database/migrations/1687053124264-GenerateDb';
 
-dotenv.config();
+//dotenv.config();
 
 let typeormconfig: DataSourceOptions = {
 	type: 'postgres',
