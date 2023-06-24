@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUsuarioUsecase = void 0;
-const controller_1 = require("../../login/controller");
 const Usuario_1 = require("../../../shared/database/entities/Usuario");
+const loginUsecase_1 = require("../../login/usecases/loginUsecase");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 class CreateUsuarioUsecase {
     constructor(usuarioRepository) {
@@ -22,7 +22,7 @@ class CreateUsuarioUsecase {
     }
     createToken(usuario) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, controller_1.createToken)(usuario);
+            return yield loginUsecase_1.LoginUsecase.createToken(usuario);
         });
     }
     execute(nome, username, senha) {

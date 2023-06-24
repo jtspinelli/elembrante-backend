@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Usuario = void 0;
 const typeorm_1 = require("typeorm");
 const Lembrete_1 = require("./Lembrete");
-let Usuario = class Usuario {
+let Usuario = exports.Usuario = class Usuario {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
@@ -38,7 +38,6 @@ __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], Usuario.prototype, "excluido", void 0);
-Usuario = __decorate([
+exports.Usuario = Usuario = __decorate([
     (0, typeorm_1.Entity)()
 ], Usuario);
-exports.Usuario = Usuario;

@@ -8,42 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.googleLoginController = exports.loginController = exports.createToken = void 0;
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+exports.googleLoginController = exports.loginController = void 0;
 const httpResponses_1 = require("../../shared/helpers/httpResponses");
 const repository_1 = require("../usuario/repository");
-const cookie_1 = require("cookie");
 const googleLoginUsecase_1 = require("./usecases/googleLoginUsecase");
 const InvalidGoogleTokenError_1 = require("../../shared/errors/InvalidGoogleTokenError");
-function createToken(user) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const secret = process.env.SECRET;
-        if (!secret)
-            return;
-        return new Promise((res, _rej) => {
-            const userData = { id: user.id, nome: user.nome, username: user.username };
-            jsonwebtoken_1.default.sign(userData, secret, {
-                expiresIn: 600
-            }, (_err, jwtToken) => {
-                const sign = (0, cookie_1.serialize)('sign', jwtToken.split('.')[2], {
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: 'strict',
-                    maxAge: 600,
-                    path: '/',
-                });
-                res({ userData, headerPayload: `${jwtToken.split('.')[0]}.${jwtToken.split('.')[1]}`, sign });
-            });
-        });
-    });
-}
-exports.createToken = createToken;
+const loginUsecase_1 = require("./usecases/loginUsecase");
 const loginController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = yield createToken(req.body.user);
+    const loginUsecase = new loginUsecase_1.LoginUsecase();
+    const data = yield loginUsecase.execute(req.body.user);
     res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.headerPayload);
     res.setHeader('Set-Cookie', data === null || data === void 0 ? void 0 : data.sign);
     if (data)
