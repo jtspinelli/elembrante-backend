@@ -1,6 +1,6 @@
 import dotenv from 'dotenv-safe';
 
-dotenv.config();
+// dotenv.config();
 
 export const appEnv = {
 	port: process.env.PORT,
