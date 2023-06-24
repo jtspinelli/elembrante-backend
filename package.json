@@ -12,8 +12,7 @@
         "test:integration:verbose": "cross-env NODE_ENV=test jest -c jest.integration.config.ts --verbose --runInBand --detectOpenHandles --forceExit",
         "test:integration:coverage": "cross-env NODE_ENV=test jest -c jest.integration.config.ts --silent --noStackTrace --runInBand --coverage",
         "test:integration:watch": "cross-env NODE_ENV=test jest -c jest.integration.config.ts --silent --noStackTrace --runInBand --watchAll",
-        "test:coverage": "cross-env NODE_ENV=test jest --silent --noStackTrace --runInBand --coverage",
-        "build": "tsc",
+        "test:coverage": "cross-env NODE_ENV=test jest --silent --noStackTrace --runInBand --coverage",       
         "start": "node out/main/index.js",
         "typeorm": "typeorm-ts-node-commonjs",
         "migration:r": "npm run typeorm -- migration:run -d src/dataSource.ts",
@@ -57,7 +56,6 @@
         "supertest": "^6.3.3",
         "ts-jest": "^29.1.0",
         "ts-node": "^10.9.1",
-        "tsc": "^2.0.4",
         "typescript": "^5.1.3"
     }
 }

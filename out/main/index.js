@@ -57,12 +57,6 @@ const resolveCertPath = () => {
 };
 const key = fs_1.default.readFileSync(path_1.default.join(...resolveCertPath(), 'localhost.key'));
 const cert = fs_1.default.readFileSync(path_1.default.join(...resolveCertPath(), 'localhost.crt'));
-console.log(path_1.default.join(...resolveCertPath(), 'localhost.key'));
-console.log(path_1.default.join(...resolveCertPath(), 'localhost.crt'));
-// Use when running tests:
-// const key = fs.readFileSync(path.join(__dirname, '..', '..', '/out/cert/localhost.key'));
-// const cert = fs.readFileSync(path.join(__dirname, '..', '..', '/out/cert/localhost.crt'));
-/////////
 exports.app = (0, express_1.default)();
 exports.app.use(express_1.default.static(path_1.default.join(__dirname, '..', "public")));
 exports.app.use((0, express_1.json)());
