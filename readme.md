@@ -23,11 +23,14 @@ O Backend da aplicação basicamente consiste em um servidor [Node.js](https://n
 
 \* os tokens possuem duração de 10 minutos.
 
+<span id="runlocal"> 
+
 ## Rodando a aplicação localmente
+</span>
 
 A aplicação está disponível [neste link](https://elembrante.vercel.app/).
 
-Mas se desejar rodar localmente, realize os seguintes ajustes:
+Mas se desejar rodar localmente, realize os seguintes ajustes*:
 
 ### 1) Banco de dados
 
@@ -37,19 +40,21 @@ Isso é suficiente, pois usaremos o TypeORM para criar automaticamente as tabela
 
 ### 2) Variáveis de ambiente
 
-No diretório do projeto, crie um arquivo `.env` com 2 informações:
+No diretório do projeto, crie um arquivo `.env` com 3 informações:
 
 ```
 SECRET=elembrante_dev 
 DB_URL=<url de conexão com o database>
+PORT=8081
 ```
 
 - SECRET: adicione qualquer valor; será utilizada para gerar e posteriormente decodificar os tokens JWT
 - DB_URL: url de conexão com o banco de dados postgreSQL
+- PORT: porta para a aplicação ouvir requisições; pode ser outra
 
-### 3) Ajuste no dataSource.ts
+### 3) Ajuste no appEnv.ts
 
-No diretório raiz do projeto, abra o arquivo [dataSource.ts](https://github.com/jtspinelli/elembrante-backend/blob/master/src/dataSource.ts#L7) e descomente a seguinte linha:
+No diretório `src/app/env`, abra o arquivo [appEnv.ts](https://github.com/jtspinelli/elembrante-backend/blob/master/src/app/env/appEnv.ts#L3C1-L3C1) e descomente a seguinte linha:
 
 ```JS
 ...
@@ -69,7 +74,7 @@ npm run migration:r
 
 ### 5) Ajustes no index.ts
 
-No diretório raiz do projeto, abra o arquivo [index.ts](https://github.com/jtspinelli/elembrante-backend/blob/master/src/index.ts) e **descomente todas as linhas comentadas**.
+No diretório `src/main`, abra o arquivo [index.ts](https://github.com/jtspinelli/elembrante-backend/blob/master/src/main/index.ts) e **descomente todas as linhas comentadas**.
 
 Por fim, comente a seguinte linha:
 
@@ -87,14 +92,34 @@ Dentro do diretório `out` adicione um diretório `cert` e, dentro deste, os seg
 
 ### 7) Por fim
 
-Instale as dependências utilizando o comando `npm install`.
+7.1 Instale as dependências utilizando o comando `npm install`.
 
-Atualize o output do projeto com o comando `tsc`.
+7.2 Atualize o output do projeto com o comando `tsc`.
 
-Inicie a aplicação com o comando `npm start`.
+7.3 Inicie a aplicação com o comando `npm start`.
 
 Dirija-se a `https://localhost:8081` para encontrar a página inicial.
+
+<br>
+
+#### * Certifique-se de ter [Node.js](https://nodejs.org/en) instalado em sua máquina, bem como [Typescript](https://www.npmjs.com/package/typescript) globalmente ou no diretório do projeto.
+
+<br>
 
 ## Testando os endpoints
 
 Baixe a [coleção](https://drive.google.com/file/d/1AFydxLs-STYykDWChfveuvSfpsuS2rYF/view?usp=share_link) de _requests_ para o Postman para testar os endpoints da API.
+
+<br>
+
+## Rodando Testes
+
+A aplicação possui suítes de **testes unitários** e de **integração**.
+
+Para executar os testes, realize todos os passos descritos acima, na seção [Rodando a aplicação localmente](#runlocal), com exceção do último passo, 7.3.
+
+**Testes unitários:** `npm run test:unit` ou `npm run test:unit:verbose` para output mais detalhado
+
+**Testes integrados:** `npm run test:integration` ou `npm run test:integration:verbose` para output mais detalhado
+
+Para **Cobertura de código:** `npm run test:coverage`.
