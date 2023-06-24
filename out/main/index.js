@@ -44,9 +44,7 @@ const appEnv_1 = require("../app/env/appEnv");
 const Lembrete_1 = require("../app/shared/database/entities/Lembrete");
 const dataSource_1 = __importDefault(require("./config/dataSource"));
 const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
 const cors_1 = __importDefault(require("cors"));
-const https_1 = __importDefault(require("https"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const LembreteDto_1 = __importDefault(require("../app/features/lembrete/dto/LembreteDto"));
 const mapper_1 = __importDefault(require("../app/shared/mappings/mapper"));
@@ -55,8 +53,8 @@ const resolveCertPath = () => {
         ? [__dirname, '..', '..', 'out', 'cert']
         : [__dirname, '..', 'cert'];
 };
-const key = fs_1.default.readFileSync(path_1.default.join(...resolveCertPath(), 'localhost.key'));
-const cert = fs_1.default.readFileSync(path_1.default.join(...resolveCertPath(), 'localhost.crt'));
+// const key = fs.readFileSync(path.join(...resolveCertPath(), 'localhost.key'));
+// const cert = fs.readFileSync(path.join(...resolveCertPath(), 'localhost.crt'));
 exports.app = (0, express_1.default)();
 exports.app.use(express_1.default.static(path_1.default.join(__dirname, '..', "public")));
 exports.app.use((0, express_1.json)());
@@ -65,14 +63,14 @@ exports.app.use((0, cors_1.default)({
     credentials: true
 }));
 (0, httpRoutes_config_1.registerRoutes)(exports.app);
-const server = https_1.default.createServer({ key, cert }, exports.app);
+// const server = https.createServer({key, cert}, app);
 (0, core_1.createMap)(mapper_1.default, Lembrete_1.Lembrete, LembreteDto_1.default, (0, core_1.forMember)(dto => dto.usuarioId, (0, core_1.mapFrom)(lembrete => lembrete.usuario.id)));
 exports.app.get('*', (_req, res) => {
     res.sendFile(path_1.default.join(__dirname, '..', "public", "index.html"));
 });
 if (process.env.NODE_ENV !== 'test') {
     dataSource_1.default.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {
-        // app.listen(appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv.port));
-        server.listen(appEnv_1.appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv_1.appEnv.port));
+        exports.app.listen(appEnv_1.appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv_1.appEnv.port));
+        // server.listen(appEnv.port, () => console.log("APP RUNNING ON PORT " + appEnv.port));
     }));
 }
