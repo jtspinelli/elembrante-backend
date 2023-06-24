@@ -116,7 +116,9 @@ Baixe a [coleção](https://drive.google.com/file/d/1AFydxLs-STYykDWChfveuvSfpsu
 
 A aplicação possui suítes de **testes unitários** e de **integração**.
 
-Para executar os testes, realize todos os passos descritos acima, na seção [Rodando a aplicação localmente](#runlocal), com exceção do último passo, 7.3.
+Para executar os testes, clone o projeto e realize os passos descritos acima, na seção [Rodando a aplicação localmente](#runlocal), (com exceção do último passo, 7.3).
+
+Caso deseje apenas rodar o testes, sem iniciar a aplicação localmente, os passos 1 e 4 podem ser ignorados.
 
 **Testes unitários:** `npm run test:unit` ou `npm run test:unit:verbose` para output mais detalhado
 
