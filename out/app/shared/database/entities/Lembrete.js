@@ -13,7 +13,7 @@ exports.Lembrete = void 0;
 const typeorm_1 = require("typeorm");
 const Usuario_1 = require("./Usuario");
 const classes_1 = require("@automapper/classes");
-let Lembrete = exports.Lembrete = class Lembrete {
+let Lembrete = class Lembrete {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
@@ -44,6 +44,7 @@ __decorate([
     (0, classes_1.AutoMap)(),
     __metadata("design:type", Date)
 ], Lembrete.prototype, "criadoEm", void 0);
-exports.Lembrete = Lembrete = __decorate([
+Lembrete = __decorate([
     (0, typeorm_1.Entity)()
 ], Lembrete);
+exports.Lembrete = Lembrete;

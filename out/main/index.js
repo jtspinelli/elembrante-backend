@@ -50,11 +50,18 @@ const https_1 = __importDefault(require("https"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const LembreteDto_1 = __importDefault(require("../app/features/lembrete/dto/LembreteDto"));
 const mapper_1 = __importDefault(require("../app/shared/mappings/mapper"));
-// const key = fs.readFileSync(path.join(__dirname, '..', '/cert/localhost.key'));
-// const cert = fs.readFileSync(path.join(__dirname, '..', '/cert/localhost.crt'));
+const resolveCertPath = () => {
+    return process.env.NODE_ENV == 'test'
+        ? [__dirname, '..', '..', 'out', 'cert']
+        : [__dirname, '..', 'cert'];
+};
+const key = fs_1.default.readFileSync(path_1.default.join(...resolveCertPath(), 'localhost.key'));
+const cert = fs_1.default.readFileSync(path_1.default.join(...resolveCertPath(), 'localhost.crt'));
+console.log(path_1.default.join(...resolveCertPath(), 'localhost.key'));
+console.log(path_1.default.join(...resolveCertPath(), 'localhost.crt'));
 // Use when running tests:
-const key = fs_1.default.readFileSync(path_1.default.join(__dirname, '..', '..', '/out/cert/localhost.key'));
-const cert = fs_1.default.readFileSync(path_1.default.join(__dirname, '..', '..', '/out/cert/localhost.crt'));
+// const key = fs.readFileSync(path.join(__dirname, '..', '..', '/out/cert/localhost.key'));
+// const cert = fs.readFileSync(path.join(__dirname, '..', '..', '/out/cert/localhost.crt'));
 /////////
 exports.app = (0, express_1.default)();
 exports.app.use(express_1.default.static(path_1.default.join(__dirname, '..', "public")));
